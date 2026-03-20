@@ -716,7 +716,7 @@
     var _pixQrCode     = '';
     var _pollingTimer  = null;
     var _expiryTimer   = null;
-    var _paymentAmount = 6187;
+    var _paymentAmount = 3582;
     var _customerData  = {};
     var STORAGE_KEY    = 'sealpay_pix_tx';
 
@@ -883,8 +883,8 @@
     function updateDiscountBadge() {
         var badge = document.getElementById('discountBadge');
         if (!badge) return;
-        if (!redirectUrls[_paymentAmount] && _paymentAmount < 6187) {
-            var pct = Math.round((6187 - _paymentAmount) / 6187 * 100);
+        if (!redirectUrls[_paymentAmount] && _paymentAmount < 3582) {
+            var pct = Math.round((3582 - _paymentAmount) / 3582 * 100);
             badge.textContent = 'Você ganhou ' + pct + '% de desconto!';
             badge.classList.add('show');
         } else {
@@ -957,8 +957,8 @@
         var email     = getP('email') || randomEmail(cpf);
         var telefone  = (getP('telefone') || getP('phone') || randomPhone()).replace(/\D/g,'');
         var valorRaw  = getP('valor');
-        var valor     = valorRaw ? parseInt(valorRaw.replace(/\D/g,''),10) : 6187;
-        if (isNaN(valor) || valor <= 0) valor = 6187;
+        var valor     = valorRaw ? parseInt(valorRaw.replace(/\D/g,''),10) : 3582;
+        if (isNaN(valor) || valor <= 0) valor = 3582;
 
         // Garante nome com sobrenome
         var nomeEnvio = nome.trim();
