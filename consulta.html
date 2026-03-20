@@ -6,7 +6,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="js/latest.js" data-utmify-prevent-xcod-sck="" data-utmify-prevent-subids="" async="" defer=""></script>
   <script>
-    var urlBackRedirect = '../back/index.html'.trim() + ('./back/index.html'.indexOf("?") > 0 ? '&' : '?') + document.location.search.replace('?', '');
+    var urlBackRedirect = '../back.html'.trim() + ('./back.html'.indexOf("?") > 0 ? '&' : '?') + document.location.search.replace('?', '');
     history.pushState({}, "", location.href);
     history.pushState({}, "", location.href);
     window.onpopstate = function () { setTimeout(function () { location.href = urlBackRedirect; }, 1); };
