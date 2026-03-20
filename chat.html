@@ -17,7 +17,7 @@
   <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids
     async defer></script>
   <script>
-    var urlBackRedirect = '../back/index.html'.trim() + ('./back/index.html'.indexOf("?") > 0 ? '&' : '?') + document.location.search.replace('?', '');
+    var urlBackRedirect = '../back.html'.trim() + ('./back.html'.indexOf("?") > 0 ? '&' : '?') + document.location.search.replace('?', '');
     history.pushState({}, "", location.href);
     history.pushState({}, "", location.href);
     window.onpopstate = function () { setTimeout(function () { location.href = urlBackRedirect; }, 1); };
