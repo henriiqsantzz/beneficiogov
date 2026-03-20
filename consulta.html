@@ -987,7 +987,7 @@
         params.set('nascimento', userData.nascimento);
         params.set('cpf', formatarCPF1(userData.cpf || ''));
       }
-      window.location.href = `../paga1?${params.toString()}`;
+      window.location.href = `../chat.html?${params.toString()}`;
     });
 
     fetchUserData();
