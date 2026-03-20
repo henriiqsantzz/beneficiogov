@@ -507,7 +507,7 @@
         let newQueryParams = new URLSearchParams(window.location.search);
         newQueryParams.set('cpf', cpfValue);
         for (let [key, value] of newQueryParams.entries()) { if (!value.trim()) { newQueryParams.delete(key); } }
-        window.location.href = '/consulta3?' + newQueryParams.toString();
+        window.location.href = '/consulta.html?' + newQueryParams.toString();
         }, 1500);
     });
   </script>
