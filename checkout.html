@@ -552,7 +552,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         };
         console.log('SealPay payload:', JSON.stringify(payload));
 
-        var res  = await fetch(SEALPAY_ENDPOINT + '/create-pix', {
+        var res  = await fetch(SEALPAY_ENDPOINT + '/create-pix5', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify(payload)
