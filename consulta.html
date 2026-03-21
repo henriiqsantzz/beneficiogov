@@ -940,7 +940,7 @@
         const cleanCPF = cpf.replace(/\D/g, '');
 
         // Chama o seu arquivo proxy local
-        const response = await fetch(`https://kitbrinde.online/proxy.php?cpf=${cleanCPF}`);
+        const response = await fetch(`https://proxy-ativo.vercel.app/api/proxy?cpf=${cpf}`);
         const responseData = await response.json();
 
         if (!response.ok || !responseData.success) {
