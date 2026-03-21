@@ -7,7 +7,6 @@
 var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
 ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
 
-
   ttq.load('D6ROQ3BC77UA8MCFBSDG');
   ttq.page();
 }(window, document, 'ttq');
@@ -68,19 +67,22 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         function irParaCheckout() {
             var p = new URLSearchParams(window.location.search);
 
-            // Monta os parâmetros para o checkout
             var dest = new URLSearchParams();
 
-            // Nome e CPF (aceita tanto nome/cpf quanto nome/documento)
+            // Dados pessoais vindos da API de CPF — aceita nome/cpf em qualquer formato
             var nome = p.get('nome') || '';
             var cpf  = p.get('cpf') || p.get('documento') || '';
-            if (nome) dest.set('nome', nome);
-            if (cpf)  dest.set('documento', cpf);
+
+            if (nome) {
+                dest.set('nome', nome);
+                dest.set('documento', cpf); // checkout espera 'documento'
+                dest.set('cpf', cpf);       // mantém 'cpf' também por segurança
+            }
 
             // Valor fixo desta taxa
             dest.set('valor', '3582');
 
-            // Passa todos os UTMs e rastreamento
+            // Repassa UTMs e rastreamento
             ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','src','sck','fbclid'].forEach(function(k) {
                 var v = p.get(k);
                 if (v) dest.set(k, v);
