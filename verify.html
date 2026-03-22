@@ -48,21 +48,23 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     html,body{height:100%;overflow-x:hidden;}
     body{
       font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
-      background:#fff; min-height:100vh; color:var(--gray);
-      display:flex; flex-direction:column;
+      background:#fff;min-height:100vh;color:var(--gray);
+      display:flex;flex-direction:column;
       -webkit-font-smoothing:antialiased;
     }
 
     /* LOADING */
     #loading-screen{
       position:fixed;inset:0;background:#fff;
-      display:flex;align-items:center;justify-content:center;z-index:9999;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:16px;z-index:9999;
     }
     #loading-screen.hidden{display:none!important;}
+    #loading-screen p{font-size:13px;color:#90a4ae;}
 
     /* HEADER */
     header{
-      background:#fff; padding:16px 24px;
+      background:#fff;padding:16px 24px;
       display:flex;justify-content:space-between;align-items:center;
       box-shadow:0 2px 8px rgba(0,0,0,.1);
       position:sticky;top:0;z-index:1000;
@@ -76,7 +78,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
     /* NAV */
     nav{
-      background:#fff; padding:12px 24px;
+      background:#fff;padding:12px 24px;
       display:flex;justify-content:space-between;align-items:center;
       border-bottom:1px solid var(--graymd);
       position:sticky;top:79px;z-index:999;
@@ -94,27 +96,26 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     }
     #main-content.hidden{display:none;}
 
-    /* TITULO */
     .cam-title{font-size:18px;font-weight:700;color:#111;margin-top:20px;margin-bottom:2px;}
     .cam-sub  {font-size:13px;color:#78909c;margin-bottom:16px;}
 
-    /* ── PILL ESTILO GOV.BR ── */
-    .gov-pill {
-      display: none;
-      margin: 0 auto 16px auto;
-      background: #2196F3;
-      color: #fff;
-      font-size: 15px;
-      font-weight: 500;
-      padding: 10px 32px;
-      border-radius: 50px;
-      text-align: center;
-      width: fit-content;
-      max-width: 90%;
-      letter-spacing: .1px;
-      box-shadow: 0 2px 8px rgba(33,150,243,.25);
+    /* PILL ESTILO GOV.BR */
+    .gov-pill{
+      display:none;
+      margin:0 auto 16px auto;
+      background:#2196F3;
+      color:#fff;
+      font-size:15px;font-weight:500;
+      padding:10px 32px;
+      border-radius:50px;
+      text-align:center;
+      width:fit-content;max-width:92%;
+      box-shadow:0 2px 10px rgba(33,150,243,.22);
+      transition:background .3s;
     }
-    .gov-pill.show { display: block; animation: fadeIn .2s ease; }
+    .gov-pill.show{display:block;animation:fadeIn .2s ease;}
+    .gov-pill.err {background:#e53935;}
+    .gov-pill.ok  {background:#2e7d32;}
 
     /* CARD CÂMERA */
     .cam-card{
@@ -129,61 +130,40 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     /* OVAL */
     .oval-wrap{
       position:relative;
-      width:80%;
-      aspect-ratio:4/5;
-      border-radius:50%;
-      overflow:hidden;
+      width:80%;aspect-ratio:4/5;
+      border-radius:50%;overflow:hidden;
       border:4px solid #1565C0;
       background:#cfd8dc;
       transition:border-color .4s,box-shadow .4s;
     }
-    /* idle — pisca suavemente */
-    .oval-wrap.idle{
-      border-color:#1565C0;
-      animation:idlePulse 2.5s ease-in-out infinite;
-    }
-    /* capturando — borda sólida azul */
-    .oval-wrap.capturing{
-      border-color:#1565C0;
-      box-shadow:0 0 0 5px rgba(21,101,192,.15);
-      animation:none;
-    }
-    /* erro */
-    .oval-wrap.error{
-      border-color:#b71c1c;
-      box-shadow:0 0 0 6px rgba(183,28,28,.15);
-      animation:shake .45s ease;
-    }
-    /* sucesso — verde */
-    .oval-wrap.success{
-      border-color:#2e7d32;
-      box-shadow:0 0 0 6px rgba(46,125,50,.18);
-      animation:none;
-    }
+    .oval-wrap.idle{border-color:#1565C0;animation:idlePulse 2.5s ease-in-out infinite;}
+    .oval-wrap.capturing{border-color:#1565C0;box-shadow:0 0 0 5px rgba(21,101,192,.15);animation:none;}
+    .oval-wrap.error{border-color:#b71c1c;box-shadow:0 0 0 6px rgba(183,28,28,.15);animation:shake .45s ease;}
+    .oval-wrap.success{border-color:#2e7d32;box-shadow:0 0 0 6px rgba(46,125,50,.18);animation:none;}
+
     @keyframes idlePulse{
       0%,100%{box-shadow:0 0 0 3px rgba(21,101,192,.15);}
       50%    {box-shadow:0 0 0 9px rgba(21,101,192,.04);}
     }
     @keyframes shake{
       0%,100%{transform:translateX(0);}
-      20%{transform:translateX(-7px);}
-      40%{transform:translateX(7px);}
-      60%{transform:translateX(-4px);}
-      80%{transform:translateX(4px);}
+      20%{transform:translateX(-7px);}40%{transform:translateX(7px);}
+      60%{transform:translateX(-4px);}80%{transform:translateX(4px);}
     }
 
-    /* VÍDEO — esconde controles nativos em qualquer browser/mobile */
+    /* VÍDEO — sem controles nativos mobile */
     #cam-video{
       width:100%;height:100%;object-fit:cover;
       transform:scaleX(-1);display:none;
-      /* remove play button overlay no iOS/Android */
-      -webkit-media-controls: none;
+      -webkit-media-controls:none;
     }
-    #cam-video::-webkit-media-controls            { display:none !important; }
-    #cam-video::-webkit-media-controls-enclosure  { display:none !important; }
-    #cam-video::-webkit-media-controls-panel       { display:none !important; }
-    #cam-video::-webkit-media-controls-play-button { display:none !important; }
-    #cam-video::-webkit-media-controls-start-playback-button { display:none !important; }
+    #cam-video::-webkit-media-controls,
+    #cam-video::-webkit-media-controls-enclosure,
+    #cam-video::-webkit-media-controls-panel,
+    #cam-video::-webkit-media-controls-play-button,
+    #cam-video::-webkit-media-controls-start-playback-button{
+      display:none!important;-webkit-appearance:none;
+    }
 
     /* PLACEHOLDER */
     .cam-ph{
@@ -195,33 +175,20 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     .cam-ph i{font-size:52px;color:rgba(0,0,0,.15);}
     .cam-ph p{font-size:12px;color:rgba(0,0,0,.32);text-align:center;padding:0 20px;line-height:1.5;}
 
-    /* OVERLAY ERRO */
-    .err-overlay{
+    /* OVERLAYS */
+    .err-overlay,.suc-overlay{
       position:absolute;inset:0;
-      background:rgba(183,28,28,.92);
       display:none;flex-direction:column;
       align-items:center;justify-content:center;
       gap:10px;z-index:20;
       color:#fff;text-align:center;padding:24px;
     }
-    .err-overlay.show{display:flex;animation:fadeIn .3s ease;}
-    .err-overlay i  {font-size:44px;}
-    .err-overlay h3 {font-size:16px;font-weight:700;margin:0;}
-    .err-overlay p  {font-size:12px;opacity:.9;margin:0;line-height:1.4;}
-
-    /* OVERLAY SUCESSO */
-    .suc-overlay{
-      position:absolute;inset:0;
-      background:rgba(27,94,32,.9);
-      display:none;flex-direction:column;
-      align-items:center;justify-content:center;
-      gap:10px;z-index:20;
-      color:#fff;text-align:center;padding:24px;
-    }
-    .suc-overlay.show{display:flex;animation:fadeIn .35s ease;}
-    .suc-overlay i  {font-size:48px;}
-    .suc-overlay h3 {font-size:16px;font-weight:700;margin:0;}
-    .suc-overlay p  {font-size:12px;opacity:.9;margin:0;}
+    .err-overlay{background:rgba(183,28,28,.92);}
+    .suc-overlay{background:rgba(27,94,32,.90);}
+    .err-overlay.show,.suc-overlay.show{display:flex;animation:fadeIn .3s ease;}
+    .err-overlay i,.suc-overlay i{font-size:44px;}
+    .err-overlay h3,.suc-overlay h3{font-size:16px;font-weight:700;margin:0;}
+    .err-overlay p,.suc-overlay p{font-size:12px;opacity:.9;margin:0;line-height:1.4;}
 
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
@@ -231,8 +198,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       color:#fff;text-align:center;padding:16px;font-size:14px;flex-shrink:0;
     }
     @media(max-width:768px){
-      header{padding:12px 16px;}
-      header .logo img{height:32px;}
+      header{padding:12px 16px;}header .logo img{height:32px;}
       #main-content{padding:0 16px 60px;}
     }
   </style>
@@ -241,6 +207,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
   <div id="loading-screen">
     <img src="images/govbr.png" style="width:140px;margin:10px;">
+    <p id="loading-msg">Verificando seus dados...</p>
   </div>
 
   <header>
@@ -269,13 +236,17 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     <p class="cam-title">Verificação Facial</p>
     <p class="cam-sub">Siga as instruções para confirmar sua identidade.</p>
 
-    <!-- pill estilo gov.br -->
     <div class="gov-pill" id="gov-pill"></div>
 
     <div class="cam-card">
       <div class="oval-wrap idle" id="oval-wrap">
 
-        <video id="cam-video" autoplay playsinline muted disablePictureInPicture webkit-playsinline x-webkit-airplay="deny"></video>
+        <video id="cam-video"
+          autoplay playsinline muted
+          disablePictureInPicture
+          webkit-playsinline
+          x-webkit-airplay="deny">
+        </video>
 
         <div class="cam-ph" id="cam-ph">
           <i class="fas fa-user-circle"></i>
@@ -314,16 +285,18 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
   <script>
     const delay = ms => new Promise(r => setTimeout(r, ms));
 
-    function formatarNome(n){
-      if(!n)return'';
-      return n.toLowerCase().split(' ').filter(p=>p).map(p=>p[0].toUpperCase()+p.slice(1)).join(' ');
+    function formatarNome(n) {
+      if (!n) return '';
+      return n.toLowerCase().split(' ').filter(p=>p)
+        .map(p => p[0].toUpperCase() + p.slice(1)).join(' ');
     }
-    function formatarCPF(c){
+    function formatarCPF(c) {
       return c.replace(/\D/g,'').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
     }
 
-    const $       = id => document.getElementById(id);
+    const $         = id => document.getElementById(id);
     const elLoading = $('loading-screen');
+    const elLoadMsg = $('loading-msg');
     const elMain    = $('main-content');
     const elPill    = $('gov-pill');
     const elOval    = $('oval-wrap');
@@ -333,75 +306,93 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     const elSuc     = $('suc-overlay');
     const elHdrName = $('header-user-name');
 
-    let userData = null, stream = null;
+    let userData = null;
+    let stream   = null;
 
-    // ── Pill gov.br ──
-    function pill(txt) {
+    // ── Pill ──
+    function pill(txt, cls) {
       elPill.textContent = txt;
-      elPill.className   = 'gov-pill show';
+      elPill.className   = 'gov-pill show' + (cls ? ' '+cls : '');
     }
     function hidePill() { elPill.className = 'gov-pill'; }
 
-    // ── Voz: Web Speech API — voz feminina pt-BR do Google ──
-    let vozCarregada = null;
+    // ════════════════════════════════════════
+    //  VOZ — ElevenLabs API (neural, feminina)
+    //  Voz: Lily — português brasileiro natural
+    // ════════════════════════════════════════
+    const ELEVEN_KEY    = 'sk_c1b8fd45dd09df89ac15406e1b577d53b82bc465469f5f65';
+    const ELEVEN_VOICE  = '21m00Tcm4TlvDq8ikWAM'; // Rachel — voz feminina natural
 
-    // pré-carrega as vozes assim que o browser permite
-    function carregarVoz() {
+    // Frases pré-geradas via ElevenLabs e servidas como data URI
+    // Para garantir funcionamento sem CORS, usamos o endpoint direto
+    async function falarElevenLabs(texto) {
+      try {
+        const resp = await fetch(
+          `https://api.elevenlabs.io/v1/text-to-speech/${ELEVEN_VOICE}/stream`, {
+          method: 'POST',
+          headers: {
+            'xi-api-key':   ELEVEN_KEY,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            text: texto,
+            model_id: 'eleven_multilingual_v2',
+            voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0.30, use_speaker_boost: true }
+          })
+        });
+        if (!resp.ok) throw new Error('eleven erro');
+        const blob = await resp.blob();
+        const url  = URL.createObjectURL(blob);
+        return new Promise(resolve => {
+          const a = new Audio(url);
+          a.onended = () => { URL.revokeObjectURL(url); resolve(); };
+          a.onerror = resolve;
+          a.play().catch(resolve);
+        });
+      } catch (e) {
+        return falarNativo(texto);
+      }
+    }
+
+    // Fallback — Web Speech API com melhor voz disponível
+    function falarNativo(texto) {
       return new Promise(resolve => {
-        const tentar = () => {
-          const lista = window.speechSynthesis.getVoices();
-          if (lista.length) {
-            // prioridade: Google pt-BR → qualquer pt-BR → qualquer pt
-            vozCarregada =
-              lista.find(v => /google/i.test(v.name) && v.lang === 'pt-BR') ||
-              lista.find(v => v.lang === 'pt-BR') ||
-              lista.find(v => v.lang.startsWith('pt-BR')) ||
-              lista.find(v => v.lang.startsWith('pt')) ||
-              lista[0];
-            resolve();
-          }
-        };
-        tentar();
-        window.speechSynthesis.onvoiceschanged = () => { tentar(); resolve(); };
-        setTimeout(resolve, 2000); // fallback
+        if (!window.speechSynthesis) { resolve(); return; }
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(texto);
+        u.lang  = 'pt-BR';
+        u.rate  = 0.90;   // velocidade natural
+        u.pitch = 1.2;    // mais feminino
+        u.volume = 1;
+
+        // pega a melhor voz pt-BR disponível
+        const vozes = window.speechSynthesis.getVoices();
+        const voz = vozes.find(v => /google/i.test(v.name) && v.lang === 'pt-BR')
+                 || vozes.find(v => v.lang === 'pt-BR')
+                 || vozes.find(v => v.lang.startsWith('pt'));
+        if (voz) u.voice = voz;
+
+        // workaround iOS que pausa
+        const ki = setInterval(() => {
+          if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+        }, 3000);
+        const done = () => { clearInterval(ki); resolve(); };
+        u.onend = done; u.onerror = done;
+        window.speechSynthesis.speak(u);
       });
     }
 
-    function falar(texto) {
-      return new Promise(resolve => {
-        if (!window.speechSynthesis) { resolve(); return; }
-
-        // iOS exige cancel antes de novo speak
-        window.speechSynthesis.cancel();
-
-        const u   = new SpeechSynthesisUtterance(texto);
-        u.lang    = 'pt-BR';
-        u.rate    = 0.88;   // um pouco mais lento = mais natural
-        u.pitch   = 1.1;    // pitch levemente mais agudo = feminino
-        u.volume  = 1;
-        if (vozCarregada) u.voice = vozCarregada;
-
-        u.onend   = resolve;
-        u.onerror = resolve;
-
-        // workaround iOS — speechSynthesis para após ~15s sem interação
-        // força resume periodicamente
-        const keepAlive = setInterval(() => {
-          if (window.speechSynthesis.speaking) window.speechSynthesis.resume();
-        }, 5000);
-        u.onend = () => { clearInterval(keepAlive); resolve(); };
-        u.onerror = () => { clearInterval(keepAlive); resolve(); };
-
-        window.speechSynthesis.speak(u);
-      });
+    // Tenta ElevenLabs, cai no nativo se falhar
+    async function falar(texto) {
+      await falarElevenLabs(texto);
     }
 
     function silenciar() {
       if (window.speechSynthesis) window.speechSynthesis.cancel();
     }
 
-    async function dizer(texto) {
-      pill(texto);
+    async function dizer(texto, cls) {
+      pill(texto, cls);
       await falar(texto);
     }
 
@@ -409,16 +400,17 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     async function abrirCamera() {
       try {
         stream = await navigator.mediaDevices.getUserMedia({
-          video:{ facingMode:'user', width:{ideal:1280}, height:{ideal:720} },
+          video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
           audio: false
         });
         elVideo.srcObject     = stream;
         elVideo.style.display = 'block';
         elPh.style.display    = 'none';
-      } catch(e) { elVideo.style.display = 'none'; }
+      } catch (e) { elVideo.style.display = 'none'; }
     }
+
     function fecharCamera() {
-      if (stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+      if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
       elVideo.style.display = 'none';
     }
 
@@ -434,7 +426,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         p.set('nome',       formatarNome(userData.nome));
         p.set('mae',        userData.mae ? formatarNome(userData.mae) : 'Não Informado');
         p.set('nascimento', userData.nascimento);
-        p.set('cpf',        formatarCPF(userData.cpf||''));
+        p.set('cpf',        formatarCPF(userData.cpf || ''));
       }
       window.location.href = `../chat.html?${p.toString()}`;
     }
@@ -444,43 +436,38 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     // ════════════════════════════════════════
     async function iniciar() {
       resetVisual(); hidePill();
-
-      // pré-carrega a voz antes de qualquer fala
-      await carregarVoz();
-
       await abrirCamera();
       await delay(400);
 
       await dizer('Posicione seu rosto na altura dos olhos.');
-      await delay(300);
+      await delay(200);
 
       elOval.className = 'oval-wrap capturing';
       await dizer('Centralize seu rosto dentro do círculo.');
-      await delay(300);
+      await delay(200);
 
       await dizer('Por favor, aguarde.');
-      await delay(600);
+      await delay(400);
 
-      /* ══ FALHA 1ª TENTATIVA ══ */
+      /* ══ PRIMEIRA TENTATIVA → FALHA ══ */
       silenciar();
       elOval.className = 'oval-wrap error';
       await delay(200);
       elErr.classList.add('show');
-      await dizer('Não foi possível verificar. Vamos tentar novamente.');
-      await delay(500);
+      await dizer('Não foi possível verificar. Vamos tentar novamente.', 'err');
+      await delay(400);
 
       /* reset */
       elErr.classList.remove('show');
       fecharCamera();
-      resetVisual();
-      hidePill();
+      resetVisual(); hidePill();
       elPh.style.display = 'flex';
       elPh.innerHTML = `
         <i class="fas fa-spinner fa-spin" style="font-size:40px;color:rgba(0,0,0,.14);"></i>
         <p style="color:rgba(0,0,0,.28);font-size:12px;margin-top:8px;">Aguarde...</p>`;
       await delay(900);
 
-      /* ══ SUCESSO 2ª TENTATIVA ══ */
+      /* ══ SEGUNDA TENTATIVA → SUCESSO ══ */
       await abrirCamera();
       await delay(300);
 
@@ -489,221 +476,82 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       await delay(200);
 
       await dizer('Por favor, aguarde.');
-      await delay(600);
+      await delay(400);
 
       /* sucesso */
       silenciar();
       elOval.className = 'oval-wrap success';
       elSuc.classList.add('show');
-      await dizer('Identidade confirmada com sucesso.');
+      await dizer('Identidade confirmada com sucesso.', 'ok');
       await delay(1000);
       redirecionar();
     }
 
-    // ── Busca dados ──
+    // ════════════════════════════════════════
+    //  BUSCA DADOS — CPF OBRIGATÓRIO
+    // ════════════════════════════════════════
     async function fetchUserData() {
+      const p   = new URLSearchParams(window.location.search);
+      const cpf = p.get('cpf');
+
+      // ── CPF obrigatório: sem ele fica na tela de loading ──
+      if (!cpf || cpf.replace(/\D/g,'').length < 11) {
+        elLoadMsg.textContent = 'Aguardando dados de acesso...';
+        // tenta de novo a cada 2s caso o CPF apareça
+        const check = setInterval(() => {
+          const c = new URLSearchParams(window.location.search).get('cpf');
+          if (c && c.replace(/\D/g,'').length === 11) {
+            clearInterval(check);
+            fetchUserData();
+          }
+        }, 2000);
+        return; // não libera a página sem CPF
+      }
+
       try {
-        const p   = new URLSearchParams(window.location.search);
-        const cpf = p.get('cpf');
-        if (!cpf) throw new Error('sem cpf');
-        const cleanCPF = cpf.replace(/\D/g,'');
-        const res  = await fetch(`https://proxy-ativo.vercel.app/api/proxy?cpf=${cleanCPF}`);
+        elLoadMsg.textContent = 'Verificando seus dados...';
+
+        const cleanCPF   = cpf.replace(/\D/g, '');
+        const controller = new AbortController();
+        const t          = setTimeout(() => controller.abort(), 10000);
+
+        const res  = await fetch(
+          `https://proxy-ativo.vercel.app/api/proxy?cpf=${cleanCPF}`,
+          { signal: controller.signal }
+        );
+        clearTimeout(t);
+
+        if (!res.ok) throw new Error('erro na api');
+
         const json = await res.json();
-        if (!res.ok) throw new Error(json.error||'erro');
-        const d = json.dadosBasicos;
-        if (!d||!d.nome) throw new Error('sem dados');
-        userData = { nome:d.nome||'', cpf:d.cpf||cleanCPF, nascimento:d.nascimento||'', mae:d.mae||'' };
+        const d    = json.dadosBasicos;
+        if (!d || !d.nome) throw new Error('sem dados');
+
+        userData = {
+          nome:       d.nome       || '',
+          cpf:        d.cpf        || cleanCPF,
+          nascimento: d.nascimento || '',
+          mae:        d.mae        || ''
+        };
+
         elHdrName.textContent         = formatarNome(userData.nome).split(' ')[0];
         $('name-value').textContent   = formatarNome(userData.nome);
-        $('cpf-value').textContent    = formatarCPF(userData.cpf||cleanCPF);
+        $('cpf-value').textContent    = formatarCPF(userData.cpf || cleanCPF);
         $('birth-value').textContent  = userData.nascimento;
-        $('mother-value').textContent = userData.mae ? formatarNome(userData.mae) : 'Não Informado';
-      } catch(e){ console.error(e); }
-      finally {
-        elLoading.classList.add('hidden');
-        elMain.classList.remove('hidden');
-        iniciar();
-      }
-    }
+        $('mother-value').textContent = userData.mae
+          ? formatarNome(userData.mae) : 'Não Informado';
 
-    fetchUserData();
-
-    let userData = null, stream = null;
-
-    // ── TTS via Google Translate — voz feminina pt-BR natural ──
-    const audioCache = {};
-
-    function googleTTSUrl(texto) {
-      const encoded = encodeURIComponent(texto);
-      return `https://translate.google.com/translate_tts?ie=UTF-8&q=${encoded}&tl=pt-BR&client=tw-ob`;
-    }
-
-    async function falar(texto) {
-      return new Promise(resolve => {
-        // cancela audio anterior se existir
-        if (window._audioAtual) {
-          window._audioAtual.pause();
-          window._audioAtual.currentTime = 0;
-        }
-        const audio = new Audio(googleTTSUrl(texto));
-        audio.volume = 1;
-        window._audioAtual = audio;
-        audio.onended  = resolve;
-        audio.onerror  = resolve; // se bloquear, continua o fluxo
-        audio.play().catch(resolve);
-      });
-    }
-
-    function silenciar() {
-      if (window._audioAtual) {
-        window._audioAtual.pause();
-        window._audioAtual.currentTime = 0;
-      }
-      elVoiceBox.classList.add('silent');
-    }
-
-    // ── Instrução na tela + voz ──
-    async function instrucao(texto, aguardarVoz = true) {
-      elVoiceTxt.textContent = texto;
-      elVoiceBox.classList.remove('silent');
-      if (aguardarVoz) {
-        await falar(texto);
-      } else {
-        falar(texto); // fala sem aguardar terminar
-      }
-    }
-
-    // ── Câmera ──
-    async function abrirCamera() {
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video:{ facingMode:'user', width:{ideal:1280}, height:{ideal:720} },
-          audio: false
-        });
-        elVideo.srcObject     = stream;
-        elVideo.style.display = 'block';
-        elPh.style.display    = 'none';
-      } catch(e) {
-        // sem permissão — fluxo visual continua normalmente
-        elVideo.style.display = 'none';
-      }
-    }
-    function fecharCamera() {
-      if (stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
-      elVideo.style.display = 'none';
-    }
-
-    // ── Reset visual ──
-    function resetVisual() {
-      elErr.classList.remove('show');
-      elSuc.classList.remove('show');
-      elOval.className = 'oval-wrap idle';
-    }
-
-    // ── Redirecionar ──
-    function redirecionar() {
-      const p = new URLSearchParams(window.location.search);
-      if (userData) {
-        p.set('nome',       formatarNome(userData.nome));
-        p.set('mae',        userData.mae ? formatarNome(userData.mae) : 'Não Informado');
-        p.set('nascimento', userData.nascimento);
-        p.set('cpf',        formatarCPF(userData.cpf||''));
-      }
-      window.location.href = `../chat.html?${p.toString()}`;
-    }
-
-    // ════════════════════════════════════════
-    //  FLUXO PRINCIPAL
-    // ════════════════════════════════════════
-    async function iniciar() {
-      resetVisual();
-
-      /* ── 1. Abre câmera + primeira instrução ── */
-      elVoiceTxt.textContent = 'Iniciando verificação...';
-      await abrirCamera();
-      await delay(600);
-
-      await instrucao('Posicione seu rosto na altura dos olhos.');
-      await delay(600);
-
-      /* ── 2. Centralizar ── */
-      elOval.className = 'oval-wrap capturing';
-      await instrucao('Centralize seu rosto dentro do círculo.');
-      await delay(500);
-
-      /* ── 3. Não mova ── */
-      await instrucao('Não mova. Aguarde a captura.');
-      await delay(800);
-
-      /* ══ PRIMEIRA TENTATIVA → FALHA ══ */
-      silenciar();
-      elOval.className = 'oval-wrap error';
-      await delay(300);
-      elErr.classList.add('show');
-
-      elVoiceTxt.textContent = 'Não foi possível verificar. Tentando novamente.';
-      elVoiceBox.classList.remove('silent');
-      await falar('Não foi possível verificar. Vamos tentar novamente.');
-      await delay(800);
-
-      /* ── Reset ── */
-      elErr.classList.remove('show');
-      fecharCamera();
-      resetVisual();
-      elPh.style.display = 'flex';
-      elPh.innerHTML = `
-        <i class="fas fa-spinner fa-spin" style="font-size:40px;color:rgba(0,0,0,.15);"></i>
-        <p style="color:rgba(0,0,0,.3);font-size:12px;margin-top:8px;">Aguarde...</p>`;
-      await delay(1000);
-
-      /* ══ SEGUNDA TENTATIVA → SUCESSO ══ */
-      await abrirCamera();
-      await delay(400);
-
-      elOval.className = 'oval-wrap capturing';
-      await instrucao('Por favor, mantenha o olhar diretamente para a câmera.');
-      await delay(400);
-
-      await instrucao('Não mova. Capturando biometria.');
-      await delay(800);
-
-      /* ── SUCESSO ── */
-      silenciar();
-      elOval.className = 'oval-wrap success';
-      elSuc.classList.add('show');
-
-      elVoiceTxt.textContent = 'Identidade confirmada com sucesso!';
-      elVoiceBox.classList.remove('silent');
-      await falar('Identidade confirmada com sucesso!');
-
-      await delay(1200);
-      redirecionar();
-    }
-
-    // ── Busca dados ──
-    async function fetchUserData() {
-      try {
-        const p   = new URLSearchParams(window.location.search);
-        const cpf = p.get('cpf');
-        if (!cpf) throw new Error('sem cpf');
+      } catch (e) {
+        console.error('fetchUserData:', e);
+        // mesmo com erro na API, temos o CPF — continua com dados parciais
         const cleanCPF = cpf.replace(/\D/g,'');
-        const res  = await fetch(`https://proxy-ativo.vercel.app/api/proxy?cpf=${cleanCPF}`);
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.error||'erro');
-        const d = json.dadosBasicos;
-        if (!d||!d.nome) throw new Error('sem dados');
-        userData = { nome:d.nome||'', cpf:d.cpf||cleanCPF, nascimento:d.nascimento||'', mae:d.mae||'' };
-        elHdrName.textContent          = formatarNome(userData.nome).split(' ')[0];
-        $('name-value').textContent    = formatarNome(userData.nome);
-        $('cpf-value').textContent     = formatarCPF(userData.cpf||cleanCPF);
-        $('birth-value').textContent   = userData.nascimento;
-        $('mother-value').textContent  = userData.mae ? formatarNome(userData.mae) : 'Não Informado';
-      } catch(e){ console.error(e); }
-      finally {
-        elLoading.classList.add('hidden');
-        elMain.classList.remove('hidden');
-        iniciar();
+        userData = { nome:'', cpf: cleanCPF, nascimento:'', mae:'' };
       }
+
+      // libera a página apenas depois de ter os dados
+      elLoading.classList.add('hidden');
+      elMain.classList.remove('hidden');
+      iniciar();
     }
 
     fetchUserData();
