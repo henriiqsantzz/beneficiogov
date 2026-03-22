@@ -337,7 +337,6 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     let stream     = null;
     let facingMode = 'user';
     let somMutado  = false;
-    let audioAtual = null;
 
     // ── Trocar câmera ──
     elIconCamera.addEventListener('click', async () => {
@@ -368,85 +367,76 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     function hidePill() { elPill.className = 'gov-pill'; }
 
     // ════════════════════════════════════════
-    //  VOZ — ElevenLabs com timeout de 4s
-    //  Se demorar ou falhar → Web Speech API
+    //  VOZ — Web Speech API (funciona 100% no browser)
+    //  ElevenLabs bloqueado por CORS na Vercel
     // ════════════════════════════════════════
-    const ELEVEN_KEY   = 'sk_c1b8fd45dd09df89ac15406e1b577d53b82bc465469f5f65';
-    const ELEVEN_VOICE = '21m00Tcm4TlvDq8ikWAM';
 
-    function falarElevenLabs(texto) {
-      return new Promise((resolve, reject) => {
-        // timeout de 4s — se ElevenLabs não responder, usa fallback
-        const timer = setTimeout(() => reject(new Error('timeout')), 4000);
+    let vozPronta = null;
 
-        fetch(`https://api.elevenlabs.io/v1/text-to-speech/${ELEVEN_VOICE}`, {
-          method: 'POST',
-          headers: {
-            'xi-api-key':   ELEVEN_KEY,
-            'Content-Type': 'application/json',
-            'Accept':       'audio/mpeg'
-          },
-          body: JSON.stringify({
-            text: texto,
-            model_id: 'eleven_multilingual_v2',
-            voice_settings: { stability:0.50, similarity_boost:0.85, style:0.20, use_speaker_boost:true }
-          })
-        })
-        .then(r => { if(!r.ok) throw new Error('err'); return r.blob(); })
-        .then(blob => {
-          clearTimeout(timer);
-          const url = URL.createObjectURL(blob);
-          if (audioAtual) { audioAtual.pause(); }
-          audioAtual = new Audio(url);
-          audioAtual.onended = () => { URL.revokeObjectURL(url); resolve(); };
-          audioAtual.onerror = () => { URL.revokeObjectURL(url); resolve(); };
-          audioAtual.play().catch(resolve);
-        })
-        .catch(e => { clearTimeout(timer); reject(e); });
-      });
-    }
-
-    // Fallback: Web Speech API
-    function falarNativo(texto) {
+    // pré-carrega a melhor voz pt-BR disponível
+    function carregarVoz() {
       return new Promise(resolve => {
-        if (!window.speechSynthesis) { resolve(); return; }
-        window.speechSynthesis.cancel();
-        const u  = new SpeechSynthesisUtterance(texto);
-        u.lang   = 'pt-BR'; u.rate = 0.90; u.pitch = 1.2; u.volume = 1;
-        const vz = window.speechSynthesis.getVoices();
-        const v  = vz.find(x => /google/i.test(x.name) && x.lang==='pt-BR')
-                || vz.find(x => x.lang==='pt-BR')
-                || vz.find(x => x.lang.startsWith('pt'));
-        if (v) u.voice = v;
-        const ki = setInterval(() => {
-          if (window.speechSynthesis.paused) window.speechSynthesis.resume();
-        }, 3000);
-        const done = () => { clearInterval(ki); resolve(); };
-        u.onend = done; u.onerror = done;
-        window.speechSynthesis.speak(u);
+        function buscar() {
+          const lista = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+          if (lista.length) {
+            vozPronta =
+              lista.find(v => /google/i.test(v.name) && v.lang === 'pt-BR') ||
+              lista.find(v => v.lang === 'pt-BR') ||
+              lista.find(v => v.lang.startsWith('pt-BR')) ||
+              lista.find(v => v.lang.startsWith('pt')) ||
+              lista[0];
+            resolve();
+            return true;
+          }
+          return false;
+        }
+        if (!buscar()) {
+          if (window.speechSynthesis) {
+            window.speechSynthesis.onvoiceschanged = () => { buscar(); resolve(); };
+          }
+          setTimeout(resolve, 2000);
+        }
       });
     }
 
-    // Tenta ElevenLabs; se falhar/timeout usa Web Speech
-    async function falar(texto) {
-      if (somMutado) return; // som desligado → pula
-      try {
-        await falarElevenLabs(texto);
-      } catch(e) {
-        await falarNativo(texto);
-      }
+    function falar(texto) {
+      if (somMutado) return Promise.resolve();
+      if (!window.speechSynthesis) return Promise.resolve();
+
+      return new Promise(resolve => {
+        window.speechSynthesis.cancel();
+
+        // pequeno delay para o cancel processar (necessário no mobile)
+        setTimeout(() => {
+          const u   = new SpeechSynthesisUtterance(texto);
+          u.lang    = 'pt-BR';
+          u.rate    = 0.88;
+          u.pitch   = 1.15;
+          u.volume  = 1;
+          if (vozPronta) u.voice = vozPronta;
+
+          // workaround iOS — pausa sozinha
+          const ki = setInterval(() => {
+            if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+          }, 2000);
+
+          const done = () => { clearInterval(ki); resolve(); };
+          u.onend   = done;
+          u.onerror = done;
+
+          window.speechSynthesis.speak(u);
+        }, 100);
+      });
     }
 
     function silenciar() {
-      if (audioAtual) { audioAtual.pause(); audioAtual.currentTime = 0; }
       if (window.speechSynthesis) window.speechSynthesis.cancel();
     }
 
-    // Mostra pill E fala — NÃO espera a voz terminar para continuar o fluxo
-    // A voz roda em paralelo, o fluxo segue pelos delays
+    // fala em paralelo com o fluxo visual
     function dizer(txt, cls) {
       pill(txt, cls);
-      falar(txt); // sem await — não trava o fluxo
+      falar(txt); // sem await — não bloqueia o fluxo
     }
 
     // ── Câmera ──
@@ -503,6 +493,9 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     // ════════════════════════════════════════
     async function iniciar() {
       resetVisual(); hidePill();
+
+      // pré-carrega a voz antes de qualquer fala
+      await carregarVoz();
 
       await abrirCamera();
       await delay(800);
