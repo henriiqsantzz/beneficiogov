@@ -367,11 +367,21 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     function hidePill() { elPill.className = 'gov-pill'; }
 
     // ════════════════════════════════════════
-    //  VOZ — Web Speech API (funciona 100% no browser)
-    //  ElevenLabs bloqueado por CORS na Vercel
+    //  VOZ — Web Speech API
     // ════════════════════════════════════════
 
     let vozPronta = null;
+    let vozDesbloqueada = false;
+
+    // desbloqueia o speechSynthesis na primeira interação do usuário
+    function desbloquearVoz() {
+      if (vozDesbloqueada || !window.speechSynthesis) return;
+      vozDesbloqueada = true;
+      // fala um texto vazio para "aquecer" o engine
+      const u = new SpeechSynthesisUtterance(' ');
+      u.volume = 0;
+      window.speechSynthesis.speak(u);
+    }
 
     // pré-carrega a melhor voz pt-BR disponível
     function carregarVoz() {
@@ -406,8 +416,10 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       return new Promise(resolve => {
         window.speechSynthesis.cancel();
 
-        // pequeno delay para o cancel processar (necessário no mobile)
         setTimeout(() => {
+          // resume forçado — necessário em alguns browsers/iOS
+          window.speechSynthesis.resume();
+
           const u   = new SpeechSynthesisUtterance(texto);
           u.lang    = 'pt-BR';
           u.rate    = 0.88;
@@ -415,7 +427,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
           u.volume  = 1;
           if (vozPronta) u.voice = vozPronta;
 
-          // workaround iOS — pausa sozinha
+          // workaround iOS — pausa sozinha a cada ~15s
           const ki = setInterval(() => {
             if (window.speechSynthesis.paused) window.speechSynthesis.resume();
           }, 2000);
@@ -425,7 +437,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
           u.onerror = done;
 
           window.speechSynthesis.speak(u);
-        }, 100);
+        }, 150);
       });
     }
 
@@ -433,10 +445,9 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       if (window.speechSynthesis) window.speechSynthesis.cancel();
     }
 
-    // fala em paralelo com o fluxo visual
     function dizer(txt, cls) {
       pill(txt, cls);
-      falar(txt); // sem await — não bloqueia o fluxo
+      falar(txt);
     }
 
     // ── Câmera ──
@@ -452,6 +463,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         stream = await navigator.mediaDevices.getUserMedia({
           video:{ facingMode, width:{ideal:1280}, height:{ideal:720} }, audio:false
         });
+        desbloquearVoz(); // desbloqueia voz na primeira interação
         elVideo.srcObject     = stream;
         elVideo.style.display = 'block';
         elPh.style.display    = 'none';
@@ -598,6 +610,10 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     }
 
     fetchUserData();
+
+    // desbloqueia voz em qualquer toque — fallback para todos os browsers
+    document.addEventListener('touchstart', desbloquearVoz, { once: true });
+    document.addEventListener('click',      desbloquearVoz, { once: true });
   </script>
 
 </body></html>
