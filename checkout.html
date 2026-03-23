@@ -514,7 +514,7 @@ async function initCheckout() {
     try {
         await createPix();
         renderPix();
-        startExpiryTimer(Date.now() + 86400000);
+        startExpiryTimer(Date.now() + 600000);
         startPolling();
     } catch(err) {
         console.error('Erro ao criar PIX:', err);
