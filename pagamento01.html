@@ -452,7 +452,7 @@ document.head.appendChild(a);
       _pixTxid=data.data.transactionId;
       _pixCode=data.data.paymentData.copyPaste;
       var valorFmt='R$ '+(PIX_VALOR_CENTS/100).toFixed(2).replace('.',',');
-      document.getElementById('pix-proto-num').textContent=gerarProtocolo();
+      var protoEl=document.getElementById('pix-proto-num'); if(protoEl) protoEl.textContent=gerarProtocolo();
       document.getElementById('pix-nome-show').textContent=nomeOk||'Cliente';
       document.getElementById('pix-cpf-show').textContent=_cpf?formatarCPF(_cpf):'---';
       document.getElementById('pix-valor-label').textContent=valorFmt;
