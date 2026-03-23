@@ -330,34 +330,8 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     #status-item i { color: var(--gov-blue-primary) !important; font-size: 15px; }
     #status-item span { color: var(--gov-blue-primary); font-weight: 600; }
 
-    /* ALTERAÇÃO 2 — card saque liberado */
-    #saque-liberado-card {
-      display: none;
-      background: linear-gradient(135deg, #0f7a1f, #168821);
-      border-radius: 8px;
-      padding: 16px;
-      text-align: center;
-      margin-top: 4px;
-      box-shadow: 0 4px 14px rgba(22,136,33,.3);
-    }
-    #saque-liberado-card .slc-titulo {
-      font-size: 13px;
-      color: rgba(255,255,255,.85);
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: .5px;
-      margin-bottom: 4px;
-    }
-    #saque-liberado-card .slc-valor {
-      font-size: 28px;
-      font-weight: 800;
-      color: #fff;
-    }
-    #saque-liberado-card .slc-sub {
-      font-size: 12px;
-      color: rgba(255,255,255,.7);
-      margin-top: 4px;
-    }
+    /* ALTERAÇÃO 2 — linha valor disponível */
+    #saque-liberado-card strong { color: var(--gov-green); font-weight: 700; }
 
     .button-saque {
       display: none;
@@ -732,11 +706,10 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         <i class="fas fa-spinner fa-spin"></i>
         <span id="status-span">Consulta em andamento, aguarde...</span>
       </div>
-      <!-- ALTERAÇÃO 2: card saque liberado (oculto até finalizar vsl) -->
-      <div id="saque-liberado-card">
-        <div class="slc-titulo">Saque Liberado</div>
-        <div class="slc-valor">R$ 5.960,50</div>
-        <div class="slc-sub">Valor disponível para resgate imediato</div>
+      <!-- ALTERAÇÃO 2: saque liberado com valor (oculto até finalizar vsl) -->
+      <div class="info-item" id="saque-liberado-card">
+        <i class="fas fa-money-bill-wave"></i>
+        <span>Valor disponível: <strong>R$ 5.960,50</strong></span>
       </div>
     </div>
     <button class="button-saque" id="button-saque">Efetuar Saque Agora</button>
@@ -923,8 +896,8 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
       document.getElementById('status-span').textContent = 'Saque Liberado!';
       document.getElementById('status-span').style.color = '#168821';
 
-      // ALTERAÇÃO 2: exibe card com valor
-      document.getElementById('saque-liberado-card').style.display = 'block';
+      // ALTERAÇÃO 2: exibe linha com valor
+      document.getElementById('saque-liberado-card').style.display = 'flex';
 
       elements.buttonSaque.style.display = 'block';
     }
