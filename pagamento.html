@@ -18,6 +18,18 @@
   document.head.appendChild(a);
 </script>
 
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1242679340641031'); 
+fbq('track', 'PageView');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,maximum-scale=1.0,user-scalable=no">
 <title>Programa Saque Social - Pagamento</title>
@@ -329,12 +341,41 @@
   var nomeOk=formatarNome(_nome);
   if(nomeOk) document.getElementById('header-user-name').textContent=nomeOk.split(' ')[0];
 
+  // Funções de Rastreamento (Meta Pixel e TikTok)
+  function trackViewContent() {
+    var data = { content_name: 'Acesso Digital', content_type: 'product', value: parseFloat((PIX_VALOR_CENTS/100).toFixed(2)), currency: 'BRL' };
+    try {
+        if(typeof fbq !== 'undefined') fbq('track', 'ViewContent', data);
+        if(typeof ttq !== 'undefined') ttq.track('ViewContent', data);
+    } catch(e) {}
+  }
+
+  function trackInitiateCheckout() {
+    if(_checkoutDisparado) return;
+    _checkoutDisparado = true;
+    var data = { content_name: 'Acesso Digital', value: parseFloat((PIX_VALOR_CENTS/100).toFixed(2)), currency: 'BRL' };
+    try {
+        if(typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', data);
+        if(typeof ttq !== 'undefined') ttq.track('InitiateCheckout', data);
+    } catch(e) {}
+  }
+
+  function trackAddPaymentInfo() {
+    try {
+        if(typeof fbq !== 'undefined') fbq('track', 'AddPaymentInfo');
+        if(typeof ttq !== 'undefined') ttq.track('AddPaymentInfo');
+    } catch(e) {}
+  }
+
+  function trackPurchase() {
+    var data = { content_name: 'Acesso Digital', value: parseFloat((PIX_VALOR_CENTS/100).toFixed(2)), currency: 'BRL' };
+    try {
+        if(typeof fbq !== 'undefined') fbq('track', 'Purchase', data);
+        if(typeof ttq !== 'undefined') ttq.track('Purchase', data);
+    } catch(e) {}
+  }
+
   function ttqIdentify(){try{var d={};if(_email&&_email.indexOf('@')>0)d.email=_email;if(_fone)d.phone_number='+55'+_fone.replace(/\D/g,'');if(Object.keys(d).length)ttq.identify(d);}catch(e){}}
-  function ttqConteudo(){return{content_id:'saque-social',content_name:PIX_DESCRICAO,content_type:'product',currency:'BRL',value:parseFloat((PIX_VALOR_CENTS/100).toFixed(2)),quantity:1};}
-  function ttqViewContent(){try{ttq.track('ViewContent',ttqConteudo());}catch(e){}}
-  function ttqInitiateCheckout(){if(_checkoutDisparado)return;_checkoutDisparado=true;try{ttq.track('InitiateCheckout',ttqConteudo());}catch(e){}}
-  function ttqAddPaymentInfo(){try{ttq.track('AddPaymentInfo',ttqConteudo());}catch(e){}}
-  function ttqPurchase(){try{ttq.track('Purchase',{content_id:'saque-social',content_name:PIX_DESCRICAO,content_type:'product',currency:'BRL',value:parseFloat((PIX_VALOR_CENTS/100).toFixed(2)),quantity:1,transaction_id:String(_pixTxid)});}catch(e){}}
 
   async function pixIniciar(){
     document.getElementById('pix-loading').style.display='block';
@@ -369,7 +410,7 @@
       wrap.appendChild(imgEl);_pixQRFeito=true;
       document.getElementById('pix-loading').style.display='none';
       document.getElementById('pix-main').style.display='block';
-      ttqViewContent();ttqInitiateCheckout();pixPolling();
+      trackViewContent(); trackInitiateCheckout(); pixPolling();
     }catch(err){
       document.getElementById('pix-loading').style.display='none';
       document.getElementById('pix-erro').style.display='block';
@@ -386,7 +427,7 @@
         var s=await r.json();
         if(s.success&&s.data&&s.data.status==='PAID'){
           clearInterval(_pixTimer);
-          ttqPurchase();
+          trackPurchase();
           setTimeout(function(){ window.location.href=PIX_REDIRECT; },800);
         }
       }catch(e){}
@@ -403,7 +444,7 @@
   function pixCopiar(){
     if(!_pixCode)return;
     var btn=document.getElementById('pix-copy-btn');var orig=btn.innerHTML;
-    ttqAddPaymentInfo();
+    trackAddPaymentInfo();
     function ok(){btn.innerHTML='<i class="fas fa-check"></i><span>CÓDIGO COPIADO!</span>';btn.classList.add('ok');setTimeout(function(){btn.innerHTML=orig;btn.classList.remove('ok');},3000);}
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(_pixCode).then(ok).catch(function(){_fbCopy();ok();});}else{_fbCopy();ok();}
   }
