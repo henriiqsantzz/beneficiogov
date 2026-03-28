@@ -314,7 +314,7 @@ fbq('track', 'PageView');
     async function pixIniciar(){
         document.getElementById('pix-loading').style.display='block';
         try{
-            // Captura UTMs individualmente para o objeto tracking da Paradise
+            // Captura UTMs individualmente conforme padrão Paradise
             var trackingData = {
                 utm_source: _p.get('utm_source') || "",
                 utm_medium: _p.get('utm_medium') || "",
@@ -332,20 +332,18 @@ fbq('track', 'PageView');
                     phone: _fone.replace(/\D/g,''),
                     document: _cpf.replace(/\D/g,'')
                 },
-                utm_data: trackingData // Enviando como objeto para o PHP
+                utm_data: trackingData 
             };
-
             var res = await fetch(MEU_PHP_GATEWAY, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
-
             var data = await res.json();
             
-            // Ajuste para os campos retornados pela Paradise: qr_code e transaction_id
+            // Ajuste para retorno Paradise: qr_code e transaction_id
             if(!res.ok || !data.qr_code) throw new Error();
-            _pixTxid = data.transaction_id; 
+            _pixTxid = data.transaction_id;
             _pixCode = data.qr_code;
 
             document.getElementById('pix-nome-show').textContent = nomeOk;
@@ -363,7 +361,7 @@ fbq('track', 'PageView');
             try{
                 var r = await fetch(MEU_PHP_GATEWAY + '?transactionId=' + encodeURIComponent(_pixTxid));
                 var s = await r.json();
-                // Na Paradise, o status de sucesso retornado pela query é 'approved'
+                // Status de sucesso na Paradise query é 'approved'
                 if(s.status === 'approved' || s.status === 'approved_manual'){
                     clearInterval(_pixTimer);
                     window.location.href=PIX_REDIRECT;
